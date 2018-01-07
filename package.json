@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bezier-js": "^2.2.3",
     "font-awesome": "^4.7.0",
     "history": "^4.7.2",
     "react": "^16.2.0",

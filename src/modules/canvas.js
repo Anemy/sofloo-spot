@@ -5,12 +5,14 @@ import { createRandomSeed } from '../utils';
 // export const DECREMENT_REQUESTED = 'counter/DECREMENT_REQUESTED';
 // export const DECREMENT = 'counter/DECREMENT';
 
+// colors https://github.com/arcticicestudio/nord
+
 const initialState = {
   height: 600,
-  points: 4,
+  points: 600, // 4,
   randomSeed: createRandomSeed(),
   rotation: 0,
-  steps: 1,
+  steps: 7,
   stepVariance: 0,
   width: 600
 };

@@ -1,3 +1,4 @@
+import Bezier from 'bezier-js';
 import React, { Component } from 'react';
 
 import './index.css';
@@ -30,130 +31,158 @@ class Canvas extends Component {
       width
     } = this.props;
 
-    const centerX = 200;
-    const centerY = 200;
+    const centerX = 300;
+    const centerY = 300;
 
-    const stepLength = 100;
-
-    console.log('Drawing a circle centered at', centerX, centerY);
-    console.log('With a radius of', stepLength * steps);
-    console.log('In an array the size of', width, height);
+    const stepLength = 30;
 
     // bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+    // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
 
     // TODO: Precompute so we can smooth.
     // TODO: Allow not to smooth.
 
+    // TODO: Polygon vs circle
+
+    // TODO: Add rotation.
+
     // This is recursive to allow the previous layers to influence?
 
     const drawBeziersOfCircleRecursively = (x, y, step) => {
+      const radius = (step + 1) * stepLength;
+
+      // ctx.beginPath();
+      // ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
+      // ctx.lineWidth = 1;
+      // ctx.strokeStyle = '#EDEDED';
+      // ctx.stroke();
+
       ctx.beginPath();
-
-      // Start from a zero degree point.
-      // TODO: Add rotation.
-      const distanceFromCenter = 100; // (step / steps) * stepLength;
-      ctx.moveTo(x + distanceFromCenter, y);
-
-      // (4/3)*tan(pi/(2n)) = 0.5xxx
-      // (4 / 3) * Math.tan(Math.PI/(2 * n));
+      ctx.moveTo(x + radius, y);
 
       for (let i = 0; i < points; i++) {
         // TODO: Use translate for relative center positioning.
 
+        // Visual to help understand bezier curves:
+        // https://doc.babylonjs.com/how_to/how_to_use_curve3
+
+        // https://en.wikipedia.org/wiki/Composite_B%C3%A9zier_curve#Approximating_circular_arcs
+
+        // https://math.stackexchange.com/questions/873224/calculate-control-points-of-cubic-bezier-curve-approximating-a-part-of-a-circle
+
+        const toDeg = angle => angle * (180/Math.PI);
+
         const startAngle = (i === 0) ? 0 : (2 * Math.PI * (i / points));
         const stopAngle = 2 * Math.PI * ((i + 1) / points);
 
-        const alpha = (stopAngle - startAngle) / 2;
+        // console.log('start, stop angles', toDeg(startAngle), toDeg(stopAngle));
 
-        const cosAlpha = Math.cos(alpha);
-        const sinAlpha = Math.sin(alpha);
-        const cotAlpha = 1 / Math.tan(alpha);
+        const circleOffset = startAngle > stopAngle ? (Math.PI * 2) : 0;
+        const halfOfAngle = Math.abs(circleOffset + (stopAngle - startAngle)) / 2;
 
-        const phi = startAngle + alpha;
-        const cosPhi = Math.cos(phi);
-        const sinPhi = Math.sin(phi);
+        // console.log('difference:', toDeg(halfOfAngle) * 2);
 
-        const lambda = (4 - cosAlpha) / 3;
-        const mu = (sinAlpha + (cosAlpha - lambda)) * cotAlpha;
+        const otherR = radius;
+        const normalizedP1X = otherR * Math.cos(halfOfAngle);
+        const normalizedP1Y = otherR * Math.sin(halfOfAngle);
 
-        const cp1x = x + (((lambda * cosPhi) + (mu * sinPhi)) * distanceFromCenter);
-        const cp1y = y + (((lambda * sinPhi) - (mu * cosPhi)) * distanceFromCenter);
-      
-        const cp2x = x + (((lambda * cosPhi) - (mu * sinPhi)) * distanceFromCenter);
-        const cp2y = y + (((lambda * sinPhi) + (mu * cosPhi)) * distanceFromCenter);
-        
-        // ALPHA = (stopAngle - startAngle) ./ 2;
-        // COS_ALPHA = cos(ALPHA);
-        // SIN_ALPHA = sin(ALPHA);
-        // COT_ALPHA = 1 ./ tan(ALPHA);
-        // PHI = startAngle + ALPHA;
-        // COS_PHI = cos(PHI);
-        // SIN_PHI = sin(PHI);
-        // LAMBDA = (4 - COS_ALPHA) ./ 3;
-        // MU = SIN_ALPHA + (COS_ALPHA - LAMBDA) .* COT_ALPHA;
+        // console.log('zeroed points:', normalizedP1X, normalizedP1Y);
 
-        // bezier = zeros(4,2);
-        // bezier(1,1) = cos(startAngle);
-        // bezier(1,2) = sin(startAngle);
-        // bezier(2,1) = LAMBDA .* COS_PHI + MU .* SIN_PHI;
-        // bezier(2,2) = LAMBDA .* SIN_PHI - MU .* COS_PHI;
-        // bezier(3,1) = LAMBDA .* COS_PHI - MU .* SIN_PHI;
-        // bezier(3,2) = LAMBDA .* SIN_PHI + MU .* COS_PHI;
-        // bezier(4,1) = cos(stopAngle);
-        // bezier(4,2) = sin(stopAngle);
+        const zeroedCP1X = (4 * otherR - normalizedP1X) / 3;
+        const zeroedCP1Y = -((1 * otherR - normalizedP1X) * (3 * otherR - normalizedP1X)) / (3 * normalizedP1Y);
 
-        // Generate the control points for the bezier curve.
-        // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/bezierCurveTo
-        
-        
-        // const cp1Angle = 4 - currentAngle;
-        // (4 / 3) * Math.tan(Math.PI/(2 * (i / points)));
-        // const cp1x = x + (((4 - Math.cos(cp1Angle))/3) * distanceFromCenter);
-        // const cp1y = y + (Math.sin(cp1Angle) * distanceFromCenter);
-      
-        // // const cp2Angle = (4 / 3) * Math.tan(Math.PI/(2 * (i / points)));
-        // // const cp2Angle = (i === points - 1) ? 0 : (2 * Math.PI * ((i + 1) / points));
-        // const cp2x = x + (((4 - Math.cos(cp2Angle))/3) * distanceFromCenter);
-        // const cp2y = y + (Math.sin(cp2Angle) * distanceFromCenter);
-        
-        
-        const endx = x + (Math.cos(stopAngle) * distanceFromCenter);
-        const endy = y + (Math.sin(stopAngle) * distanceFromCenter);
+        const zeroedCP2X = zeroedCP1X;
+        const zeroedCP2Y = -zeroedCP1Y;
 
-        ctx.fillStyle = 'green';
-        ctx.fillRect(endx - 3, endy - 3, 6, 6);
+        // Rotate the control points to their offset.
+        let cp1xAngle = Math.atan2(zeroedCP1Y, zeroedCP1X);
+        let cp2xAngle = Math.atan2(zeroedCP2Y, zeroedCP2X);
 
-        ctx.fillStyle = 'blue';
-        ctx.fillRect(cp1x - 3, cp1y - 3, 6, 6);
-        ctx.fillRect(cp2x - 3, cp2y - 3, 6, 6);
+        if (zeroedCP1X < 0) {
+          cp1xAngle = -cp1xAngle + Math.PI;
+        }
 
-        console.log(i, points, 'Start angle:', Math.floor(startAngle * (180 / Math.PI)));
-        console.log(i, 'End angle:', Math.floor(stopAngle * (180 / Math.PI)));
+        if (zeroedCP2X < 0) {
+          cp2xAngle = -cp2xAngle + Math.PI;
+        }
 
-        ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endx, endy);
+        cp1xAngle += (2 * Math.PI * (i / points)) + halfOfAngle;
+        cp2xAngle += (2 * Math.PI * (i / points)) + halfOfAngle;
+
+        const controlPointDistance = Math.sqrt(zeroedCP1X*zeroedCP1X + zeroedCP1Y*zeroedCP1Y) + Math.random() * (10 * (step + 1 / steps));
+
+        const cp1x = x + Math.cos(cp1xAngle) * controlPointDistance;
+        const cp1y = y + Math.sin(cp1xAngle) * controlPointDistance;
+
+        const cp2x = x + Math.cos(cp2xAngle) * controlPointDistance;
+        const cp2y = y + Math.sin(cp2xAngle) * controlPointDistance;
+
+        const stopx = x + (Math.cos(stopAngle) * radius);
+        const stopy = y + (Math.sin(stopAngle) * radius);
+
+        // if (i === 0) {
+        //   ctx.fillStyle = 'black';
+        //   ctx.fillRect(stopx - 3, stopy - 3, 8, 4);
+
+        //   const startx = x + Math.cos(startAngle) * radius;
+        //   const starty = y + Math.sin(startAngle) * radius;
+
+        //   ctx.fillStyle = 'black';
+        //   ctx.fillRect(startx - 3, starty - 3, 4, 8);
+
+        //   ctx.fillStyle = 'blue';
+        //   ctx.fillRect(cp1x - 3, cp1y - 3, 10, 6);
+        //   ctx.fillStyle = 'purple';
+        //   ctx.fillRect(cp2x - 3, cp2y - 3, 6, 10);
+        // }
+
+        // console.log('Start angle:', Math.floor(startAngle * (180 / Math.PI)));
+        // console.log('End angle:', Math.floor(stopAngle * (180 / Math.PI)));
+
+        ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, stopx, stopy);
         // console.log('Position:', cp2x, cp2y);
       }
 
-      const r = 0; // red
-      const g = 0; // green
-      const b = 255;// * (step / steps); // blue
-      const a = 255; // alpha
+      const r = 30; // 255 - Math.floor(255 * (step / steps)); // red
+      const g = 255 - Math.floor(255 * (step / steps)); // green
+      const b = Math.floor(255 * (step / steps)); // blue
+      const a = 1 - (step / steps); // alpha
 
       ctx.closePath();
+
+      // ctx.globalCompositeOperation='source-atop';
       
-      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+      const color = `rgba(${r}, ${g}, ${b}, ${a})`;
+      ctx.fillStyle = color;
+      // console.log('step:', step,'color:', color);
+      ctx.shadowColor = 'black'; // '#999';
+      ctx.shadowBlur = 20;
+      ctx.shadowOffsetX = 15;
+      ctx.shadowOffsetY = 15;
+
+      // ctx.globalCompositeOperation='source-over';
+
       ctx.fill();
 
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = 'green';
+
+      // Creating the shadow:
+      // invert alpha channel
+      // ctx.globalCompositeOperation = 'xor';
+      // ctx.fillRect(0, 0, c.width, c.height);
+
+
+      // ctx.lineWidth = 2;
+      // ctx.strokeStyle = 'purple';
       // ctx.stroke();
       // TODO: Add shadow.
 
-      ctx.fillStyle = 'orange';
-      ctx.fillRect(x - 3, y - 3, 6, 6);
+      // ctx.fillStyle = 'orange';
+      // ctx.fillRect(x - 3, y - 3, 6, 6);
     };
 
-    drawBeziersOfCircleRecursively(centerX, centerY, 0);
+    for (let i = steps-1; i >= 0; i--) {
+      drawBeziersOfCircleRecursively(centerX, centerY, i);
+    }
   }
 
   render() {
