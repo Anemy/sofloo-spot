@@ -9,9 +9,16 @@ import { createRandomSeed } from '../utils';
 
 const initialState = {
   height: 600,
-  points: 600, // 4,
+  points: 4,
   randomSeed: createRandomSeed(),
   rotation: 0,
+  shadowBlur: 1,
+  shadowColor: `rgb(${0}, ${0}, ${0})`,
+  shadowId: 'svg-shadow',
+  shadowInset: true,
+  shadowOffsetX: 0,
+  shadowOffsetY: 20,
+  shadowOpacity: 0.7,
   steps: 7,
   stepVariance: 0,
   width: 600

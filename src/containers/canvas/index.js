@@ -7,6 +7,11 @@ import Canvas from '../../components/canvas';
 const mapStateToProps = state => ({
   height: state.canvas.height,
   points: state.canvas.points,
+  shadowBlur: state.canvas.shadowBlur,
+  shadowColor: state.canvas.shadowColor,
+  shadowInset: state.canvas.shadowInset,
+  shadowOffsetX: state.canvas.shadowOffsetX,
+  shadowOffsetY: state.canvas.shadowOffsetY,
   steps: state.canvas.steps,
   width: state.canvas.width
 });

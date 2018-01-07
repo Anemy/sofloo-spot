@@ -3177,6 +3177,10 @@ inquirer@3.3.0, inquirer@^3.0.6:
     strip-ansi "^4.0.0"
     through "^2.3.6"
 
+inset.js@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/inset.js/-/inset.js-1.0.2.tgz#cb0680e9aff2ae3e2dc3175ebae210e95ac41a53"
+
 internal-ip@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/internal-ip/-/internal-ip-1.2.0.tgz#ae9fbf93b984878785d50a8de1b356956058cf5c"

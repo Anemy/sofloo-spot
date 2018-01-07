@@ -9,7 +9,7 @@ const About = props => (
     <button
       onClick={() => props.changePage()}
     >
-      <i class="fa fa-home" aria-hidden="true" />
+      <i className="fa fa-home" aria-hidden="true" />
     </button>
   </div>
 );

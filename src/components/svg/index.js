@@ -1,66 +1,36 @@
 import 'inset.js'
 
-import Bezier from 'bezier-js';
+// import Bezier from 'bezier-js';
 import React, { Component } from 'react';
 
 import './index.css';
 
 import { buildBezierControlPointsForCircleAt } from '../../utils';
 
+import SvgShadow from '../../containers/svg-shadow';
+import Path from '../path';
+
 // TODO: https://tympanus.net/Development/CreativeGooeyEffects/send.html
 
-class Canvas extends Component {
-  componentDidMount() {
-    this.drawCanvas();
-  }
-  
-  componentDidUpdate() {
-    this.drawCanvas();
-  }
-
-  drawCanvas() {
-    console.log('Starting to draw canvas...');
-    const ctx = this.canvasRef.getContext('2d');
-
-    this.drawCircle(ctx);
-
-    console.log('Done drawing canvas.');
-  }
-
-  drawCircle(ctx) {
+class SVG extends Component {
+  buildSVGCircles() {
     const {
-      height,
       points,
-      shadowBlur,
-      shadowColor,
-      shadowInset,
-      shadowOffsetX,
-      shadowOffsetY,
-      steps,
-      width
+      shadowId,
+      steps
     } = this.props;
+
+    let circles = [];
 
     const centerX = 300;
     const centerY = 300;
 
     const stepLength = 30;
 
-    // TODO: Precompute so we can smooth.
-    // TODO: Allow not to smooth.
-
-    // TODO: Polygon vs circle
-
-    // TODO: Add rotation.
-
-    // This is recursive to allow the previous layers to influence?
-
-    // const interiorShape
-
     const drawBeziersOfCircleRecursively = (x, y, step) => {
       const radius = (step + 1) * stepLength;
 
-      ctx.beginPath();
-      ctx.moveTo(x + radius, y);
+      let pathPoints = [];
 
       for (let i = 0; i < points; i++) {
         const startAngle = (i === 0) ? 0 : (2 * Math.PI * (i / points));
@@ -69,12 +39,24 @@ class Canvas extends Component {
         const startx = x + (Math.cos(startAngle) * radius);
         const starty = y + (Math.sin(startAngle) * radius);
 
+        if (i === 0) {
+          pathPoints.push({
+            x: startx,
+            y: starty
+          });
+        }
+
         const stopx = x + (Math.cos(stopAngle) * radius);
         const stopy = y + (Math.sin(stopAngle) * radius);
 
         const cp = buildBezierControlPointsForCircleAt(x, y, radius, startx, starty, stopx, stopy);
 
-        ctx.bezierCurveTo(cp[0].x, cp[0].y, cp[1].x, cp[1].y, stopx, stopy);
+        pathPoints.push({
+          type: 'C',
+          cp: cp,
+          x: stopx,
+          y: stopy
+        });
       }
 
       const r = 30; // 255 - Math.floor(255 * (step / steps)); // red
@@ -82,23 +64,31 @@ class Canvas extends Component {
       const b = Math.floor(255 * (step / steps)); // blue
       const a = 1; // 1 - (step / steps); // alpha
 
-      ctx.closePath();
-      
-      const color = `rgba(${r}, ${g}, ${b}, ${a})`;
-      ctx.fillStyle = color;
+      const fillColor = `rgba(${r}, ${g}, ${b}, ${a})`;
 
-      ctx.shadowColor = shadowColor;
-      ctx.shadowBlur = shadowBlur;
-      ctx.shadowOffsetX = shadowOffsetX;
-      ctx.shadowOffsetY = shadowOffsetY;
-      ctx.shadowInset = shadowInset;
+      const pathStyle = {
+        fill: fillColor// ,
+        // filter: `url(#${shadowId})`
+      };
 
-      ctx.fill();
+      const pathId = `step-${step}`;
+
+      circles.push(
+        <Path
+          key={pathId}
+          pathId={pathId}
+          points={pathPoints}
+          shadowId={step !== steps-1 ? shadowId : ''}
+          style={pathStyle}
+        />
+      );
     };
 
     for (let i = steps-1; i >= 0; i--) {
       drawBeziersOfCircleRecursively(centerX, centerY, i);
     }
+
+    return circles;
   }
 
   render() {
@@ -108,14 +98,17 @@ class Canvas extends Component {
     } = this.props;
 
     return (
-      <canvas
-        className="canvas"
+      <svg
+        className="visual-container"
         height={height}
-        ref={ref => {this.canvasRef = ref;}}
+        ref={ref => {this.svgRef = ref;}}
         width={width}
-      />
+      >
+        {<SvgShadow />}
+        {this.buildSVGCircles()}
+      </svg>
     );
   }
 };
 
-export default Canvas;
+export default SVG;
