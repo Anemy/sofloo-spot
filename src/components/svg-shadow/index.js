@@ -1,7 +1,7 @@
 import React from 'react';
 
-const SvgShadow = props => {console.log(props);return (
-  <defs>
+const SvgShadow = props => (
+  // <defs>
     <filter id={props.shadowId}>
       {/* Shadow offset */}
       <feOffset dx={props.shadowOffsetX} dy={props.shadowOffsetY}/>
@@ -20,8 +20,8 @@ const SvgShadow = props => {console.log(props);return (
       {/* Put shadow over original object */}
       {/* <feComposite operator="over" in="shadow" in2="SourceGraphic"/> */}
     </filter>
-  </defs>
-)};
+  // </defs>
+);
 
 export default SvgShadow;
 

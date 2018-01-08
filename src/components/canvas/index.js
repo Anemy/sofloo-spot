@@ -7,6 +7,8 @@ import './index.css';
 
 import { buildBezierControlPointsForCircleAt } from '../../utils';
 
+// https://codepen.io/netsi1964/pen/ZYpNMz/
+
 // TODO: https://tympanus.net/Development/CreativeGooeyEffects/send.html
 
 class Canvas extends Component {

@@ -290,3 +290,63 @@
 
     drawBeziersOfCircleRecursively(centerX, centerY, 0);
   }
+
+
+
+
+
+
+
+var scale = d3.scaleLinear()
+  .range(["orange","steelblue","purple"])
+  .domain([0,60]);
+  
+var data = [0,10,20,30,40,50,60];
+
+var width = 200;
+var height = 200;
+
+var svg = d3.select("body")
+  .append("svg")
+  .attr("width",width)
+  .attr("height",height)
+  .attr("transform","translate("+width/2+","+height/2+")");
+  
+var circles = svg.selectAll("circle")
+  .data(data)
+  .enter()
+  .append("circle")
+  .attr("r",function(d) { return d; })
+  .attr("fill","none")
+  .style("stroke-width","4")
+  .style("stroke",function(d) { return scale(d) });
+  
+function transition() {
+  // Update data, max d is 60:
+  data = data.map(function(d) { return d == 60 ? 0 : d + 10});
+  
+  var i = 0;
+  // Grow circles
+  circles
+     .data(data)
+     .filter(function(d) { return d > 0 })
+     .transition()
+     .ease(d3.easeLinear)
+     .attr("r", function(d) { return d; })
+     .style("stroke", function(d) { return scale(d) })
+     .style("opacity",function(d) { return d == 60 ? 0 : 1 }) 
+     .duration(1000)
+     .on("end",function(){if(++i==circles.size()-1) { transition(); } });
+    
+     
+  // Reset circles where r == 0
+  circles
+    .filter(function(d) { return d == 0 })
+    .attr("r", 0)
+    .style("opacity",1)
+    .style("stroke",function(d) { return scale(d); });
+     
+    
+}
+
+transition();

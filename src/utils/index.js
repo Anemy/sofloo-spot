@@ -57,7 +57,9 @@ export const buildBezierControlPointsForCircleAt = (oX, oY, radius, x1, y1, x2, 
     cp1xAngle += startAngle + halfOfAngle;
     cp2xAngle += startAngle + halfOfAngle;
 
-    const controlPointDistance = Math.sqrt((zeroedCP1X * zeroedCP1X) + (zeroedCP1Y * zeroedCP1Y)); // + Math.random() * 50;
+    const randomNess = 0;
+    const deviation = Math.random() * randomNess + Math.random() * -randomNess;
+    const controlPointDistance = Math.sqrt((zeroedCP1X * zeroedCP1X) + (zeroedCP1Y * zeroedCP1Y)) + deviation;
 
     return [{
       x: oX + Math.cos(cp1xAngle) * controlPointDistance,
