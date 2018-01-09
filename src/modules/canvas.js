@@ -42,33 +42,33 @@ const colors = [{
 
 const randomFloor = range => Math.floor(Math.random() * range); 
 
-const firstLoadGraphic = {
+const initialState = {
   centerX: window.innerWidth / 2,
   centerY: window.innerHeight / 2,
   colors,
   height: window.innerHeight,
   innerRadius: randomFloor(window.innerHeight / 8),
-  points: randomFloor(40) + 3,
+  points: randomFloor(30) + 3,
   randomSeed: createRandomSeed(),
   rotation: 0,
   shadowBlur: 0,// 0.4,
   shadowColor: `rgba(${0}, ${0}, ${0}, ${0.5})`,
   shadowId: 'svg-shadow',
   shadowInset: true,
-  shadowOffsetX: -4,
-  shadowOffsetY: -10,
-  shadowOpacity: 0.7,
+  shadowOffsetX: 0,
+  shadowOffsetY: 10,
+  shadowOpacity: 1,
   steps: 30,
   stepVariance: 10,
   width: window.innerWidth
 }
 
-const initialState = {
+const initialStates = {
   centerX: 550,
   centerY: 680,
   colors,
   height: 800,
-  innerRadius: 50,
+  innerRadius: randomFloor(100),
   points: 3,
   randomSeed: createRandomSeed(),
   rotation: 0,

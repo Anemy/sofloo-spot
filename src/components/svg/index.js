@@ -53,6 +53,12 @@ class SVG extends Component {
 
     let elementsAreHidden = false;
 
+    const positionDeviationMaxX = 40;
+    const positionDeviationMaxY = 40;
+
+    // const positionDeviationX = Math.random() * positionDeviationMaxX - Math.random() * positionDeviationMaxX;
+    // const positionDeviationY = Math.random() * positionDeviationMaxY - Math.random() * positionDeviationMaxY;
+
     const buildStep = (x, y, step) => {
       if (elementsAreHidden) {
         return;
@@ -76,10 +82,12 @@ class SVG extends Component {
       const rotate = rotateEach * step + rotation;
 
       for (let i = 0; i < points; i++) {
-        const deviationAmount = 100;
+        const positionDeviationX = Math.random() * positionDeviationMaxX - Math.random() * positionDeviationMaxX;
+        const positionDeviationY = Math.random() * positionDeviationMaxY - Math.random() * positionDeviationMaxY;    
+
         const deviation = {
-          x: Math.random() * deviationAmount - Math.random() * deviationAmount,
-          y: Math.random() * deviationAmount - Math.random() * deviationAmount
+          x: positionDeviationX,
+          y: positionDeviationY
         };
 
         if (i === 0) {
@@ -255,9 +263,15 @@ class SVG extends Component {
       );
     };
 
+    const maxDeviationX = 30;
+    const maxDeviationY = 30;
+
+    const deviationX = Math.random() * maxDeviationX - Math.random() * maxDeviationX;
+    const deviationY = Math.random() * maxDeviationY - Math.random() * maxDeviationY;
+    // const deviationY = -14;
+
     for (let i = steps - 1; i >= 0; i--) {
-      const centerDeviation = -14;
-      buildStep(centerX + i * (centerDeviation / 2), centerY + i * centerDeviation, i);
+      buildStep(centerX + (steps - i) * deviationX, centerY + (steps - i) * deviationY, i);
     }
 
     return [
