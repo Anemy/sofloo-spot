@@ -86,8 +86,8 @@ export const createPathPoint = (radius, point, points, rotate, circleBase, previ
   const startAngle = 2 * Math.PI * (point / points) + rotate;
   const stopAngle = 2 * Math.PI * ((point + 1) / points) + rotate;
 
-  const startx = (Math.cos(startAngle) * radius) + previousDeviation.x;
-  const starty = (Math.sin(startAngle) * radius) + previousDeviation.y;
+  const startx = (Math.cos(startAngle) * radius) + previousDeviation.x || 0;
+  const starty = (Math.sin(startAngle) * radius) + previousDeviation.y || 0;
 
   const isLastPoint = point === points - 1;
 
@@ -135,3 +135,23 @@ export const pointInPolyon = (point, vs) => {
   
   return inside;
 };
+
+// Color Bound.
+const cb = color => Math.min(Math.max(Math.floor(color), 0), 255);
+
+export const getStepColor = (step, steps, colors) => {
+  // let r = 0;
+  // let b = 0;
+  // let g = 0;
+  // let a = 0;
+
+  const amountOfColors = colors.length;
+
+  const r = cb(Math.random() * 255);
+  const g = cb(Math.random() * 255);
+  const b = cb(Math.random() * 255);
+
+  const a = 1;
+
+  return `rgba(${r}, ${b}, ${g}, ${a})`;
+}

@@ -20,11 +20,32 @@ import { createRandomSeed } from '../utils';
 //   }
 // };
 
+const colors = [{
+  r: 255,
+  b: 255,
+  g: 255
+}, {
+  r: 0,
+  b: 0,
+  g: 0
+}];
+
+// const fillColor = `rgba(${r}, ${g}, ${b}, ${a})`;
+
+// Color Bound.
+// const cb = color => Math.min(Math.max(Math.floor(color), 0), 255);
+
+// 1 halfway through steps.
+// const halfVarience = 1 - (Math.abs(((step - (steps / 2)) / steps)) * 2);
+
+
+
 const randomFloor = range => Math.floor(Math.random() * range); 
 
 const firstLoadGraphic = {
   centerX: window.innerWidth / 2,
   centerY: window.innerHeight / 2,
+  colors,
   height: window.innerHeight,
   innerRadius: randomFloor(window.innerHeight / 8),
   points: randomFloor(40) + 3,
@@ -45,17 +66,18 @@ const firstLoadGraphic = {
 const initialState = {
   centerX: 550,
   centerY: 680,
+  colors,
   height: 800,
   innerRadius: 50,
-  points: 5,
+  points: 3,
   randomSeed: createRandomSeed(),
   rotation: 0,
   shadowBlur: 0,// 0.4,
   shadowColor: `rgba(${0}, ${0}, ${0}, ${0.4})`,
   shadowId: 'svg-shadow',
   shadowInset: true,
-  shadowOffsetX: 1,
-  shadowOffsetY: 6,
+  shadowOffsetX: 0,
+  shadowOffsetY: 10,
   shadowOpacity: 1,
   steps: 30,
   stepVariance: 10,

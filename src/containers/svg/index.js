@@ -7,6 +7,7 @@ import SVG from '../../components/svg';
 const mapStateToProps = state => ({
   centerX: state.canvas.centerX,
   centerY: state.canvas.centerY,
+  colors: state.canvas.colors,
   height: state.canvas.height,
   innerRadius: state.canvas.innerRadius,
   points: state.canvas.points,

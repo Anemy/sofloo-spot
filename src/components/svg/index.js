@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 
 import './index.css';
 
-import { createPathPoint, createStartPoint, pointInPolyon } from '../../utils';
+import { createPathPoint, createStartPoint, getStepColor } from '../../utils';
 
 import SvgShadow from '../../containers/svg-shadow';
 
@@ -28,6 +28,7 @@ class SVG extends Component {
     const {
       centerX,
       centerY,
+      colors,
       innerRadius,
       points,
       rotation,
@@ -39,7 +40,6 @@ class SVG extends Component {
     const defs = [
       <SvgShadow key="svg-shadow"/>
     ];
-    const clipPaths = [];
 
     const stepLength = 10;
 
@@ -47,30 +47,8 @@ class SVG extends Component {
 
     const rotateEach = -Math.PI / 40;
 
-    let outerStepInteriorPoints = [];
-
     // https://sourceforge.net/p/jsclipper/wiki/documentation/#clipperlibcliptype
-
     const ClipperLib = window.ClipperLib;
-
-    const clipSolution = new ClipperLib.Paths();
-    const clipType = 0;
-
-    // ClipperLib.Clipper.Execute(clipType, clipSolution, );
-    // {ctIntersection: 0, ctUnion: 1, ctDifference: 2, ctXor: 3};
-
-    // const subj = [[{X:10,Y:10},{X:110,Y:10},{X:110,Y:110},{X:10,Y:110}],
-    //               [{X:20,Y:20},{X:20,Y:100},{X:100,Y:100},{X:100,Y:20}]]; 
-    // const clip = [[{X:50,Y:50},{X:150,Y:50},{X:150,Y:150},{X:50,Y:150}],
-    //               [{X:60,Y:60},{X:60,Y:140},{X:140,Y:140},{X:140,Y:60}]];
-
-    // const solution = new ClipperLib.Paths();
-    // const c = new ClipperLib.Clipper();
-    // c.AddPaths(subj, ClipperLib.PolyType.ptSubject, true);
-    // c.AddPaths(clip, ClipperLib.PolyType.ptClip, true);
-    // c.Execute(ClipperLib.ClipType.ctIntersection, solution);
-    // console.log('c', solution);
-
     const clippingFilterPoints = ClipperLib.Paths();
 
     let elementsAreHidden = false;
@@ -88,20 +66,17 @@ class SVG extends Component {
       const interiorPathPoints = [];
       const exteriorPathPoints = [];
 
-      let firstDeviation = {
+      const firstDeviation = {
         x: 0,
         y: 0
       };
-      
-      let previousDeviation = {
-        x: 0,
-        y: 0
-      };
+
+      const previousDeviation = {};
 
       const rotate = rotateEach * step + rotation;
 
       for (let i = 0; i < points; i++) {
-        const deviationAmount = 0;
+        const deviationAmount = 100;
         const deviation = {
           x: Math.random() * deviationAmount - Math.random() * deviationAmount,
           y: Math.random() * deviationAmount - Math.random() * deviationAmount
@@ -152,33 +127,11 @@ class SVG extends Component {
       // Outer is 0. Inner is 1
       const percentage = (step / (steps - 1));
 
-      // Color Bound.
-      const cb = color => Math.min(Math.max(Math.floor(color), 0), 255);
-
-      // 1 halfway through steps.
-      const halfVarience = 1 - (Math.abs(((step - (steps / 2)) / steps)) * 2);
-
       // console.log(step, 'halfVarience', halfVarience.toFixed(3));
-      console.log(percentage);
-
-      // const r = cb(12 * percentage + 30 * halfVarience);
-      // const g = cb(125 * percentage + 100 * halfVarience);
-      // const b = cb(194 * percentage - 10 * halfVarience);
-
-      // const b = cb(255 * percentage); // 8, 105, 114
-      // const g = cb(100 * percentage);
-      // const r = cb(150 * halfVarience + 20 * percentage);
-
-      const r = cb(Math.random() * 255);
-      const g = cb(Math.random() * 255);
-      const b = cb(Math.random() * 255);
-
-      const a = 1;// 1 - percentage; // alpha
-
-      const fillColor = `rgba(${r}, ${g}, ${b}, ${a})`;
+      // console.log(percentage);
 
       const pathStyle = {
-        fill: fillColor
+        fill: getStepColor(step, steps, colors)
         // fill: 'none',
         // stroke: step % 2 === 0 ? fillColor : 'none'
       };
@@ -204,8 +157,6 @@ class SVG extends Component {
           });
         }
 
-        // TODO ? Push a connector to build a tunnel.
-
         for (let i = exteriorPathPoints.length - 1; i >= 0; i--) {
           const point = exteriorPathPoints[i];
   
@@ -224,18 +175,6 @@ class SVG extends Component {
       }
 
       const clipId = `clip-${pathId}`;
-
-      // if (clipPaths.length < 1) {
-        clipPaths.push(
-          <ClipPath
-            key={`outer-${clipId}`}
-            points={interiorPathPoints}
-          />
-        );
-      // }
-
-      // console.log((steps - step) - 1, clipPaths)
-      // console.log(step, clipPaths[(steps - step) - 1] && clipPaths[(steps - step) - 1]);
 
       if (step !== steps - 1) {
         const pathPointsForClip = [];
@@ -260,9 +199,6 @@ class SVG extends Component {
               id={clipId}
               points={pathPointsForClip}
             />
-            {/* { clipPaths[0] } */}
-            {/* {/* { clipPaths[(steps - step) - 1] && clipPaths[(steps - step) - 1] } */} */}
-            {/* { clipPaths[1] && clipPaths[1] } */}
           </clipPath>
         );
 
@@ -277,20 +213,11 @@ class SVG extends Component {
           });
         }
 
-        // console.log('pointsToAddToClip', pointsToAddToClip);
-        // console.log('clippingFilterPoints', clippingFilterPoints);
-
-        // clippingFilterPoints
-
         const clipSolution = new ClipperLib.Paths();
         const c = new ClipperLib.Clipper();
         c.AddPath(pointsToAddToClip, ClipperLib.PolyType.ptSubject, true);
         c.AddPath(clippingFilterPoints, ClipperLib.PolyType.ptClip, true);
         const excecuteSuccess = c.Execute(ClipperLib.ClipType.ctIntersection, clipSolution);
-
-        // const clip
-
-        // console.log(excecuteSuccess, 'solution:', clipSolution);
 
         if (clipSolution && clipSolution.length > 0) {
           clippingFilterPoints.length = 0;
@@ -299,11 +226,8 @@ class SVG extends Component {
               X: clipSolution[0][i].X,
               Y: clipSolution[0][i].Y
             };
-
-            // console.log(i, 'clippingFilterPoints', clippingFilterPoints)
           }
         } else {
-          console.log('No clip!');
           elementsAreHidden = true;
         }
       } else {
@@ -322,7 +246,7 @@ class SVG extends Component {
           clipId={`clip-step-${step}`}
           key={pathId}
           id={pathId}
-          maskedPathPoints={exteriorPathPoints} // maskedPathPoints}
+          maskedPathPoints={exteriorPathPoints}
           points={exteriorPathPoints}
           shadowId={step !== steps-1 ? shadowId : ''}
           step={step}
@@ -332,7 +256,7 @@ class SVG extends Component {
     };
 
     for (let i = steps - 1; i >= 0; i--) {
-      const centerDeviation = -11;
+      const centerDeviation = -14;
       buildStep(centerX + i * (centerDeviation / 2), centerY + i * centerDeviation, i);
     }
 
