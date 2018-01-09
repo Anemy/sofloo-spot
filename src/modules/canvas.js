@@ -7,21 +7,59 @@ import { createRandomSeed } from '../utils';
 
 // colors https://github.com/arcticicestudio/nord
 
-const initialState = {
-  height: 600,
-  points: 3,
+// export class Color {
+//   constructor(r, g, b, a) {
+//     this.r = r;
+//     this.g = g;
+//     this.b = b;
+//     this.a = a === undefined ? 1 : a;
+//   }
+
+//   getRGBAColorString() {
+//     return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
+//   }
+// };
+
+const randomFloor = range => Math.floor(Math.random() * range); 
+
+const firstLoadGraphic = {
+  centerX: window.innerWidth / 2,
+  centerY: window.innerHeight / 2,
+  height: window.innerHeight,
+  innerRadius: randomFloor(window.innerHeight / 8),
+  points: randomFloor(40) + 3,
   randomSeed: createRandomSeed(),
   rotation: 0,
-  shadowBlur: 0,
-  shadowColor: `rgb(${0}, ${0}, ${0})`,
+  shadowBlur: 0,// 0.4,
+  shadowColor: `rgba(${0}, ${0}, ${0}, ${0.5})`,
   shadowId: 'svg-shadow',
   shadowInset: true,
-  shadowOffsetX: 0,
-  shadowOffsetY: 3,
+  shadowOffsetX: -4,
+  shadowOffsetY: -10,
   shadowOpacity: 0.7,
-  steps: 40,
-  stepVariance: 0,
-  width: 600
+  steps: 30,
+  stepVariance: 10,
+  width: window.innerWidth
+}
+
+const initialState = {
+  centerX: 550,
+  centerY: 680,
+  height: 800,
+  innerRadius: 50,
+  points: 5,
+  randomSeed: createRandomSeed(),
+  rotation: 0,
+  shadowBlur: 0,// 0.4,
+  shadowColor: `rgba(${0}, ${0}, ${0}, ${0.4})`,
+  shadowId: 'svg-shadow',
+  shadowInset: true,
+  shadowOffsetX: 1,
+  shadowOffsetY: 6,
+  shadowOpacity: 1,
+  steps: 30,
+  stepVariance: 10,
+  width: 800
 };
 
 /* Things to add:

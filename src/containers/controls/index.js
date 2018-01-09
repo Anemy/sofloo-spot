@@ -2,7 +2,7 @@
 // import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import SVG from '../../components/svg';
+import controls from '../../components/controls';
 
 const mapStateToProps = state => ({
   centerX: state.canvas.centerX,
@@ -10,7 +10,7 @@ const mapStateToProps = state => ({
   height: state.canvas.height,
   innerRadius: state.canvas.innerRadius,
   points: state.canvas.points,
-  rotation: state.canvas.rotation,
+  rotate: state.canvas.rotate,
   shadowId: state.canvas.shadowId,
   steps: state.canvas.steps,
   width: state.canvas.width
