@@ -145,28 +145,17 @@ class SVG extends Component {
 
       const pathPointsForClip = [];
 
-      if (step !== steps - 1) {
-        for (let i = clippingFilterPoints.length - 1; i >= 0; i--) {
-          const point = clippingFilterPoints[i];
+      if (step === steps - 1) {
+        for (let i = interiorPathPoints.length - 1; i >= 0; i--) {
+          const point = interiorPathPoints[i];
   
-          pathPointsForClip.push({
-            x: point.X,
-            y: point.Y
+          clippingFilterPoints.push({
+            X: point.x,
+            Y: point.y
           });
         }
-        
-        defs.push(
-          <clipPath
-            id={`clip-step-${step}`}
-            key={`clip-step-${step}`}
-          >
-            <ClipPath
-              key={clipId}
-              id={clipId}
-              points={pathPointsForClip}
-            />
-          </clipPath>
-        );
+      } else {
+
 
         const pointsToAddToClip = [];
 
@@ -197,15 +186,28 @@ class SVG extends Component {
         } else {
           elementsAreHidden = true;
         }
-      } else {
-        for (let i = interiorPathPoints.length - 1; i >= 0; i--) {
-          const point = interiorPathPoints[i];
+
+        for (let i = clippingFilterPoints.length - 1; i >= 0; i--) {
+          const point = clippingFilterPoints[i];
   
-          clippingFilterPoints.push({
-            X: point.x,
-            Y: point.y
+          pathPointsForClip.push({
+            x: point.X,
+            y: point.Y
           });
         }
+        
+        defs.push(
+          <clipPath
+            id={`clip-step-${step}`}
+            key={`clip-step-${step}`}
+          >
+            <ClipPath
+              key={clipId}
+              id={clipId}
+              points={pathPointsForClip}
+            />
+          </clipPath>
+        );
       }
 
       circles.push(

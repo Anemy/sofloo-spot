@@ -1,26 +1,8 @@
 import { createRandomColors, createRandomSeed } from '../utils';
 
-// export const INCREMENT_REQUESTED = 'counter/INCREMENT_REQUESTED';
-// export const INCREMENT = 'counter/INCREMENT';
-// export const DECREMENT_REQUESTED = 'counter/DECREMENT_REQUESTED';
-// export const DECREMENT = 'counter/DECREMENT';
-
 export const RANDOMIZE = 'svg/RANDOMIZE';
 
 // colors https://github.com/arcticicestudio/nord
-
-// export class Color {
-//   constructor(r, g, b, a) {
-//     this.r = r;
-//     this.g = g;
-//     this.b = b;
-//     this.a = a === undefined ? 1 : a;
-//   }
-
-//   getRGBAColorString() {
-//     return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
-//   }
-// };
 
 const blackToWhite = [{
   r: 255,
@@ -46,17 +28,12 @@ const whiteToBlack = [{
   a: 1
 }];
 
-const colors = whiteToBlack;
+const startColors = whiteToBlack;
 
 // const fillColor = `rgba(${r}, ${g}, ${b}, ${a})`;
 
 // Color Bound.
 // const cb = color => Math.min(Math.max(Math.floor(color), 0), 255);
-
-// 1 halfway through steps.
-// const halfVarience = 1 - (Math.abs(((step - (steps / 2)) / steps)) * 2);
-
-
 
 const randomFloor = range => Math.floor(Math.random() * range);
 const randomFloorNegate = range => Math.floor(Math.random() * range) - Math.floor(Math.random() * range); 
@@ -64,7 +41,7 @@ const randomFloorNegate = range => Math.floor(Math.random() * range) - Math.floo
 const initialState = {
   centerX: window.innerWidth / 2,
   centerY: window.innerHeight / 2,
-  colors,
+  colors: startColors,
   height: window.innerHeight,
   innerRadius: 0,
   pointDeviationMaxX: randomFloor(60),
@@ -140,12 +117,6 @@ export const randomizeVizual = () => ({
 });
 
 /* Things to add:
-- Steps
-- step width
-- 4 sides? - HOW MANY SIDES!?
-- Shadows
-- Random
-- Color gradient - 2 color - many color
 
 Future:
 - Interior things
@@ -154,8 +125,9 @@ Future:
 - Multiple scattered
 
 Array elements:
-- Shadows - Color & direction
-- Color steps
+- Shadows - Color & direction ?
+- Color steps - done
+- Step points
 */
 
 export default (state = initialState, action) => {
@@ -170,16 +142,4 @@ export default (state = initialState, action) => {
     default:
       return state;
   }
-}
-
-// export const increment = () => {
-//   return dispatch => {
-//     dispatch({
-//       type: INCREMENT_REQUESTED
-//     })
-
-//     dispatch({
-//       type: INCREMENT
-//     })
-//   }
-// };
+};

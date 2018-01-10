@@ -41,9 +41,6 @@ const Path = props => {
     }
   });
 
-  // console.log('shadow points:', shadowPathDString);
-  // console.log('points:', pathDString)
-
   return (
     <g
       clipPath={clipId ? `url(#${clipId})` : ''}
@@ -58,7 +55,8 @@ const Path = props => {
         <path
           d={shadowPathDString}
           style={{
-            ...shadowStyle,
+            fill: 'black',
+            // ...shadowStyle,
             filter: `url(#${shadowId})`
           }}
         />
