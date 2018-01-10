@@ -24,6 +24,11 @@ const Home = props => (
     <SVG />
     <p>Get HTML &lt;svg&gt; code</p>
     <p>Choose a gallery</p>
+    <button
+      onClick={() => props.randomizeVizual()}
+    >
+      RANDOMIZE
+    </button>
   </div>
 );
 

@@ -30,9 +30,13 @@ class SVG extends Component {
       centerY,
       colors,
       innerRadius,
+      pointDeviationMaxX,
+      pointDeviationMaxY,
       points,
+      rotateEachStep,
       rotation,
       shadowId,
+      stepLength,
       steps
     } = this.props;
 
@@ -41,11 +45,7 @@ class SVG extends Component {
       <SvgShadow key="svg-shadow"/>
     ];
 
-    const stepLength = 10;
-
     const circleBase = false;
-
-    const rotateEach = -Math.PI / 40;
 
     // https://sourceforge.net/p/jsclipper/wiki/documentation/#clipperlibcliptype
     const ClipperLib = window.ClipperLib;
@@ -53,11 +53,7 @@ class SVG extends Component {
 
     let elementsAreHidden = false;
 
-    const positionDeviationMaxX = 40;
-    const positionDeviationMaxY = 40;
-
-    // const positionDeviationX = Math.random() * positionDeviationMaxX - Math.random() * positionDeviationMaxX;
-    // const positionDeviationY = Math.random() * positionDeviationMaxY - Math.random() * positionDeviationMaxY;
+    const randomFloor = range => Math.floor(Math.random() * range); 
 
     const buildStep = (x, y, step) => {
       if (elementsAreHidden) {
@@ -79,15 +75,15 @@ class SVG extends Component {
 
       const previousDeviation = {};
 
-      const rotate = rotateEach * step + rotation;
+      const rotate = rotateEachStep * step + rotation;
 
       for (let i = 0; i < points; i++) {
-        const positionDeviationX = Math.random() * positionDeviationMaxX - Math.random() * positionDeviationMaxX;
-        const positionDeviationY = Math.random() * positionDeviationMaxY - Math.random() * positionDeviationMaxY;    
+        const pointDeviationX = Math.random() * pointDeviationMaxX - Math.random() * pointDeviationMaxX;
+        const pointDeviationY = Math.random() * pointDeviationMaxY - Math.random() * pointDeviationMaxY;    
 
         const deviation = {
-          x: positionDeviationX,
-          y: positionDeviationY
+          x: pointDeviationX,
+          y: pointDeviationY
         };
 
         if (i === 0) {
@@ -134,9 +130,6 @@ class SVG extends Component {
 
       // Outer is 0. Inner is 1
       const percentage = (step / (steps - 1));
-
-      // console.log(step, 'halfVarience', halfVarience.toFixed(3));
-      // console.log(percentage);
 
       const pathStyle = {
         fill: getStepColor(step, steps, colors)
@@ -223,9 +216,10 @@ class SVG extends Component {
 
         const clipSolution = new ClipperLib.Paths();
         const c = new ClipperLib.Clipper();
+        // NOTE: If these arrays contain NaN then it will infinite loop.
         c.AddPath(pointsToAddToClip, ClipperLib.PolyType.ptSubject, true);
         c.AddPath(clippingFilterPoints, ClipperLib.PolyType.ptClip, true);
-        const excecuteSuccess = c.Execute(ClipperLib.ClipType.ctIntersection, clipSolution);
+        c.Execute(ClipperLib.ClipType.ctIntersection, clipSolution);
 
         if (clipSolution && clipSolution.length > 0) {
           clippingFilterPoints.length = 0;
@@ -273,6 +267,7 @@ class SVG extends Component {
     for (let i = steps - 1; i >= 0; i--) {
       buildStep(centerX + (steps - i) * deviationX, centerY + (steps - i) * deviationY, i);
     }
+
 
     return [
       <defs key="svg-defs">

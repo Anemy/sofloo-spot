@@ -10,9 +10,13 @@ const mapStateToProps = state => ({
   colors: state.canvas.colors,
   height: state.canvas.height,
   innerRadius: state.canvas.innerRadius,
+  pointDeviationMaxX: state.canvas.pointDeviationMaxX,
+  pointDeviationMaxY: state.canvas.pointDeviationMaxY,
   points: state.canvas.points,
   rotation: state.canvas.rotation,
+  rotateEachStep: state.canvas.rotateEachStep,
   shadowId: state.canvas.shadowId,
+  stepLength: state.canvas.stepLength,
   steps: state.canvas.steps,
   width: state.canvas.width
 });

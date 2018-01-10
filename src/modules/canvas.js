@@ -5,6 +5,8 @@ import { createRandomSeed } from '../utils';
 // export const DECREMENT_REQUESTED = 'counter/DECREMENT_REQUESTED';
 // export const DECREMENT = 'counter/DECREMENT';
 
+export const RANDOMIZE = 'svg/RANDOMIZE';
+
 // colors https://github.com/arcticicestudio/nord
 
 // export class Color {
@@ -47,9 +49,34 @@ const initialState = {
   centerY: window.innerHeight / 2,
   colors,
   height: window.innerHeight,
-  innerRadius: randomFloor(window.innerHeight / 8),
-  points: randomFloor(30) + 3,
+  innerRadius: 0,
+  pointDeviationMaxX: randomFloor(40),
+  pointDeviationMaxY: randomFloor(40),
+  points: 4,
   randomSeed: createRandomSeed(),
+  rotateEachStep: 0,
+  rotation: 0,
+  shadowBlur: 0,// 0.4,
+  shadowColor: `rgba(${0}, ${0}, ${0}, ${0.5})`,
+  shadowId: 'svg-shadow',
+  shadowInset: true,
+  shadowOffsetX: 0,
+  shadowOffsetY: 0,
+  shadowOpacity: 1,
+  stepLength: 20,
+  steps: 5,
+  stepVariance: 10,
+  width: window.innerWidth
+};
+
+const getRandomState = () => ({
+  colors,
+  innerRadius: randomFloor(window.innerHeight / 8),
+  pointDeviationMaxX: randomFloor(40),
+  pointDeviationMaxY: randomFloor(40),
+  points: 3 + (randomFloor(10) > 3 ? randomFloor(10) : randomFloor(500)), // randomFloor(30) + 3,
+  randomSeed: createRandomSeed(),
+  rotateEachStep: randomFloor(40),// + randomFloor(-40),
   rotation: 0,
   shadowBlur: 0,// 0.4,
   shadowColor: `rgba(${0}, ${0}, ${0}, ${0.5})`,
@@ -58,31 +85,14 @@ const initialState = {
   shadowOffsetX: 0,
   shadowOffsetY: 10,
   shadowOpacity: 1,
+  stepLength: 2 + randomFloor(5),
   steps: 30,
-  stepVariance: 10,
-  width: window.innerWidth
-}
+  stepVariance: 10
+});
 
-const initialStates = {
-  centerX: 550,
-  centerY: 680,
-  colors,
-  height: 800,
-  innerRadius: randomFloor(100),
-  points: 3,
-  randomSeed: createRandomSeed(),
-  rotation: 0,
-  shadowBlur: 0,// 0.4,
-  shadowColor: `rgba(${0}, ${0}, ${0}, ${0.4})`,
-  shadowId: 'svg-shadow',
-  shadowInset: true,
-  shadowOffsetX: 0,
-  shadowOffsetY: 10,
-  shadowOpacity: 1,
-  steps: 30,
-  stepVariance: 10,
-  width: 800
-};
+export const randomizeVizual = () => ({
+  type: RANDOMIZE
+});
 
 /* Things to add:
 - Steps
@@ -105,12 +115,11 @@ Array elements:
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    // case INCREMENT:
-    //   return {
-    //     ...state,
-    //     count: state.count + 1,
-    //     isIncrementing: !state.isIncrementing
-    //   }
+    case RANDOMIZE:
+      return {
+        ...state,
+        ...getRandomState()
+      }
 
     default:
       return state;
