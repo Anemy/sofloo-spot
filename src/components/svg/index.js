@@ -24,6 +24,10 @@ import Path from '../path';
 // - draw circle with bezier curves
 
 class SVG extends Component {
+  componentDidMount() {
+    this.props.setSvgRef(this.svgRef);
+  }
+
   buildSVGCircles() {
     const {
       applyShadowOnTopStep,

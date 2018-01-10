@@ -1,6 +1,7 @@
-// import { push } from 'react-router-redux';
-// import { bindActionCreators } from 'redux';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
+import { setSvgRef } from '../../modules/canvas';
 
 import SVG from '../../components/svg';
 
@@ -25,7 +26,11 @@ const mapStateToProps = state => ({
   width: state.canvas.width
 });
 
+const mapDispatchToProps = dispatch => bindActionCreators({
+  setSvgRef: () => setSvgRef()
+}, dispatch);
+
 export default connect(
   mapStateToProps, 
-  null
+  mapDispatchToProps
 )(SVG);

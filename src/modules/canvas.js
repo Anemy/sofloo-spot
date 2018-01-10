@@ -1,6 +1,7 @@
 import { createRandomColors, createRandomSeed, floorRandom } from '../utils';
 
 export const RANDOMIZE = 'svg/RANDOMIZE';
+export const SET_SVG_REF = 'svg/SET_SVG_REF';
 
 // colors https://github.com/arcticicestudio/nord
 
@@ -143,13 +144,13 @@ const getRandomState = () => {
     randomSeed: createRandomSeed(),
     rotateEachStep: randomFloorNegate(180),
     rotation: randomFloor(Math.PI * 2),
-    shadowBlur: randomFloor(5),// 0.4,
-    shadowColor: `rgba(${0}, ${0}, ${0}, ${Math.random()})`,
+    shadowBlur: randomFloor(5),
+    shadowColor: `rgba(${0}, ${0}, ${0}, ${1})`,
     shadowId: 'svg-shadow',
     shadowInset: true,
     shadowOffsetX: randomFloorNegate(10),
     shadowOffsetY: randomFloorNegate(20),
-    shadowOpacity: 1,
+    shadowOpacity: Math.random().toFixed(4),
     stepCenterDeviationX: randomFloorNegate(stepCenterMaxDeviationX),
     stepCenterDeviationY: randomFloorNegate(stepCenterMaxDeviationX),
     stepLength: 2 + randomFloor(10),
@@ -187,7 +188,19 @@ export default (state = initialState, action) => {
         // TODO: Allow locked layers to not change.
       }
 
+    case SET_SVG_REF:
+      return {
+        ...state,
+        svgRef: action.svgRef
+      }
+
     default:
       return state;
   }
 };
+
+
+export const setSvgRef = svgRef => ({
+  svgRef,
+  type: SET_SVG_REF
+});
