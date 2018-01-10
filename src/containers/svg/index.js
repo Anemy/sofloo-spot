@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import SVG from '../../components/svg';
 
 const mapStateToProps = state => ({
+  applyShadowOnTopStep: state.canvas.applyShadowOnTopStep,
   centerX: state.canvas.centerX,
   centerY: state.canvas.centerY,
   colors: state.canvas.colors,

@@ -26,6 +26,7 @@ import Path from '../path';
 class SVG extends Component {
   buildSVGCircles() {
     const {
+      applyShadowOnTopStep,
       centerX,
       centerY,
       colors,
@@ -149,16 +150,13 @@ class SVG extends Component {
         for (let i = interiorPathPoints.length - 1; i >= 0; i--) {
           const point = interiorPathPoints[i];
   
-          clippingFilterPoints.push({
-            X: point.x,
-            Y: point.y
+          pathPointsForClip.push({
+            x: point.x,
+            y: point.y
           });
         }
       } else {
-
-
         const pointsToAddToClip = [];
-
         for (let i = interiorPathPoints.length - 1; i >= 0; i--) {
           const point = interiorPathPoints[i];
   
@@ -189,26 +187,37 @@ class SVG extends Component {
 
         for (let i = clippingFilterPoints.length - 1; i >= 0; i--) {
           const point = clippingFilterPoints[i];
-  
+
           pathPointsForClip.push({
             x: point.X,
             y: point.Y
           });
         }
-        
-        defs.push(
-          <clipPath
-            id={`clip-step-${step}`}
-            key={`clip-step-${step}`}
-          >
-            <ClipPath
-              key={clipId}
-              id={clipId}
-              points={pathPointsForClip}
-            />
-          </clipPath>
-        );
       }
+
+      for (let i = 0; i < pathPointsForClip.length; i++) {
+        const point = (step === steps - 1) ? interiorPathPoints[i] : pathPointsForClip[i];
+
+        clippingFilterPoints[i] = {
+          X: point.x,
+          Y: point.y
+        }
+      }
+      
+      defs.push(
+        <clipPath
+          id={`clip-step-${step}`}
+          key={`clip-step-${step}`}
+        >
+          <ClipPath
+            key={clipId}
+            id={clipId}
+            points={pathPointsForClip}
+          />
+        </clipPath>
+      );
+
+      const shadow = !(applyShadowOnTopStep && (step === steps - 1));
 
       circles.push(
         <Path
@@ -216,8 +225,8 @@ class SVG extends Component {
           key={pathId}
           id={pathId}
           pathPoints={exteriorPathPoints}
-          shadowPathPoints={pathPointsForClip}
-          shadowId={step !== steps-1 ? shadowId : ''}
+          shadowPathPoints={shadow && pathPointsForClip}
+          shadowId={shadow && shadowId}
           shadowStyle={pathStyle}
           step={step}
           style={pathStyle}

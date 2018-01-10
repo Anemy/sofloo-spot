@@ -1,4 +1,4 @@
-import { floorRandom } from "./index";
+// import { floorRandom } from "./index";
 
 // Nice blue backgorund
 // rgb(162, 198, 221)
