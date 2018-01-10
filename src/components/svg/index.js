@@ -39,7 +39,8 @@ class SVG extends Component {
       stepCenterDeviationX,
       stepCenterDeviationY,
       stepLength,
-      steps
+      steps,
+      strokePath
     } = this.props;
 
     const circles = [];
@@ -80,6 +81,7 @@ class SVG extends Component {
       const rotate = rotateEachStep * step + rotation;
 
       for (let i = 0; i < points; i++) {
+        // TODO: This will have to be integrated with the store somehow.
         const pointDeviationX = Math.random() * pointDeviationMaxX - Math.random() * pointDeviationMaxX;
         const pointDeviationY = Math.random() * pointDeviationMaxY - Math.random() * pointDeviationMaxY;    
 
@@ -122,7 +124,7 @@ class SVG extends Component {
         previousDeviation.y = deviation.y;
       }
 
-      // Translate to the center.
+      // Translate the step to the center.
       for (let i = 0; i < interiorPathPoints.length; i++) {
         interiorPathPoints[i].x += x;
         interiorPathPoints[i].y += y;
@@ -134,49 +136,11 @@ class SVG extends Component {
       const percentage = (step / (steps - 1));
 
       const pathStyle = {
-        fill: getStepColor(step, steps, colors)
-        // fill: 'none',
-        // stroke: step % 2 === 0 ? fillColor : 'none'
+        fill: !strokePath ? getStepColor(step, steps, colors) : 'none',
+        stroke: strokePath ? getStepColor(step, steps, colors) : 'none'
       };
 
       const pathId = `step-${step}`;
-
-      // Here we create a clip mask so that only the step shows up when filled.
-      // This ensures we only draw the layer.
-      // We use a zero pixel tunnel: https://css-tricks.com/cutting-inner-part-element-using-clip-path/
-      
-      let maskedPathPoints = [];
-      
-      if (step === 0) {
-        maskedPathPoints = exteriorPathPoints;
-      } else {
-        for (let i = 0; i < interiorPathPoints.length; i++) {
-          const point = interiorPathPoints[i];
-
-          maskedPathPoints.push({
-            type: point.type,
-            x: point.x,
-            y: point.y
-          });
-        }
-
-        for (let i = exteriorPathPoints.length - 1; i >= 0; i--) {
-          const point = exteriorPathPoints[i];
-  
-          maskedPathPoints.push({
-            type: point.type,
-            x: point.x,
-            y: point.y
-          });
-        }
-
-        maskedPathPoints.push({
-          type: 'L',
-          x: interiorPathPoints[0].x,
-          y: interiorPathPoints[0].y
-        });
-      }
-
       const clipId = `clip-${pathId}`;
 
       const pathPointsForClip = [];
@@ -195,7 +159,6 @@ class SVG extends Component {
           <clipPath
             id={`clip-step-${step}`}
             key={`clip-step-${step}`}
-            style={{fill: '#FFF'}}
           >
             <ClipPath
               key={clipId}
@@ -250,9 +213,10 @@ class SVG extends Component {
           clipId={`clip-step-${step}`}
           key={pathId}
           id={pathId}
-          maskedPathPoints={exteriorPathPoints}
-          points={pathPointsForClip}
+          pathPoints={exteriorPathPoints}
+          shadowPathPoints={pathPointsForClip}
           shadowId={step !== steps-1 ? shadowId : ''}
+          shadowStyle={pathStyle}
           step={step}
           style={pathStyle}
         />

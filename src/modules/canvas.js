@@ -102,7 +102,8 @@ const getRandomState = () => {
     maxColorRandom
   };
 
-  const amountOfColors = 2 + randomFloor(3); //randomFloor(steps);
+  // 1/10 random colors, else nice gradient.
+  const amountOfColors = randomFloor(10) === 1 ? steps : 2 + randomFloor(3);
   
   const stepCenterMaxDeviationX = 30;
   const stepCenterMaxDeviationY = 30;
@@ -114,7 +115,7 @@ const getRandomState = () => {
     innerRadius: randomFloor(window.innerHeight / 8),
     pointDeviationMaxX: randomFloorNegate(40),
     pointDeviationMaxY: randomFloorNegate(40),
-    points: 3 + (randomFloor(10) > 3 ? randomFloor(10) : randomFloor(500)), // randomFloor(30) + 3,
+    points: 3 + randomFloor(randomFloor(5) === 1 ? 1000 : 7), // 1 / 5 chance for possibly many points.
     randomSeed: createRandomSeed(),
     rotateEachStep: randomFloor(40),// + randomFloor(-40),
     rotation: randomFloor(Math.PI * 2),
@@ -129,7 +130,8 @@ const getRandomState = () => {
     stepCenterDeviationY: randomFloorNegate(stepCenterMaxDeviationX),
     stepLength: 2 + randomFloor(10),
     steps,
-    stepVariance: 10
+    stepVariance: 10,
+    strokePath: randomFloor(6) === 1 // 1/6 chance
   };
 };
 
@@ -162,6 +164,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         ...getRandomState()
+        // TODO: Allow locked layers to not change.
       }
 
     default:

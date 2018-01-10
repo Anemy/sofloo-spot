@@ -350,3 +350,44 @@ function transition() {
 }
 
 transition();
+
+
+
+
+
+
+      // Here we create a clip mask so that only the step shows up when filled.
+      // This ensures we only draw the layer.
+      // We use a zero pixel tunnel: https://css-tricks.com/cutting-inner-part-element-using-clip-path/
+      
+      let maskedPathPoints = [];
+      
+      if (step === 0) {
+        maskedPathPoints = exteriorPathPoints;
+      } else {
+        for (let i = 0; i < interiorPathPoints.length; i++) {
+          const point = interiorPathPoints[i];
+
+          maskedPathPoints.push({
+            type: point.type,
+            x: point.x,
+            y: point.y
+          });
+        }
+
+        for (let i = exteriorPathPoints.length - 1; i >= 0; i--) {
+          const point = exteriorPathPoints[i];
+  
+          maskedPathPoints.push({
+            type: point.type,
+            x: point.x,
+            y: point.y
+          });
+        }
+
+        maskedPathPoints.push({
+          type: 'L',
+          x: interiorPathPoints[0].x,
+          y: interiorPathPoints[0].y
+        });
+      }

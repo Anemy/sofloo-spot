@@ -20,6 +20,7 @@ const mapStateToProps = state => ({
   stepCenterDeviationY: state.canvas.stepCenterDeviationY,
   stepLength: state.canvas.stepLength,
   steps: state.canvas.steps,
+  strokePath: state.canvas.strokePath,
   width: state.canvas.width
 });
 

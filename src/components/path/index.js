@@ -7,16 +7,30 @@ const Path = props => {
   const {
     clipId,
     id,
-    maskedPathPoints,
-    points,
+    pathPoints,
+    shadowPathPoints,
     shadowId,
     step,
+    shadowStyle,
     style
   } = props;
 
+  let shadowPathDString = '';
+
+  _.each(shadowPathPoints, (point, index) => {
+    if (point.type === 'C') {
+      const cp = point.cp;
+      shadowPathDString += `C${cp[0].x} ${cp[0].y} ${cp[1].x} ${cp[1].y} ${point.x} ${point.y}`;
+    } else if (index === 0) {
+      shadowPathDString += `M${point.x} ${point.y} `;
+    } else {
+      shadowPathDString += `L${point.x} ${point.y} `;
+    }
+  });
+
   let pathDString = '';
 
-  _.each(points, (point, index) => {
+  _.each(pathPoints, (point, index) => {
     if (point.type === 'C') {
       const cp = point.cp;
       pathDString += `C${cp[0].x} ${cp[0].y} ${cp[1].x} ${cp[1].y} ${point.x} ${point.y}`;
@@ -27,40 +41,24 @@ const Path = props => {
     }
   });
 
-  let maskedPathDString = '';
-
-  _.each(maskedPathPoints, (point, index) => {
-    if (point.type === 'C') {
-      const cp = point.cp;
-      maskedPathDString += `C${cp[0].x} ${cp[0].y} ${cp[1].x} ${cp[1].y} ${point.x} ${point.y}`;
-    } else if (index === 0) {
-      maskedPathDString += `M${point.x} ${point.y} `;
-    } else {
-      maskedPathDString += `L${point.x} ${point.y} `;
-    }
-  });
-
-  // console.log('masked:', maskedPathPoints);
-  // console.log('string:', maskedPathDString)
+  // console.log('shadow points:', shadowPathDString);
+  // console.log('points:', pathDString)
 
   return (
     <g
       clipPath={clipId ? `url(#${clipId})` : ''}
       id={id}
-      // style={{
-      //   zIndex: step
-      // }}
     >
       <path
         className={`step-path path-${id}`}
-        d={maskedPathDString}
+        d={pathDString}
         style={style}
       />
       {shadowId && 
         <path
-          d={pathDString}
+          d={shadowPathDString}
           style={{
-            ...style,
+            ...shadowStyle,
             filter: `url(#${shadowId})`
           }}
         />

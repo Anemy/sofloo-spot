@@ -15,10 +15,10 @@ const Home = props => (
       <Link to="/about">About</Link>
     </header> */}
     <div className="concentric-js-home-background" />
-    <div className="concentric-js-dotted-background" />
+    {/* <div className="concentric-js-dotted-background" /> */}
 
     <h1 className="concentric-js-home-title">Concentric js</h1>
-    <p>A tool for building 🔥 visuals.</p>
+    <p className="concentric-js-home-description">A tool for building 🔥 visuals.</p>
     {/* <button onClick={() =>  props.changePage()}>Go to about page via redux</button> */}
     {/* <Canvas /> */}
     <SVG />
