@@ -16,16 +16,14 @@ const mapStateToProps = state => ({
   rotation: state.canvas.rotation,
   rotateEachStep: state.canvas.rotateEachStep,
   shadowId: state.canvas.shadowId,
+  stepCenterDeviationX: state.canvas.stepCenterDeviationX,
+  stepCenterDeviationY: state.canvas.stepCenterDeviationY,
   stepLength: state.canvas.stepLength,
   steps: state.canvas.steps,
   width: state.canvas.width
 });
 
-// const mapDispatchToProps = dispatch => bindActionCreators({
-//   changePage: () => push('/')
-// }, dispatch);
-
 export default connect(
   mapStateToProps, 
-  null // mapDispatchToProps
+  null
 )(SVG);

@@ -36,6 +36,8 @@ class SVG extends Component {
       rotateEachStep,
       rotation,
       shadowId,
+      stepCenterDeviationX,
+      stepCenterDeviationY,
       stepLength,
       steps
     } = this.props;
@@ -177,9 +179,9 @@ class SVG extends Component {
 
       const clipId = `clip-${pathId}`;
 
-      if (step !== steps - 1) {
-        const pathPointsForClip = [];
+      const pathPointsForClip = [];
 
+      if (step !== steps - 1) {
         for (let i = clippingFilterPoints.length - 1; i >= 0; i--) {
           const point = clippingFilterPoints[i];
   
@@ -249,7 +251,7 @@ class SVG extends Component {
           key={pathId}
           id={pathId}
           maskedPathPoints={exteriorPathPoints}
-          points={exteriorPathPoints}
+          points={pathPointsForClip}
           shadowId={step !== steps-1 ? shadowId : ''}
           step={step}
           style={pathStyle}
@@ -257,17 +259,9 @@ class SVG extends Component {
       );
     };
 
-    const maxDeviationX = 30;
-    const maxDeviationY = 30;
-
-    const deviationX = Math.random() * maxDeviationX - Math.random() * maxDeviationX;
-    const deviationY = Math.random() * maxDeviationY - Math.random() * maxDeviationY;
-    // const deviationY = -14;
-
     for (let i = steps - 1; i >= 0; i--) {
-      buildStep(centerX + (steps - i) * deviationX, centerY + (steps - i) * deviationY, i);
+      buildStep(centerX + (steps - i) * stepCenterDeviationX, centerY + (steps - i) * stepCenterDeviationY, i);
     }
-
 
     return [
       <defs key="svg-defs">
@@ -284,9 +278,7 @@ class SVG extends Component {
       height,
       width
     } = this.props;
-
-      // console.log('here')
-
+    
     return (
       <svg
         className="visual-container"
@@ -301,14 +293,3 @@ class SVG extends Component {
 };
 
 export default SVG;
-
-
-
-        // const b = cb(Math.floor(200 * percentage)); // red
-        // const g = 225 - cb(Math.floor(30 * percentage) + Math.floor(105 * halfVarience)); // green
-        // const r = cb(30 + Math.floor(240 * percentage) + Math.floor(200 * halfVarience));// 255 - Math.floor(255 * percentage); // blue
-        
-        // const r = cb(Math.floor(200 * percentage)); // red
-        // const g = 225 - cb(Math.floor(30 * percentage) + Math.floor(105 * halfVarience)); // green
-        // const b = cb(30 + Math.floor(240 * percentage) + Math.floor(200 * halfVarience));// 255 - Math.floor(255 * percentage); // blue
-        

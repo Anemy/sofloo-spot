@@ -1,3 +1,4 @@
+export * from './color';
 
 export const floorRandom = max => Math.floor(Math.random() * max);
 
@@ -139,19 +140,40 @@ export const pointInPolyon = (point, vs) => {
 // Color Bound.
 const cb = color => Math.min(Math.max(Math.floor(color), 0), 255);
 
-export const getStepColor = (step, steps, colors) => {
-  // let r = 0;
-  // let b = 0;
-  // let g = 0;
-  // let a = 0;
+// export const getStepColor = (step, steps, colors) => {
+//   // let r = 0;
+//   // let b = 0;
+//   // let g = 0;
+//   // let a = 0;
 
-  const amountOfColors = colors.length;
+//   const amountOfColors = colors.length;
 
-  const r = cb(Math.random() * 255);
-  const g = cb(Math.random() * 255);
-  const b = cb(Math.random() * 255);
+//   // const transition = 
 
-  const a = 1;
+//   // const r = cb(Math.random() * 255);
+//   // const g = cb(Math.random() * 255);
+//   // const b = cb(Math.random() * 255);
 
-  return `rgba(${r}, ${b}, ${g}, ${a})`;
-}
+//   const percentage = step / (steps - 1);
+
+//   console.log(step, 'colors:', colors, Math.max(Math.floor(percentage * amountOfColors) - 1, 0), Math.min(Math.ceil(percentage * amountOfColors), amountOfColors - 1), percentage)
+
+//   const previousColor = colors[Math.max(Math.floor(percentage * amountOfColors) - 1, 0)];
+//   const nextColor = colors[Math.min(Math.ceil(percentage * amountOfColors), amountOfColors - 1)]; // Maybe - 1
+
+//   console.log('prev', previousColor, 'next', nextColor);
+
+//   console.log('dif', ((nextColor.r - previousColor.r) * (percentage % 1)));
+//   console.log('per', percentage % 1);
+
+//   const r = cb(previousColor.r + ((nextColor.r - previousColor.r) * (percentage % 1)));
+//   const g = cb(previousColor.g + ((nextColor.g - previousColor.g) * (percentage % 1)));
+//   const b = cb(previousColor.b + ((nextColor.b - previousColor.b) * (percentage % 1)));
+
+
+//   const a = cb(previousColor.a + ((nextColor.a - previousColor.a) * (percentage % 1)));
+
+//   console.log('color:', `rgba(${r}, ${b}, ${g}, ${a})`);
+
+//   return `rgba(${r}, ${b}, ${g}, ${a})`;
+// }
