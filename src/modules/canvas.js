@@ -73,6 +73,32 @@ const whiteToBlack = [{
 //   return colors;
 // };
 
+// const logoColors = [{
+//   r: 245,
+//   g: 245,
+//   b: 255
+// }, {
+//   r: 2,
+//   g: 167,
+//   b: 254
+// }];
+
+// const logo = {
+//   innerRadius: -3,
+//   colors: logoColors,
+//   pointDeviationMaxX: 0,
+//   pointDeviationMaxY: 0,
+//   points: 500,
+//   rotateEachStep: 0,
+//   rotation: Math.PI / 4,
+//   shadowOffsetX: 0,
+//   shadowOffsetY: 0,
+//   stepCenterDeviationX: 0,
+//   stepCenterDeviationY: 0,
+//   stepLength: 20,
+//   steps: 10,
+//   strokePath: false
+// };
 
 const startColors = whiteToBlack;
 
@@ -96,7 +122,7 @@ const initialState = {
   points: 3 + randomFloor(6),
   randomSeed: createRandomSeed(),
   rotateEachStep: randomFloorNegate(Math.PI),
-  rotation: 30,
+  rotation: Math.PI / 8,
   shadowBlur: 0,// 0.4,
   shadowColor: `rgba(${0}, ${0}, ${0}, ${1})`,
   shadowId: 'svg-shadow',
@@ -108,7 +134,9 @@ const initialState = {
   steps: 8,
   stepCenterDeviationX: randomFloorNegate(30),
   stepCenterDeviationY: randomFloorNegate(30),
+  strokePath: false,
   width
+  // ...logo
 };
 
 const getRandomState = () => {
@@ -144,7 +172,7 @@ const getRandomState = () => {
     pointDeviationMaxY: randomFloor(maxPointDeviation),
     points: 3 + randomFloor(randomFloor(5) === 1 ? 1000 : 7), // 1 / 5 chance for possibly many points.
     randomSeed: createRandomSeed(),
-    rotateEachStep: randomFloorNegate(180),
+    rotateEachStep: randomFloorNegate(Math.PI),
     rotation: randomFloor(Math.PI * 2),
     shadowBlur: randomFloor(5),
     shadowColor: `rgba(${0}, ${0}, ${0}, ${1})`,

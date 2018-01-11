@@ -5,16 +5,11 @@ import { randomizeVizual } from '../../modules/canvas';
 
 import Controls from '../../components/controls';
 
+import { createColorString, getContrastingBinaryColor } from '../../utils';
+
 const mapStateToProps = state => ({
-  centerX: state.canvas.centerX,
-  centerY: state.canvas.centerY,
-  height: state.canvas.height,
-  innerRadius: state.canvas.innerRadius,
-  points: state.canvas.points,
-  rotate: state.canvas.rotate,
-  shadowId: state.canvas.shadowId,
-  steps: state.canvas.steps,
-  width: state.canvas.width
+  randomizeButtonBackgroundColor: createColorString(state.canvas.colors[state.canvas.colors.length - 1]),
+  randomizeButtonLabelColor: getContrastingBinaryColor(state.canvas.colors[state.canvas.colors.length - 1])
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

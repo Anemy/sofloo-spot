@@ -21,8 +21,7 @@ export const getStepColor = (step, steps, colors) => {
   const g = cb(previousColor.g + ((nextColor.g - previousColor.g) * (1 - ((percentage * (amountOfColors - 1)) % 1))));
   const b = cb(previousColor.b + ((nextColor.b - previousColor.b) * (1 - ((percentage * (amountOfColors - 1)) % 1))));
 
-
-  const a = cb(previousColor.a + ((nextColor.a - previousColor.a) * (1 - ((percentage * (amountOfColors - 1)) % 1))));
+  const a = cb(previousColor.a + ((nextColor.a - previousColor.a) * (1 - ((percentage * (amountOfColors - 1)) % 1)))) || 1;
 
   return `rgba(${r}, ${g}, ${b}, ${a})`;
 }
