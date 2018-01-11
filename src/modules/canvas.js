@@ -8,6 +8,8 @@ import {
 
 export const RANDOMIZE = 'svg/RANDOMIZE';
 export const SET_SVG_REF = 'svg/SET_SVG_REF';
+export const HISTORY_BACK = 'svg/HISTORY_BACK';
+export const HISTORY_FORWARD = 'svg/HISTORY_FORWARD';
 
 // colors https://github.com/arcticicestudio/nord
 
@@ -106,6 +108,8 @@ const whiteToBlack = [{
 //   strokePath: false
 // };
 
+const maxHistoryLength = 100;
+
 const startColors = whiteToBlack;
 
 const heightOfHeader = 80;
@@ -117,30 +121,34 @@ const height = Math.max(Math.floor(window.innerHeight - heightOfHeader), minHeig
 const width = Math.max(Math.floor(window.innerWidth), minWidth);
 
 const initialState = {
-  applyShadowOnTopStep: true,
-  centerX: width / 2,
-  centerY: height / 2,
-  colors: startColors,
   height,
-  innerRadius: 0,
-  pointDeviationMaxX: randomFloor(50),
-  pointDeviationMaxY: randomFloor(50),
-  points: 3 + randomFloor(6),
-  randomSeed: createRandomSeed(),
-  rotateEachStep: randomFloorNegate(Math.PI),
-  rotation: Math.PI / 8,
-  shadowBlur: 0,// 0.4,
-  shadowColor: `rgba(${0}, ${0}, ${0}, ${1})`,
-  shadowId: 'svg-shadow',
-  shadowInset: true,
-  shadowOffsetX: 0,
-  shadowOffsetY: 10,
-  shadowOpacity: 1,
-  stepLength: 30,
-  steps: 8,
-  stepCenterDeviationX: randomFloorNegate(30),
-  stepCenterDeviationY: randomFloorNegate(30),
-  strokePath: false,
+  history: [],
+  future: [],
+  present: {
+    applyShadowOnTopStep: true,
+    centerX: width / 2,
+    centerY: height / 2,
+    colors: startColors,
+    innerRadius: 0,
+    pointDeviationMaxX: randomFloor(50),
+    pointDeviationMaxY: randomFloor(50),
+    points: 3 + randomFloor(6),
+    randomSeed: createRandomSeed(),
+    rotateEachStep: randomFloorNegate(Math.PI),
+    rotation: Math.PI / 8,
+    shadowBlur: 0,// 0.4,
+    shadowColor: `rgba(${0}, ${0}, ${0}, ${1})`,
+    shadowId: 'svg-shadow',
+    shadowInset: true,
+    shadowOffsetX: 0,
+    shadowOffsetY: 10,
+    shadowOpacity: 1,
+    stepLength: 30,
+    steps: 8,
+    stepCenterDeviationX: randomFloorNegate(30),
+    stepCenterDeviationY: randomFloorNegate(30),
+    strokePath: false
+  },
   width
   // ...logo
 };
@@ -204,13 +212,15 @@ export const randomizeVizual = () => ({
 });
 
 /* Things to add:
-- gradients on step
+- past future
+- controls
 
 Future:
 - Interior things
 - Combinations
 - Custom import shape
 - Multiple scattered
+- Locked layers dont change
 
 Array elements:
 - Shadows - Color & direction ?
@@ -220,12 +230,73 @@ Array elements:
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case RANDOMIZE:
-      return {
-        ...state,
-        ...getRandomState()
-        // TODO: Allow locked layers to not change.
+    case HISTORY_BACK:
+      if (state.history && state.history.length > 0) {
+        const newState = {
+          ...state
+        };
+
+        newState.future.unshift({
+          ...state.present
+        });
+
+        newState.present = {
+          ...state.present,
+          ...newState.history.shift()
+        };
+
+        if (newState.future.length > maxHistoryLength) {
+          newState.future.pop();
+        }
+
+        return newState;
+      } else {
+        return state;
       }
+
+    case HISTORY_FORWARD:
+      if (state.future && state.future.length > 0) {
+        const newState = {
+          ...state
+        };
+
+        newState.history.unshift({
+          ...state.present
+        });
+
+        newState.present = {
+          ...state.present,
+          ...newState.future.shift()
+        };
+
+        if (newState.history.length > maxHistoryLength) {
+          newState.history.pop();
+        }
+
+        return newState;
+      } else {
+        return state;
+      }
+
+    case RANDOMIZE:
+      const newState = {
+        ...state
+      };
+
+      newState.history.unshift({
+        ...state.present
+      });
+
+      newState.present = {
+        ...state.present,
+        ...getRandomState()
+      };
+
+      if (newState.history.length > maxHistoryLength) {
+        newState.history.pop();
+      }
+
+      return newState;
 
     case SET_SVG_REF:
       return {
@@ -238,8 +309,15 @@ export default (state = initialState, action) => {
   }
 };
 
-
 export const setSvgRef = svgRef => ({
   svgRef,
   type: SET_SVG_REF
+});
+
+export const historyBack = () => ({
+  type: HISTORY_BACK
+});
+
+export const historyForward = () => ({
+  type: HISTORY_FORWARD
 });

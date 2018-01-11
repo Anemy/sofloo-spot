@@ -9,6 +9,8 @@ import './index.css';
 class Controls extends Component {
   render() {
     const {
+      historyBack,
+      historyForward,
       randomizeButtonBackgroundColor,
       randomizeButtonLabelColor,
       randomizeVizual
@@ -23,6 +25,16 @@ class Controls extends Component {
             label="Randomize"
             labelColor={randomizeButtonLabelColor}
           />
+          <button
+            onClick={() => historyBack()}
+          >
+            back
+          </button>
+          <button
+            onClick={() => historyForward()}
+          >
+            forward
+          </button>
         </div>
       </MuiThemeProvider>
     );
