@@ -1,4 +1,10 @@
-import { createRandomColors, createRandomSeed, floorRandom } from '../utils';
+import {
+  createColorString,
+  createRandomColors,
+  createRandomSeed,
+  floorRandom,
+  createRandomColor
+} from '../utils';
 
 export const RANDOMIZE = 'svg/RANDOMIZE';
 export const SET_SVG_REF = 'svg/SET_SVG_REF';
@@ -162,6 +168,9 @@ const getRandomState = () => {
   // 1 / 2 chance for no deviation.
   const maxPointDeviation = randomFloor(2) === 1 ? 0 : 50;
 
+  const blackBasedShadow = randomFloor(2) === 1;
+  const shadowColor = blackBasedShadow ? `rgba(${0}, ${0}, ${0}, ${1})` : createColorString(createRandomColor());
+
   // console.log('colors', createRandomColors(1 + randomFloor(steps), maxColorRandom));
 
   return {
@@ -175,7 +184,7 @@ const getRandomState = () => {
     rotateEachStep: randomFloorNegate(Math.PI),
     rotation: randomFloor(Math.PI * 2),
     shadowBlur: randomFloor(5),
-    shadowColor: `rgba(${0}, ${0}, ${0}, ${1})`,
+    shadowColor,
     shadowId: 'svg-shadow',
     shadowInset: true,
     shadowOffsetX: randomFloorNegate(10),
