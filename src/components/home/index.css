@@ -2,17 +2,18 @@
   background-color: #FAFAFA;
   color: #333;
   font-family: 'Roboto',arial,sans-serif;
-  /* padding: 20px; */
+  margin: 0;
+  padding: 0;
   text-align: center;
 }
 
 .concentric-js-home-background {
   background-color: #FAFAFA;
-  background-image: -webkit-gradient(radial,center center,0,center center,460,from(#f5f6f7),to(#FAFAFA));
+  /* background-image: -webkit-gradient(radial,center center,0,center center,460,from(#f5f6f7),to(#FAFAFA));
   background-image: -webkit-radial-gradient(circle,#f5f6f7,#FAFAFA);
   background-image: -moz-radial-gradient(circle,#f5f6f7,#FAFAFA);
   background-image: -o-radial-gradient(circle,#f5f6f7,#FAFAFA);
-  background-repeat: no-repeat;
+  background-repeat: no-repeat; */
   bottom: 0;
   left: 0;
   position: absolute;
@@ -40,15 +41,17 @@
 
 .concentric-js-home-title {
   font-size: 36px;
+  line-height: 36px;
   margin: 0;
-  margin-top: 50px;
+  margin-top: 16px;
   padding: 0;
 }
 
 .concentric-js-home-description {
   color: #777;
   font-size: 16px;
+  line-height: 16px;
   margin: 0;
-  margin-top: 12px;
+  margin-top: 6px;
   padding: 0;
 }

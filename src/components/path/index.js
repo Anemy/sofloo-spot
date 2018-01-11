@@ -10,7 +10,6 @@ const Path = props => {
     pathPoints,
     shadowPathPoints,
     shadowId,
-    step,
     shadowStyle,
     style
   } = props;

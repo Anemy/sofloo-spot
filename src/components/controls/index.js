@@ -1,22 +1,56 @@
-import React from 'react';
-import { push } from 'react-router-redux';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import RaisedButton from 'material-ui/RaisedButton';
+import React, { Component } from 'react';
+
+import { createColorString, createRandomColor, getContrastingBinaryColor } from '../../utils';
 
 import './index.css';
 
-import SVG from '../../containers/svg';
+// symshapes.com
 
-const Home = props => (
-  <div>
-    <h1>Concentric js</h1>
-    <p>A tool for building visuals.</p>
-    {/* <button onClick={() =>  props.changePage()}>Go to about page via redux</button> */}
-    {/* <Canvas /> */}
-    <SVG />
-    <p>Export in PNG</p>
-    <p>Choose a gallery</p>
-  </div>
-);
+class Controls extends Component {
+  state = {
+    randomizeButtonBackgroundColor: {
+      r: 0,
+      g: 188,
+      b: 212
+    },
+    randomizeButtonLabelColor: 'white'
+  };
 
-export default Home;
+  randomizeClicked = () => {
+    const newButtonColor = createRandomColor();
+
+    this.setState({
+      randomizeButtonBackgroundColor: newButtonColor,
+      randomizeButtonLabelColor: getContrastingBinaryColor(newButtonColor)
+    });
+
+    this.props.randomizeVizual();
+  }
+
+  render() {
+    const {
+      randomizeButtonBackgroundColor,
+      randomizeButtonLabelColor
+    } = this.state;
+
+    console.log('state', this.state);
+    
+    return (
+      <MuiThemeProvider>
+        <div className="concentric-js-controls-container">
+          <RaisedButton
+            backgroundColor={createColorString(randomizeButtonBackgroundColor)}
+            onClick={() => this.randomizeClicked()}
+            label="Randomize"
+            labelColor={randomizeButtonLabelColor}
+            overrides={true}
+          />
+        </div>
+      </MuiThemeProvider>
+    );
+  }
+}
+
+export default Controls;

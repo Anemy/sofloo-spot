@@ -1,8 +1,9 @@
-// import { push } from 'react-router-redux';
-// import { bindActionCreators } from 'redux';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import controls from '../../components/controls';
+import { randomizeVizual } from '../../modules/canvas';
+
+import Controls from '../../components/controls';
 
 const mapStateToProps = state => ({
   centerX: state.canvas.centerX,
@@ -16,11 +17,11 @@ const mapStateToProps = state => ({
   width: state.canvas.width
 });
 
-// const mapDispatchToProps = dispatch => bindActionCreators({
-//   changePage: () => push('/')
-// }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({
+  randomizeVizual: () => randomizeVizual()
+}, dispatch);
 
 export default connect(
   mapStateToProps, 
-  null // mapDispatchToProps
-)(SVG);
+  mapDispatchToProps
+)(Controls);

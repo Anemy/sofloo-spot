@@ -8,17 +8,17 @@ export const SET_SVG_REF = 'svg/SET_SVG_REF';
 const randomFloor = range => Math.floor(Math.random() * range);
 const randomFloorNegate = range => Math.floor(Math.random() * range) - Math.floor(Math.random() * range); 
 
-const blackToWhite = [{
-  r: 255,
-  g: 255,
-  b: 255,
-  a: 1
-}, {
-  r: 0,
-  g: 0,
-  b: 0,
-  a: 1
-}];
+// const blackToWhite = [{
+//   r: 255,
+//   g: 255,
+//   b: 255,
+//   a: 1
+// }, {
+//   r: 0,
+//   g: 0,
+//   b: 0,
+//   a: 1
+// }];
 
 const whiteToBlack = [{
   r: 0,
@@ -32,64 +32,67 @@ const whiteToBlack = [{
   a: 1
 }];
 
-const galaxyColorPallete = [{
-  r: 255,
-  g: 255,
-  b: 255,
-  a: 1
-}, {
-  r: 153,
-  g: 153,
-  b: 153,
-  a: 1
-}, {
-  r: 51,
-  g: 51,
-  b: 51,
-  a: 1
-}, {
-  r: 243,
-  g: 156,
-  b: 18,
-  a: 1
-}, {
-  r: 123,
-  g: 76,
-  b: 10,
-  a: 1
-}]
+// const galaxyColorPallete = [{
+//   r: 255,
+//   g: 255,
+//   b: 255,
+//   a: 1
+// }, {
+//   r: 153,
+//   g: 153,
+//   b: 153,
+//   a: 1
+// }, {
+//   r: 51,
+//   g: 51,
+//   b: 51,
+//   a: 1
+// }, {
+//   r: 243,
+//   g: 156,
+//   b: 18,
+//   a: 1
+// }, {
+//   r: 123,
+//   g: 76,
+//   b: 10,
+//   a: 1
+// }];
 
-const galaxyColors = amt => {
-  const colors = [];
+// const galaxyColors = amt => {
+//   const colors = [];
 
-  for(let i = 0; i < amt; i++) {
-    const color = Math.min(randomFloor(galaxyColorPallete.length), galaxyColorPallete.length - 1);
-    console.log('color', color);
-    colors[i] = galaxyColorPallete[color];
-  }
+//   for(let i = 0; i < amt; i++) {
+//     const color = Math.min(randomFloor(galaxyColorPallete.length), galaxyColorPallete.length - 1);
+//     console.log('color', color);
+//     colors[i] = galaxyColorPallete[color];
+//   }
 
-  console.log('colors', colors);
+//   console.log('colors', colors);
 
-  return colors;
-}
+//   return colors;
+// };
 
 
 const startColors = whiteToBlack;
 
-// const fillColor = `rgba(${r}, ${g}, ${b}, ${a})`;
+const heightOfHeader = 80;
 
-// Color Bound.
-// const cb = color => Math.min(Math.max(Math.floor(color), 0), 255);
+const minHeight = 200;
+const minWidth = 200;
+
+const height = Math.max(Math.floor(window.innerHeight - heightOfHeader), minHeight);
+const width = Math.max(Math.floor(window.innerWidth), minWidth);
 
 const initialState = {
   applyShadowOnTopStep: true,
-  centerX: window.innerWidth / 2,
-  centerY: window.innerHeight / 2,
+  centerX: width / 2,
+  centerY: height / 2,
   colors: startColors,
-  height: window.innerHeight,
+  height,
   innerRadius: 0,
-  pointDeviationMaxX: randomFloor(60),
-  pointDeviationMaxY: randomFloor(60),
+  pointDeviationMaxX: randomFloor(50),
+  pointDeviationMaxY: randomFloor(50),
   points: 3 + randomFloor(6),
   randomSeed: createRandomSeed(),
   rotateEachStep: randomFloorNegate(Math.PI),
@@ -105,8 +108,7 @@ const initialState = {
   steps: 8,
   stepCenterDeviationX: randomFloorNegate(30),
   stepCenterDeviationY: randomFloorNegate(30),
-  stepVariance: 10,
-  width: window.innerWidth
+  width
 };
 
 const getRandomState = () => {
@@ -138,8 +140,8 @@ const getRandomState = () => {
     applyShadowOnTopStep: floorRandom(2) === 0,
     colors: createRandomColors(amountOfColors, randomColorOptions),
     innerRadius: randomFloor(window.innerHeight / 8),
-    pointDeviationMaxX: randomFloorNegate(maxPointDeviation),
-    pointDeviationMaxY: randomFloorNegate(maxPointDeviation),
+    pointDeviationMaxX: randomFloor(maxPointDeviation),
+    pointDeviationMaxY: randomFloor(maxPointDeviation),
     points: 3 + randomFloor(randomFloor(5) === 1 ? 1000 : 7), // 1 / 5 chance for possibly many points.
     randomSeed: createRandomSeed(),
     rotateEachStep: randomFloorNegate(180),
@@ -152,11 +154,11 @@ const getRandomState = () => {
     shadowOffsetY: randomFloorNegate(20),
     shadowOpacity: Math.random().toFixed(4),
     stepCenterDeviationX: randomFloorNegate(stepCenterMaxDeviationX),
-    stepCenterDeviationY: randomFloorNegate(stepCenterMaxDeviationX),
+    stepCenterDeviationY: randomFloorNegate(stepCenterMaxDeviationY),
     stepLength: 2 + randomFloor(10),
     steps,
     stepVariance: 10,
-    strokePath: randomFloor(20) === 1 // 1/20 chance for a stroke instead of a fill.
+    strokePath: false// : randomFloor(20) === 1 // 1/20 chance for a stroke instead of a fill.
   };
 };
 

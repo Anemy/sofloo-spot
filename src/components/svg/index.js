@@ -61,14 +61,10 @@ class SVG extends Component {
 
     let elementsAreHidden = false;
 
-    const randomFloor = range => Math.floor(Math.random() * range); 
-
     const buildStep = (x, y, step) => {
       if (elementsAreHidden) {
         return;
       }
-
-      const radius = step * stepLength + innerRadius;
 
       const interiorRadius = step * stepLength + innerRadius;
       const exteriorRadius = (step + 1) * stepLength + innerRadius;
@@ -136,9 +132,6 @@ class SVG extends Component {
         exteriorPathPoints[i].x += x;
         exteriorPathPoints[i].y += y;
       }
-
-      // Outer is 0. Inner is 1
-      const percentage = (step / (steps - 1));
 
       const pathStyle = {
         fill: !strokePath ? getStepColor(step, steps, colors) : 'none',
@@ -252,8 +245,6 @@ class SVG extends Component {
 
   render() {
     const {
-      centerX,
-      centerY,
       height,
       width
     } = this.props;

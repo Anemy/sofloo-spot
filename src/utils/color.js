@@ -1,3 +1,5 @@
+import { floorRandom } from "./index";
+
 // import { floorRandom } from "./index";
 
 // Nice blue backgorund
@@ -25,6 +27,12 @@ export const getStepColor = (step, steps, colors) => {
   return `rgba(${r}, ${g}, ${b}, ${a})`;
 }
 
+export const createRandomColor = () => ({
+  r: floorRandom(255),
+  g: floorRandom(255),
+  b: floorRandom(255)
+});
+
 // Possible options and defaults:
 // - maxColorRandom - a color object used for giving a max random for each possible color.
 export const createRandomColors = (amountOfColors, setOptions) => {
@@ -42,12 +50,30 @@ export const createRandomColors = (amountOfColors, setOptions) => {
 
   for (let i = 0; i < amountOfColors; i++) {
     colors.push({
-      r: Math.floor(Math.random() * (options.maxColorRandom.r)),
-      g: Math.floor(Math.random() * (options.maxColorRandom.g)),
-      b: Math.floor(Math.random() * (options.maxColorRandom.b)),
+      r: floorRandom(options.maxColorRandom.r),
+      g: floorRandom(options.maxColorRandom.g),
+      b: floorRandom(options.maxColorRandom.b),
       a: options.maxColorRandom.a
     });
   }
 
   return colors;
 };
+
+export const getContrastingBinaryColor = color => {
+  let d = 0;
+
+  // Counting the perceptive luminance - human eye favors green color... 
+  const a = 1 - (0.299 * color.r + 0.587 * color.g + 0.114 * color.b) / 255;
+
+  if (a < 0.5) {
+    d = 0; // bright colors - black font
+  } else {
+    d = 255; // dark colors - white font
+  }
+
+  return `rgb(${d}, ${d}, ${d})`;
+};
+
+export const createColorString = c => `rgba(${c.r}, ${c.g}, ${c.b}, ${c.a || 1})`;
+
