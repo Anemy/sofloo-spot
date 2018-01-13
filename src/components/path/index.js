@@ -54,7 +54,6 @@ const Path = props => {
         <path
           d={shadowPathDString}
           style={{
-            // fill: 'black',
             ...shadowStyle,
             filter: `url(#${shadowId})`
           }}

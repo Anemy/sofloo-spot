@@ -38,6 +38,7 @@ class SVG extends Component {
       pointDeviationMaxX,
       pointDeviationMaxY,
       points,
+      previousPointDeviationInfluence,
       rotateEachStep,
       rotation,
       shadowId,
@@ -62,10 +63,6 @@ class SVG extends Component {
     let elementsAreHidden = false;
 
     const buildStep = (x, y, step) => {
-      if (elementsAreHidden) {
-        return;
-      }
-
       const interiorRadius = step * stepLength + innerRadius;
       const exteriorRadius = (step + 1) * stepLength + innerRadius;
 
@@ -77,7 +74,10 @@ class SVG extends Component {
         y: 0
       };
 
-      const previousDeviation = {};
+      const previousDeviation = {
+        x: 0,
+        y: 0
+      };
 
       const rotate = rotateEachStep * step + rotation;
 
@@ -90,6 +90,31 @@ class SVG extends Component {
           x: pointDeviationX,
           y: pointDeviationY
         };
+
+        if (previousPointDeviationInfluence) {
+          deviation.x += previousDeviation.x;
+          deviation.y += previousDeviation.y;
+
+          // Come back to the origin when we're past the half point.
+          // This prevents it making a sharp edge back to the starting location when it goes full circle.
+          if (i > points - (points / 2)) {
+            if (Math.abs(pointDeviationMaxX) > 0 && 
+              ((pointDeviationX < 0 && previousDeviation.x > 0) || (pointDeviationX > 0 && previousDeviation.x < 0)))
+            {
+              const undeviateX = pointDeviationX / 2;
+
+              deviation.x += undeviateX;
+            }
+
+            if (Math.abs(pointDeviationMaxY) > 0 && 
+              ((pointDeviationY < 0 && previousDeviation.y > 0) || (pointDeviationY > 0 && previousDeviation.y < 0)))
+            {
+              const undeviateY = pointDeviationY / 2;
+
+              deviation.y += undeviateY;
+            }
+          }
+        }
 
         if (i === 0) {
           firstDeviation.x = deviation.x;
@@ -132,14 +157,6 @@ class SVG extends Component {
         exteriorPathPoints[i].x += x;
         exteriorPathPoints[i].y += y;
       }
-
-      const pathStyle = {
-        fill: !strokePath ? getStepColor(step, steps, colors) : 'none',
-        stroke: strokePath ? getStepColor(step, steps, colors) : 'none'
-      };
-
-      const pathId = `step-${step}`;
-      const clipId = `clip-${pathId}`;
 
       const pathPointsForClip = [];
 
@@ -201,14 +218,15 @@ class SVG extends Component {
         }
       }
       
+      const pathId = `step-${step}`;
+      const clipId = `clip-${pathId}`;
+
       defs.push(
         <clipPath
-          id={`clip-step-${step}`}
-          key={`clip-step-${step}`}
+          id={clipId}
+          key={clipId}
         >
           <ClipPath
-            key={clipId}
-            id={clipId}
             points={pathPointsForClip}
           />
         </clipPath>
@@ -216,15 +234,26 @@ class SVG extends Component {
 
       const shadow = !(applyShadowOnTopStep && (step === steps - 1));
 
+      const pathStyle = {
+        fill: !strokePath ? getStepColor(step, steps, colors) : 'none',
+        stroke: strokePath ? getStepColor(step, steps, colors) : 'none',
+        strokeWidth: strokePath ? '1px' : '0px'
+      };
+
+      const shadowStyle = {
+        fill: !strokePath ? getStepColor(step, steps, colors) : 'none',
+        stroke: strokePath ? getStepColor(step, steps, colors) : 'none'
+      }
+
       circles.push(
         <Path
           clipId={`clip-step-${step}`}
           key={pathId}
           id={pathId}
-          pathPoints={exteriorPathPoints}
-          shadowPathPoints={shadow && pathPointsForClip}
+          pathPoints={strokePath ? interiorPathPoints : exteriorPathPoints}
+          shadowPathPoints={strokePath ? (shadow && exteriorPathPoints) : (shadow && pathPointsForClip)}
           shadowId={shadow && shadowId}
-          shadowStyle={pathStyle}
+          shadowStyle={shadowStyle}
           step={step}
           style={pathStyle}
         />
@@ -232,6 +261,10 @@ class SVG extends Component {
     };
 
     for (let i = steps - 1; i >= 0; i--) {
+      if (elementsAreHidden) {
+        break;
+      }
+
       buildStep(centerX + (steps - i) * stepCenterDeviationX, centerY + (steps - i) * stepCenterDeviationY, i);
     }
 

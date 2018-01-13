@@ -15,6 +15,7 @@ const mapStateToProps = state => ({
   pointDeviationMaxX: state.canvas.present.pointDeviationMaxX,
   pointDeviationMaxY: state.canvas.present.pointDeviationMaxY,
   points: state.canvas.present.points,
+  previousPointDeviationInfluence: state.canvas.present.previousPointDeviationInfluence,
   rotation: state.canvas.present.rotation,
   rotateEachStep: state.canvas.present.rotateEachStep,
   shadowId: state.canvas.present.shadowId,

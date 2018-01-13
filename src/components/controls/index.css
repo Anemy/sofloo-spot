@@ -3,3 +3,18 @@
   right: 16px;
   top: 12px;
 }
+
+.concentric-js-history-forward-button {
+  margin-left: 4px; 
+}
+
+.concentric-js-history-forward-button {
+  /* position: fixed;
+  top: 4px;
+  left: 4px; */
+  margin-left: 8px;
+}
+
+.concentric-js-controls-history {
+  margin-top: 8px;
+}

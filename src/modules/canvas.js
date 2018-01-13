@@ -133,6 +133,7 @@ const initialState = {
     pointDeviationMaxX: randomFloor(50),
     pointDeviationMaxY: randomFloor(50),
     points: 3 + randomFloor(6),
+    previousPointDeviationInfluence: false,
     randomSeed: createRandomSeed(),
     rotateEachStep: randomFloorNegate(Math.PI),
     rotation: Math.PI / 8,
@@ -154,6 +155,8 @@ const initialState = {
 };
 
 const getRandomState = () => {
+  const maxPoints = 1000;
+  const points = 3 + randomFloor(randomFloor(3) === 1 ? maxPoints : 7); // 1 / 5 chance for possibly many points.
   const steps = 2 + randomFloor(40);
 
   const maxColorRandom = {
@@ -168,18 +171,19 @@ const getRandomState = () => {
   };
 
   // 1/10 random colors, else nice gradient.
-  const amountOfColors = randomFloor(10) === 1 ? steps : 2 + randomFloor(3);
+  const amountOfColors = randomFloor(10) === 1 ? steps : 1 + randomFloor(4);
   
   const stepCenterMaxDeviationX = 30;
   const stepCenterMaxDeviationY = 30;
 
   // 1 / 2 chance for no deviation.
-  const maxPointDeviation = randomFloor(2) === 1 ? 0 : 50;
+  const maxPointDeviation = randomFloor(2) === 1 ? 0 : 50 - (maxPoints / 25);
 
   const blackBasedShadow = randomFloor(2) === 1;
   const shadowColor = blackBasedShadow ? `rgba(${0}, ${0}, ${0}, ${1})` : createColorString(createRandomColor());
 
   // console.log('colors', createRandomColors(1 + randomFloor(steps), maxColorRandom));
+  // Open street map for data.
 
   return {
     applyShadowOnTopStep: floorRandom(2) === 0,
@@ -187,7 +191,8 @@ const getRandomState = () => {
     innerRadius: randomFloor(window.innerHeight / 8),
     pointDeviationMaxX: randomFloor(maxPointDeviation),
     pointDeviationMaxY: randomFloor(maxPointDeviation),
-    points: 3 + randomFloor(randomFloor(5) === 1 ? 1000 : 7), // 1 / 5 chance for possibly many points.
+    points,
+    previousPointDeviationInfluence: randomFloor(3) === 1, // 1 out of 3
     randomSeed: createRandomSeed(),
     rotateEachStep: randomFloorNegate(Math.PI),
     rotation: randomFloor(Math.PI * 2),
@@ -203,7 +208,7 @@ const getRandomState = () => {
     stepLength: 2 + randomFloor(10),
     steps,
     stepVariance: 10,
-    strokePath: false// : randomFloor(20) === 1 // 1/20 chance for a stroke instead of a fill.
+    strokePath: randomFloor(10) === 1 // 1/20 chance for a stroke instead of a fill.
   };
 };
 
