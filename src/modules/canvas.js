@@ -171,13 +171,13 @@ const getRandomState = () => {
   };
 
   // 1/10 random colors, else nice gradient.
-  const amountOfColors = randomFloor(10) === 1 ? steps : 1 + randomFloor(4);
+  const amountOfColors = randomFloor(10) === 1 ? steps : 1 + randomFloor(5);
   
-  const stepCenterMaxDeviationX = 30;
-  const stepCenterMaxDeviationY = 30;
+  const stepCenterMaxDeviationX = randomFloor(4) === 1 ? 0 : 30;
+  const stepCenterMaxDeviationY = randomFloor(4) === 1 ? 0 : 30;
 
   // 1 / 2 chance for no deviation.
-  const maxPointDeviation = randomFloor(2) === 1 ? 0 : 50 - (maxPoints / 25);
+  const maxPointDeviation = randomFloor(3) === 1 ? 0 : 50 - (maxPoints / 25);
 
   const blackBasedShadow = randomFloor(2) === 1;
   const shadowColor = blackBasedShadow ? `rgba(${0}, ${0}, ${0}, ${1})` : createColorString(createRandomColor());
@@ -207,8 +207,7 @@ const getRandomState = () => {
     stepCenterDeviationY: randomFloorNegate(stepCenterMaxDeviationY),
     stepLength: 2 + randomFloor(10),
     steps,
-    stepVariance: 10,
-    strokePath: randomFloor(10) === 1 // 1/20 chance for a stroke instead of a fill.
+    strokePath: randomFloor(8) === 1 // 1/8 chance for a stroke instead of a fill.
   };
 };
 
