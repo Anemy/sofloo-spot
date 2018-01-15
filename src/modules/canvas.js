@@ -307,7 +307,6 @@ export default (state = initialState, action) => {
     case SET_SVG_REF:
       return {
         ...state,
-        svgCode: action.svgRef.outerHTML,
         svgRef: action.svgRef
       }
 

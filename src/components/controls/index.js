@@ -18,11 +18,12 @@ const buttonLabelColor = '#333';
 
 class Controls extends Component {
   state = {
-    showSVGCode: false
+    showSVGCode: false,
+    svgCode: 'The svg has not yet loaded or an error has occured.'
   };
 
   showSVGCodePopup() {
-    const { svgCode } = this.props;
+    const { svgCode } = this.state;
 
     return (
       <div className="concentric-js-svg-popup-container">
@@ -54,7 +55,15 @@ class Controls extends Component {
   }
 
   toggleShowSVGCode = () => {
-    this.setState({showSVGCode: !this.state.showSVGCode});
+    const newState = {
+      showSVGCode: !this.state.showSVGCode
+    };
+
+    if (!this.state.showSVGCode) {
+      newState.svgCode = this.props.svgRef.outerHTML;
+    }
+
+    this.setState(newState);
   }
 
   render() {

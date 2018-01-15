@@ -15,7 +15,7 @@ const mapStateToProps = state => ({
   // TODO: This looks bad.
   randomizeButtonBackgroundColor: createColorString(state.canvas.present.colors[state.canvas.present.colors.length - 1]),
   randomizeButtonLabelColor: getContrastingBinaryColor(state.canvas.present.colors[state.canvas.present.colors.length - 1]),
-  svgCode: state.canvas.svgCode
+  svgRef: state.canvas.svgRef
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
