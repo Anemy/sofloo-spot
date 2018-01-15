@@ -1,5 +1,5 @@
 .concentric-js-controls-container {
-  position: absolute;
+  position: fixed;
   right: 16px;
   top: 12px;
 }
@@ -9,12 +9,72 @@
 }
 
 .concentric-js-history-forward-button {
-  /* position: fixed;
-  top: 4px;
-  left: 4px; */
   margin-left: 8px;
 }
 
 .concentric-js-controls-history {
   margin-top: 8px;
+}
+
+.concentric-js-show-svg-code-button {
+  bottom: 12px;
+  position: fixed;
+  right: 16px;
+}
+
+.concentric-js-svg-popup-container {
+  left: 0;
+  position: fixed;
+  text-align: center;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+}
+
+.concentric-js-svg-popup-background {
+  background-color: rgba(0, 0, 0, 0.3);
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: -1;
+}
+
+.concentric-js-svg-popup-modal {
+  background-color: #EEE;
+  color: #333;
+  margin: auto;
+  margin-top: 10%;
+  position: relative;
+  width: 60%;
+}
+
+.concentric-js-svg-popup-top-area {
+  background-color: #FAFAFA;
+  padding: 8px 16px;
+  text-align: left;
+}
+
+.concentric-js-svg-popup-top-area h2 {
+  font-size: 24px;
+  margin: 0;
+  padding: 0;
+}
+
+.concentric-js-svg-popup-close-button {
+  position: absolute !important;
+  top: 0px;
+  right: 0px;
+}
+
+.concentric-js-svg-popup-body {
+  padding: 20px;
+}
+
+.concentric-js-svg-popup-textarea {
+  box-sizing: border-box;
+  min-height: 80px;
+  padding: 8px;
+  width: 100%;
 }

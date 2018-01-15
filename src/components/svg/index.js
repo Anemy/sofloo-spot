@@ -22,6 +22,7 @@ import Path from '../path';
 // - inset shadows in canvas
 // - inset shadows in svg
 // - draw circle with bezier curves
+// - prog gen art
 
 class SVG extends Component {
   componentDidMount() {
@@ -286,7 +287,7 @@ class SVG extends Component {
       <svg
         className="visual-container"
         height={height}
-        ref={ref => {this.svgRef = ref;}}
+        ref={ref => { this.svgRef = ref; }}
         width={width}
       >
         {this.buildSVGCircles()}

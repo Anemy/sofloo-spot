@@ -28,7 +28,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  setSvgRef: () => setSvgRef()
+  setSvgRef: ref => setSvgRef(ref)
 }, dispatch);
 
 export default connect(
