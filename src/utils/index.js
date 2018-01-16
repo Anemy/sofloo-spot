@@ -1,4 +1,5 @@
 export * from './color';
+export * from './steps';
 
 export const floorRandom = max => Math.floor(Math.random() * max);
 
@@ -53,8 +54,6 @@ export const buildBezierControlPointsForCircleAt = (radius, x1, y1, x2, y2) => {
     let cp1xAngle = Math.atan2(zeroedCP1Y, zeroedCP1X);
     let cp2xAngle = Math.atan2(zeroedCP2Y, zeroedCP2X);
 
-    // TODO: We might have to normalize the negative degree created from ^
-
     cp1xAngle += startAngle + halfOfAngle;
     cp2xAngle += startAngle + halfOfAngle;
 
@@ -71,47 +70,16 @@ export const buildBezierControlPointsForCircleAt = (radius, x1, y1, x2, y2) => {
     }];
 }
 
-export const createStartPoint = (radius, rotate, deviation) => {
-  const startAngle = rotate;
+// if (circleBase) {
+//   const cp = buildBezierControlPointsForCircleAt(radius, startx, starty, stopx, stopy);
 
-  const startx = Math.cos(startAngle) * radius + deviation.x;
-  const starty = Math.sin(startAngle) * radius + deviation.y;
-
-  return {
-    x: startx,
-    y: starty
-  }
-}
-
-export const createPathPoint = (radius, point, points, rotate, circleBase, previousDeviation, deviation, firstDeviation) => {
-  const startAngle = 2 * Math.PI * (point / points) + rotate;
-  const stopAngle = 2 * Math.PI * ((point + 1) / points) + rotate;
-
-  const startx = (Math.cos(startAngle) * radius) + previousDeviation.x || 0;
-  const starty = (Math.sin(startAngle) * radius) + previousDeviation.y || 0;
-
-  const isLastPoint = point === points - 1;
-
-  const stopx = (Math.cos(stopAngle) * radius) + (isLastPoint ? firstDeviation.x : deviation.x);
-  const stopy = (Math.sin(stopAngle) * radius) + (isLastPoint ? firstDeviation.y : deviation.y);
-
-  if (circleBase) {
-    const cp = buildBezierControlPointsForCircleAt(radius, startx, starty, stopx, stopy);
-
-    return {
-      type: 'C',
-      cp: cp,
-      x: stopx,
-      y: stopy
-    };
-  } else {
-    return {
-      type: 'L',
-      x: stopx,
-      y: stopy
-    }
-  }
-};
+//   return {
+//     type: 'C',
+//     cp: cp,
+//     x: stopx,
+//     y: stopy
+//   };
+// } 
 
 export const pointInPolyon = (point, vs) => {
   // ray-casting algorithm based on

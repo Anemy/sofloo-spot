@@ -9,6 +9,8 @@ import React, { Component } from 'react';
 
 import './index.css';
 
+import SvgControls from '../../containers/svg-controls';
+
 // symshapes.com
 // progenart.com
 // procgenart.com
@@ -19,6 +21,7 @@ const buttonLabelColor = '#333';
 class Controls extends Component {
   state = {
     showSVGCode: false,
+    showSVGControls: false,
     svgCode: 'The svg has not yet loaded or an error has occured.'
   };
 
@@ -75,7 +78,7 @@ class Controls extends Component {
       randomizeVizual
     } = this.props;
 
-    const { showSVGCode } = this.state;
+    const { showSVGCode, showSVGControls } = this.state;
     
     return (
       <MuiThemeProvider>
@@ -111,6 +114,7 @@ class Controls extends Component {
             label="Show Svg Code"
             labelColor={buttonLabelColor}
           />
+          {showSVGControls && <SvgControls />}
         </div>
       </MuiThemeProvider>
     );

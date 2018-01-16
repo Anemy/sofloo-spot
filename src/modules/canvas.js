@@ -1,4 +1,5 @@
 import {
+  buildSteps,
   createColorString,
   createRandomColors,
   createRandomSeed,
@@ -10,6 +11,8 @@ export const RANDOMIZE = 'svg/RANDOMIZE';
 export const SET_SVG_REF = 'svg/SET_SVG_REF';
 export const HISTORY_BACK = 'svg/HISTORY_BACK';
 export const HISTORY_FORWARD = 'svg/HISTORY_FORWARD';
+export const UPDATE_BACKGROUND = 'svg/UPDATE_BACKGROUND';
+export const UPDATE_SVG = 'svg/UPDATE_SVG';
 
 // colors https://github.com/arcticicestudio/nord
 
@@ -112,7 +115,7 @@ const maxHistoryLength = 100;
 
 const startColors = whiteToBlack;
 
-const heightOfHeader = 80;
+const heightOfHeader = 0; // 80;
 
 const minHeight = 200;
 const minWidth = 200;
@@ -120,46 +123,50 @@ const minWidth = 200;
 const height = Math.max(Math.floor(window.innerHeight - heightOfHeader), minHeight);
 const width = Math.max(Math.floor(window.innerWidth), minWidth);
 
+const initialSVGConfig = {
+  amountOfSteps: 8,
+  applyShadowOnTopStep: true, // TODO TODO
+  centerX: width / 2,
+  centerY: height / 2,
+  colors: startColors,
+  innerRadius: 0,
+  pointDeviationMaxX: randomFloor(50),
+  pointDeviationMaxY: randomFloor(50),
+  points: 3 + randomFloor(6),
+  previousPointDeviationInfluence: false,
+  randomSeed: createRandomSeed(),
+  rotateEachStep: randomFloorNegate(Math.PI),
+  rotation: Math.PI / 8,
+  shadowBlur: 0,// 0.4,
+  shadowColor: `rgba(${0}, ${0}, ${0}, ${1})`,
+  shadowId: 'svg-shadow',
+  shadowInset: true,
+  shadowOffsetX: 0,
+  shadowOffsetY: 10,
+  shadowOpacity: 1,
+  stepLength: 30,
+  stepCenterDeviationX: randomFloorNegate(30),
+  stepCenterDeviationY: randomFloorNegate(30),
+  strokePath: false
+};
+
 const initialState = {
   height,
   history: [],
   future: [],
   present: {
-    applyShadowOnTopStep: true,
-    centerX: width / 2,
-    centerY: height / 2,
-    colors: startColors,
-    innerRadius: 0,
-    pointDeviationMaxX: randomFloor(50),
-    pointDeviationMaxY: randomFloor(50),
-    points: 3 + randomFloor(6),
-    previousPointDeviationInfluence: false,
-    randomSeed: createRandomSeed(),
-    rotateEachStep: randomFloorNegate(Math.PI),
-    rotation: Math.PI / 8,
-    shadowBlur: 0,// 0.4,
-    shadowColor: `rgba(${0}, ${0}, ${0}, ${1})`,
-    shadowId: 'svg-shadow',
-    shadowInset: true,
-    shadowOffsetX: 0,
-    shadowOffsetY: 10,
-    shadowOpacity: 1,
-    stepLength: 30,
-    steps: 8,
-    stepCenterDeviationX: randomFloorNegate(30),
-    stepCenterDeviationY: randomFloorNegate(30),
-    strokePath: false
+    ...initialSVGConfig,
+    steps: buildSteps(initialSVGConfig)
   },
-  svgCode: 'The svg has not yet loaded or an error has occured.',
   svgRef: null,
   width
   // ...logo
 };
 
-const getRandomState = () => {
+const getRandomSVGConfig = () => {
   const maxPoints = 1000;
-  const points = 3 + randomFloor(randomFloor(3) === 1 ? maxPoints : 7); // 1 / 5 chance for possibly many points.
-  const steps = 2 + randomFloor(40);
+  const points = 3 + randomFloor(randomFloor(3) === 1 ? maxPoints : 9); // 1 / 5 chance for possibly many points.
+  const amountOfSteps = 2 + randomFloor(40);
 
   const maxColorRandom = {
     r: 255,
@@ -173,13 +180,13 @@ const getRandomState = () => {
   };
 
   // 1/10 random colors, else nice gradient.
-  const amountOfColors = randomFloor(10) === 1 ? steps : 1 + randomFloor(5);
+  const amountOfColors = randomFloor(10) === 1 ? amountOfSteps : 1 + randomFloor(5);
   
   const stepCenterMaxDeviationX = randomFloor(4) === 1 ? 0 : 30;
   const stepCenterMaxDeviationY = randomFloor(4) === 1 ? 0 : 30;
 
   // 1 / 2 chance for no deviation.
-  const maxPointDeviation = randomFloor(3) === 1 ? 0 : 50 - (maxPoints / 25);
+  const maxPointDeviation = randomFloor(3) === 1 ? 0 : 200 - (maxPoints / 7.5);
 
   const blackBasedShadow = randomFloor(2) === 1;
   const shadowColor = blackBasedShadow ? `rgba(${0}, ${0}, ${0}, ${1})` : createColorString(createRandomColor());
@@ -188,6 +195,7 @@ const getRandomState = () => {
   // Open street map for data.
 
   return {
+    amountOfSteps,
     applyShadowOnTopStep: floorRandom(2) === 0,
     colors: createRandomColors(amountOfColors, randomColorOptions),
     innerRadius: randomFloor(window.innerHeight / 8),
@@ -208,7 +216,6 @@ const getRandomState = () => {
     stepCenterDeviationX: randomFloorNegate(stepCenterMaxDeviationX),
     stepCenterDeviationY: randomFloorNegate(stepCenterMaxDeviationY),
     stepLength: 2 + randomFloor(10),
-    steps,
     strokePath: randomFloor(8) === 1 // 1/8 chance for a stroke instead of a fill.
   };
 };
@@ -295,8 +302,10 @@ export default (state = initialState, action) => {
 
       newState.present = {
         ...state.present,
-        ...getRandomState()
+        ...getRandomSVGConfig()
       };
+
+      newState.present.steps = buildSteps(newState.present);
 
       if (newState.history.length > maxHistoryLength) {
         newState.history.pop();
@@ -326,4 +335,14 @@ export const historyBack = () => ({
 
 export const historyForward = () => ({
   type: HISTORY_FORWARD
+});
+
+export const updateBackground = newBackground => ({
+  newBackground,
+  type: UPDATE_BACKGROUND
+});
+
+export const updateVisual = update => ({
+  update,
+  type: UPDATE_SVG
 });
