@@ -123,7 +123,7 @@ export const buildSteps = ({
 
         // Come back to the origin when we're past the half point.
         // This prevents it making a sharp edge back to the starting location when it goes full circle.
-        if (i > points - (points / 2)) {
+        if (i > points - (points / 4)) {
           if (Math.abs(pointDeviationMaxX) > 0 && 
             ((pointDeviationX < 0 && previousDeviation.x > 0) || (pointDeviationX > 0 && previousDeviation.x < 0)))
           {

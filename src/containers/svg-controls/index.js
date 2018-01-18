@@ -11,8 +11,11 @@ import SVGControls from '../../components/svg-controls';
 import { createColorString, getContrastingBinaryColor } from '../../utils';
 
 const mapStateToProps = state => ({
+  backgroundColor: state.canvas.present.backgroundColor,
   primarySVGColor: createColorString(state.canvas.present.colors[state.canvas.present.colors.length - 1]),
   contrastPrimarySVGColor: getContrastingBinaryColor(state.canvas.present.colors[state.canvas.present.colors.length - 1]),
+  radialBackground: state.canvas.present.radialBackground,
+  radialBackgroundColor: state.canvas.present.radialBackgroundColor,
   svgRef: state.canvas.svgRef
 });
 

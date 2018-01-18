@@ -12,7 +12,13 @@ const Home = props => (
       <Link to="/">Home</Link>
       <Link to="/about">About</Link>
     </header> */}
-    <div className="concentric-js-home-background" />
+    <div
+      className="concentric-js-home-background"
+      style={{
+        background: props.radialBackground ?
+          `radial-gradient(${props.radialBackgroundColor}, ${props.backgroundColor})` : props.backgroundColor
+      }}
+    />
     {/* <div className="concentric-js-dotted-background" /> */}
 
     {/* <div className="concentric-js-home-header">

@@ -126,6 +126,7 @@ const width = Math.max(Math.floor(window.innerWidth), minWidth);
 const initialSVGConfig = {
   amountOfSteps: 8,
   applyShadowOnTopStep: true, // TODO TODO
+  backgroundColor: `#FAFAFA`,
   centerX: width / 2,
   centerY: height / 2,
   colors: startColors,
@@ -134,6 +135,8 @@ const initialSVGConfig = {
   pointDeviationMaxY: randomFloor(50),
   points: 3 + randomFloor(6),
   previousPointDeviationInfluence: false,
+  radialBackground: false,
+  radialBackgroundColor: `#333`,
   randomSeed: createRandomSeed(),
   rotateEachStep: randomFloorNegate(Math.PI),
   rotation: Math.PI / 8,
@@ -318,6 +321,18 @@ export default (state = initialState, action) => {
         ...state,
         svgRef: action.svgRef
       }
+
+    case UPDATE_BACKGROUND:
+      const theNewState = {
+        ...state
+      };
+
+      theNewState.present = {
+        ...theNewState.present,
+        ...action.newBackground
+      }
+
+      return theNewState;
 
     default:
       return state;

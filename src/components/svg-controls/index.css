@@ -1,0 +1,15 @@
+.concentric-js-svg-controls {
+  background-color: white;
+  bottom: 0;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  left: 0;
+  padding: 10px;
+  position: absolute;
+  right: 0;
+  text-align: left;
+  top: 0;
+}
+
+.concentric-js-svg-controls-list-nested-item {
+  margin-left: 15px;
+}

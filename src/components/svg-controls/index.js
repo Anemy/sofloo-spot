@@ -1,11 +1,9 @@
-import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
-import ArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
-import Close from 'material-ui/svg-icons/navigation/close';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import IconButton from 'material-ui/IconButton';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import RaisedButton from 'material-ui/RaisedButton';
+import Divider from 'material-ui/Divider';
+import { List, ListItem } from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
+import Toggle from 'material-ui/Toggle';
 import React, { Component } from 'react';
+import { CompactPicker } from 'react-color';
 
 import './index.css';
 
@@ -17,23 +15,77 @@ const buttonBackgroundColor = '#FAFAFA';
 const buttonLabelColor = '#333';
 
 class SvgControls extends Component {
+  setBackgroundColor = color => {
+    this.props.updateBackground({
+      backgroundColor: color.hex
+    });
+  }
+  
+  setRadialBackgroundColor = color => {
+    this.props.updateBackground({
+      radialBackgroundColor: color.hex
+    });
+  }
+
+  toggleRadialBackground = () => {
+    this.props.updateBackground({
+      radialBackground: !this.props.radialBackground
+    });
+  }
+
   render() {
     const {
+      backgroundColor,
       contrastPrimarySVGColor,
-      primarySVGColor
+      primarySVGColor,
+      radialBackground,
+      radialBackgroundColor
     } = this.props;
-    
+
     return (
-      <MuiThemeProvider>
-        <div className="concentric-js-svg-controls-container">
-          <RaisedButton
-            backgroundColor={primarySVGColor}
-            // onClick={() => randomizeVizual()}
-            label="nice"
-            labelColor={contrastPrimarySVGColor}
+      <div className="concentric-js-svg-controls">
+        <List>
+          <Subheader>Controls</Subheader>
+          {/* <ListItem primaryText="Some option" /> */}
+          <ListItem
+            primaryText="Background"
+            initiallyOpen={true}
+            primaryTogglesNestedList={true}
+            nestedItems={[
+              <div
+                className="concentric-js-svg-controls-list-nested-item"
+                key={1}
+              >
+                <CompactPicker
+                  color={backgroundColor}
+                  onChange={this.setBackgroundColor}
+                />
+              </div>,
+              <ListItem
+                key={2}
+                primaryText="Radial Background"
+                rightToggle={<Toggle
+                  onToggle={this.toggleRadialBackground}
+                  toggled={radialBackground}
+                />}
+              />,
+              <div
+                className="concentric-js-svg-controls-list-nested-item"
+                key={3}
+              >
+                <CompactPicker
+                  color={radialBackgroundColor}
+                  onChange={this.setRadialBackgroundColor}
+                />
+              </div>
+            ]}
           />
-        </div>
-      </MuiThemeProvider>
+        </List>
+        {/* <Divider />
+        <List>
+          <ListItem primaryText="Another option" />
+        </List> */}
+      </div>
     );
   }
 }

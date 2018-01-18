@@ -3,6 +3,7 @@ import ArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
 import Close from 'material-ui/svg-icons/navigation/close';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import IconButton from 'material-ui/IconButton';
+import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import RaisedButton from 'material-ui/RaisedButton';
 import React, { Component } from 'react';
@@ -69,6 +70,12 @@ class Controls extends Component {
     this.setState(newState);
   }
 
+  toggleShowSVGControls = () => {
+    this.setState({
+      showSVGControls: !this.state.showSVGControls
+    });
+  }
+
   render() {
     const {
       historyBack,
@@ -82,9 +89,21 @@ class Controls extends Component {
     
     return (
       <MuiThemeProvider>
-        <div className="concentric-js-controls-container">
+        <div
+          className={'concentric-js-controls-container' + (showSVGControls ? ' concentric-js-controls-container-active' : '')}
+        >
           {showSVGCode && this.showSVGCodePopup()}
+          <div>
+            <FloatingActionButton
+              backgroundColor={buttonBackgroundColor}
+              mini
+              onClick={() => this.toggleShowSVGControls()}
+            >
+              <MenuIcon style={{fill: buttonLabelColor}} />
+            </FloatingActionButton>
+          </div>
           <RaisedButton
+            className="concentric-js-controls-randomize-button"
             backgroundColor={randomizeButtonBackgroundColor}
             onClick={() => randomizeVizual()}
             label="Randomize"
@@ -114,7 +133,11 @@ class Controls extends Component {
             label="Show Svg Code"
             labelColor={buttonLabelColor}
           />
-          {showSVGControls && <SvgControls />}
+          {showSVGControls && 
+            <div className="concentric-js-svg-controls-container">
+              <SvgControls />
+            </div>
+          }
         </div>
       </MuiThemeProvider>
     );
