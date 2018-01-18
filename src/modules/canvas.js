@@ -140,6 +140,7 @@ const initialSVGConfig = {
   randomSeed: createRandomSeed(),
   rotateEachStep: randomFloorNegate(Math.PI),
   rotation: Math.PI / 8,
+  shapes: 1,
   shadowBlur: 0,// 0.4,
   shadowColor: `rgba(${0}, ${0}, ${0}, ${1})`,
   shadowId: 'svg-shadow',
@@ -169,7 +170,7 @@ const initialState = {
 const getRandomSVGConfig = () => {
   const maxPoints = 1000;
   const points = 3 + randomFloor(randomFloor(3) === 1 ? maxPoints : 9); // 1 / 5 chance for possibly many points.
-  const amountOfSteps = 2 + randomFloor(40);
+  const amountOfSteps = 2 + randomFloor(100);
 
   const maxColorRandom = {
     r: 255,
@@ -189,7 +190,7 @@ const getRandomSVGConfig = () => {
   const stepCenterMaxDeviationY = randomFloor(4) === 1 ? 0 : 30;
 
   // 1 / 2 chance for no deviation.
-  const maxPointDeviation = randomFloor(3) === 1 ? 0 : 200 - (maxPoints / 7.5);
+  const maxPointDeviation = randomFloor(3) === 1 ? 0 : Math.max(60 - (points / 30), 0);
 
   const blackBasedShadow = randomFloor(2) === 1;
   const shadowColor = blackBasedShadow ? `rgba(${0}, ${0}, ${0}, ${1})` : createColorString(createRandomColor());
@@ -209,6 +210,7 @@ const getRandomSVGConfig = () => {
     randomSeed: createRandomSeed(),
     rotateEachStep: randomFloorNegate(Math.PI),
     rotation: randomFloor(Math.PI * 2),
+    shapes: 1 + randomFloor(5),
     shadowBlur: randomFloor(5),
     shadowColor,
     shadowId: 'svg-shadow',
@@ -216,9 +218,10 @@ const getRandomSVGConfig = () => {
     shadowOffsetX: randomFloorNegate(10),
     shadowOffsetY: randomFloorNegate(20),
     shadowOpacity: Math.random().toFixed(4),
+    sharedPointDeviation: floorRandom(2) === 1,
     stepCenterDeviationX: randomFloorNegate(stepCenterMaxDeviationX),
     stepCenterDeviationY: randomFloorNegate(stepCenterMaxDeviationY),
-    stepLength: 2 + randomFloor(10),
+    stepLength: 2 + randomFloor((Math.min(height, width) / 3) / amountOfSteps),
     strokePath: randomFloor(8) === 1 // 1/8 chance for a stroke instead of a fill.
   };
 };

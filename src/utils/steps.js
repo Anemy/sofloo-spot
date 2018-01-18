@@ -77,6 +77,7 @@ export const buildSteps = ({
   previousPointDeviationInfluence,
   rotateEachStep,
   rotation,
+  sharedPointDeviation,
   stepCenterDeviationX,
   stepCenterDeviationY,
   stepLength
@@ -88,6 +89,8 @@ export const buildSteps = ({
   let clippingFilterPoints = ClipperLib.Paths();
 
   let futureElementsAreHidden = false;
+
+  const pointDeviations = [];
 
   const buildStep = (x, y, step) => {
     const radius = (step + 1) * stepLength + innerRadius;
@@ -144,22 +147,40 @@ export const buildSteps = ({
         // TODO: Undeviate more on the last couple points.
       }
 
+      if (sharedPointDeviation && isFirstStep) {
+        pointDeviations.push(deviation);
+      }
+
       if (i === 0) {
         firstDeviation.x = deviation.x;
         firstDeviation.y = deviation.y;
 
-        pathPoints.push(createStartPoint(radius, rotate, deviation));
+        pathPoints.push(createStartPoint(radius, rotate, sharedPointDeviation ? pointDeviations[0] : deviation));
       }
-
-      pathPoints.push(createPathPoint(
-        radius,
-        i,
-        points,
-        rotate,
-        previousDeviation,
-        deviation,
-        firstDeviation
-      ));
+      
+      if (sharedPointDeviation) {
+        pathPoints.push(createPathPoint(
+          radius,
+          i,
+          points,
+          rotate,
+          isFirstStep && i === 0 ? {} : pointDeviations[i - 1],
+          pointDeviations[i],
+          pointDeviations[0]
+        ));
+      }
+      
+      if (!sharedPointDeviation) {
+        pathPoints.push(createPathPoint(
+          radius,
+          i,
+          points,
+          rotate,
+          previousDeviation,
+          deviation,
+          firstDeviation
+        ));
+      }
 
       previousDeviation.x = deviation.x;
       previousDeviation.y = deviation.y;
