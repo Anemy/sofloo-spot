@@ -149,6 +149,8 @@ const initialSVGConfig = {
   shadowOffsetY: 10,
   shadowOpacity: 1,
   stepLength: 30,
+  stepLengthDropOff: (Math.random() * 2) - 1,
+  stepCenterDeviationDropOff: 1,// (Math.random() * 2) - 1,
   stepCenterDeviationX: randomFloorNegate(30),
   stepCenterDeviationY: randomFloorNegate(30),
   strokePath: false
@@ -170,7 +172,9 @@ const initialState = {
 const getRandomSVGConfig = () => {
   const maxPoints = 1000;
   const points = 3 + randomFloor(randomFloor(3) === 1 ? maxPoints : 9); // 1 / 5 chance for possibly many points.
-  const amountOfSteps = 2 + randomFloor(100);
+  const amountOfSteps = 2 + (100 - Math.pow(100, Math.random()));
+
+  console.log('amount of steps:', amountOfSteps);
 
   const maxColorRandom = {
     r: 255,
@@ -221,7 +225,9 @@ const getRandomSVGConfig = () => {
     sharedPointDeviation: floorRandom(2) === 1,
     stepCenterDeviationX: randomFloorNegate(stepCenterMaxDeviationX),
     stepCenterDeviationY: randomFloorNegate(stepCenterMaxDeviationY),
+    stepCenterDeviationDropOff: 1, // (Math.random() * 2) - 1,
     stepLength: 2 + randomFloor((Math.min(height, width) / 3) / amountOfSteps),
+    stepLengthDropOff: (Math.random() * 2),
     strokePath: randomFloor(8) === 1 // 1/8 chance for a stroke instead of a fill.
   };
 };

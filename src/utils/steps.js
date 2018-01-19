@@ -1,10 +1,10 @@
 import { getStepColor } from './color';
 
-const createStartPoint = (radius, rotate, deviation) => {
+const createStartPoint = (radius, rotate, deviation, dropOffAmount) => {
   const startAngle = rotate;
 
-  const startx = Math.cos(startAngle) * radius + deviation.x;
-  const starty = Math.sin(startAngle) * radius + deviation.y;
+  const startx = Math.cos(startAngle) * radius + deviation.x * dropOffAmount;
+  const starty = Math.sin(startAngle) * radius + deviation.y * dropOffAmount;
 
   return {
     x: startx,
@@ -12,13 +12,13 @@ const createStartPoint = (radius, rotate, deviation) => {
   }
 }
 
-const createPathPoint = (radius, point, points, rotate, previousDeviation, deviation, firstDeviation) => {
+const createPathPoint = (radius, point, points, rotate, deviation, firstDeviation, dropOffAmount) => {
   const stopAngle = 2 * Math.PI * ((point + 1) / points) + rotate;
 
   const isLastPoint = point === points - 1;
 
-  const stopx = (Math.cos(stopAngle) * radius) + (isLastPoint ? firstDeviation.x : deviation.x);
-  const stopy = (Math.sin(stopAngle) * radius) + (isLastPoint ? firstDeviation.y : deviation.y);
+  const stopx = (Math.cos(stopAngle) * radius) + (isLastPoint ? firstDeviation.x * dropOffAmount : deviation.x * dropOffAmount);
+  const stopy = (Math.sin(stopAngle) * radius) + (isLastPoint ? firstDeviation.y * dropOffAmount : deviation.y * dropOffAmount);
 
   return {
     type: 'L',
@@ -57,7 +57,6 @@ const getXYPointsfromxyPoints = points => {
 //   return newPoints;
 // };
 
-
 // Returns an array of all of the steps.
 // Where a step is an object with the properties:
 // clipPoints
@@ -78,9 +77,11 @@ export const buildSteps = ({
   rotateEachStep,
   rotation,
   sharedPointDeviation,
+  stepCenterDeviationDropOff,
   stepCenterDeviationX,
   stepCenterDeviationY,
-  stepLength
+  stepLength,
+  stepLengthDropOff
 }) => {
   const steps = [];
 
@@ -93,7 +94,10 @@ export const buildSteps = ({
   const pointDeviations = [];
 
   const buildStep = (x, y, step) => {
-    const radius = (step + 1) * stepLength + innerRadius;
+    const thisStepLengthDropoff = 1 - (((amountOfSteps - step) / amountOfSteps) * stepLengthDropOff);
+    const thisStepLength = stepLength * thisStepLengthDropoff;
+
+    const radius = (step + 1) * thisStepLength + innerRadius;
 
     const isFirstStep = step === amountOfSteps - 1;
 
@@ -110,6 +114,8 @@ export const buildSteps = ({
     };
 
     const rotate = rotateEachStep * step + rotation;
+
+    const stepCenterDeviationDropOffAmount = 1 - (((amountOfSteps - step) / amountOfSteps) * stepCenterDeviationDropOff);
 
     for (let i = 0; i < points; i++) {
       const pointDeviationX = Math.random() * pointDeviationMaxX - Math.random() * pointDeviationMaxX;
@@ -155,7 +161,7 @@ export const buildSteps = ({
         firstDeviation.x = deviation.x;
         firstDeviation.y = deviation.y;
 
-        pathPoints.push(createStartPoint(radius, rotate, sharedPointDeviation ? pointDeviations[0] : deviation));
+        pathPoints.push(createStartPoint(radius, rotate, sharedPointDeviation ? pointDeviations[0] : deviation, stepCenterDeviationDropOffAmount));
       }
       
       if (sharedPointDeviation) {
@@ -164,9 +170,9 @@ export const buildSteps = ({
           i,
           points,
           rotate,
-          isFirstStep && i === 0 ? {} : pointDeviations[i - 1],
           pointDeviations[i],
-          pointDeviations[0]
+          pointDeviations[0],
+          stepCenterDeviationDropOffAmount
         ));
       }
       
@@ -176,9 +182,9 @@ export const buildSteps = ({
           i,
           points,
           rotate,
-          previousDeviation,
           deviation,
-          firstDeviation
+          firstDeviation,
+          stepCenterDeviationDropOffAmount
         ));
       }
 
