@@ -1,5 +1,13 @@
 import React from 'react';
 
+const getRandomColor = () => {
+  const r = Math.floor(Math.random()*255);
+  const g = Math.floor(Math.random()*255);
+  const b = Math.floor(Math.random()*255);
+
+  return 
+}
+
 const SvgShadow = props => (
   // <defs>
     <filter id={props.shadowId}>
@@ -10,7 +18,7 @@ const SvgShadow = props => (
       {/* Invert the drop shadow to create an inner shadow  */}
       <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result={props.shadowInset && "inverse"}/>
       {/* Color & Opacity */}
-      <feFlood floodColor={props.shadowColor} floodOpacity={props.shadowOpacity} result="color"/>
+      <feFlood floodColor={props.randomShadow ? getRandomColor() : props.shadowColor} floodOpacity={props.shadowOpacity} result="color"/>
       {/* Clip color inside shadow */}
       <feComposite operator="in" in="color" in2="inverse" result="shadow"/>
       {/* Shadow Opacity */}

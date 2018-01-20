@@ -138,6 +138,7 @@ const initialSVGConfig = {
   radialBackground: false,
   radialBackgroundColor: `#333`,
   randomSeed: createRandomSeed(),
+  randomShadow: false,
   rotateEachStep: randomFloorNegate(Math.PI),
   rotation: Math.PI / 8,
   shapes: 1,
@@ -172,24 +173,23 @@ const initialState = {
 const getRandomSVGConfig = () => {
   const maxPoints = 1000;
   const points = 3 + randomFloor(randomFloor(3) === 1 ? maxPoints : 9); // 1 / 5 chance for possibly many points.
-  const amountOfSteps = 2 + (100 - Math.pow(100, Math.random()));
-
-  console.log('amount of steps:', amountOfSteps);
+  const amountOfSteps = 2 + (100 - Math.floor(Math.pow(100, Math.random())));
 
   const maxColorRandom = {
-    r: 255,
-    g: 255,
-    b: 255,
+    r: randomFloor(12) === 1 ? 0 : 255,
+    g: randomFloor(12) === 1 ? 0 : 255,
+    b: randomFloor(12) === 1 ? 0 : 255,
     a: 1
   };
 
   const randomColorOptions = {
-    maxColorRandom
+    maxColorRandom,
+    blackAndWhite: randomFloor(20) === 1
   };
 
   // 1/10 random colors, else nice gradient.
   const amountOfColors = randomFloor(10) === 1 ? amountOfSteps : 1 + randomFloor(5);
-  
+
   const stepCenterMaxDeviationX = randomFloor(4) === 1 ? 0 : 30;
   const stepCenterMaxDeviationY = randomFloor(4) === 1 ? 0 : 30;
 
@@ -204,7 +204,7 @@ const getRandomSVGConfig = () => {
 
   return {
     amountOfSteps,
-    applyShadowOnTopStep: floorRandom(2) === 0,
+    applyShadowOnTopStep: true,
     colors: createRandomColors(amountOfColors, randomColorOptions),
     innerRadius: randomFloor(window.innerHeight / 8),
     pointDeviationMaxX: randomFloor(maxPointDeviation),
@@ -212,6 +212,7 @@ const getRandomSVGConfig = () => {
     points,
     previousPointDeviationInfluence: randomFloor(3) === 1, // 1 out of 3
     randomSeed: createRandomSeed(),
+    randomShadow: false, // true, // randomFloor(10) === 1,
     rotateEachStep: randomFloorNegate(Math.PI),
     rotation: randomFloor(Math.PI * 2),
     shapes: 1 + randomFloor(5),

@@ -34,6 +34,7 @@ export const createRandomColor = () => ({
 
 // Possible options and defaults:
 // - maxColorRandom - a color object used for giving a max random for each possible color.
+// - blackAndWhite
 export const createRandomColors = (amountOfColors, setOptions) => {
   const options = {
     maxColorRandom: {
@@ -48,10 +49,12 @@ export const createRandomColors = (amountOfColors, setOptions) => {
   const colors = [];
 
   for (let i = 0; i < amountOfColors; i++) {
+    const blackAndWhiteColor = options.blackAndWhite ? floorRandom(options.maxColorRandom.r) : 0;
+
     colors.push({
-      r: floorRandom(options.maxColorRandom.r),
-      g: floorRandom(options.maxColorRandom.g),
-      b: floorRandom(options.maxColorRandom.b),
+      r: options.blackAndWhite ? blackAndWhiteColor : floorRandom(options.maxColorRandom.r),
+      g: options.blackAndWhite ? blackAndWhiteColor : floorRandom(options.maxColorRandom.g),
+      b: options.blackAndWhite ? blackAndWhiteColor : floorRandom(options.maxColorRandom.b),
       a: options.maxColorRandom.a
     });
   }

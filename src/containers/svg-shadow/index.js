@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import SvgShadow from '../../components/svg-shadow';
 
 const mapStateToProps = state => ({
+  randomShadow: state.canvas.present.randomShadow,
   shadowBlur: state.canvas.present.shadowBlur,
   shadowColor: state.canvas.present.shadowColor,
   shadowId: state.canvas.present.shadowId,

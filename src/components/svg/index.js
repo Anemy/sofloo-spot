@@ -31,19 +31,28 @@ class SVG extends Component {
     const {
       applyShadowOnTopStep,
       amountOfSteps,
+      randomShadow,
       shadowId,
       steps,
       strokePath
     } = this.props;
 
     const stepComponenets = [];
-    const defs = [
-      <SvgShadow key="svg-shadow"/>
-    ];
+    const defs = [];
+
+    if (!randomShadow) {
+      console.log('random shadow', randomShadow);
+      defs.push(<SvgShadow key="svg-shadow"/>);
+    }
       
     _.each(steps, (step, index) => {
       const pathId = `step-${step.id}`;
       const clipId = `clip-${pathId}`;
+
+      if (randomShadow) {
+        console.log('new svg shadow')
+        defs.push(<SvgShadow key={`${shadowId}-${pathId}`} id={`${shadowId}-${pathId}`}/>);
+      }
 
       defs.push(
         <clipPath
@@ -71,7 +80,7 @@ class SVG extends Component {
           id={pathId}
           pathPoints={step.pathPoints}
           shadowPathPoints={shadow && strokePath ? step.pathPoints : step.clipPoints}
-          shadowId={shadow && shadowId}
+          shadowId={shadow && randomShadow ? `${shadowId}-${pathId}` : shadowId}
           shadowStyle={pathStyle}
           step={step}
           style={pathStyle}

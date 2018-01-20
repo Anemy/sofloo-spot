@@ -12,6 +12,7 @@ const mapStateToProps = state => ({
   centerX: state.canvas.present.centerX,
   centerY: state.canvas.present.centerY,
   height: state.canvas.height,
+  randomShadow: state.canvas.present.randomShadow,
   radialBackground: state.canvas.present.radialBackground,
   radialBackgroundColor: state.canvas.present.radialBackgroundColor,
   shadowId: state.canvas.present.shadowId,
