@@ -10,14 +10,22 @@ import SVGControls from '../../components/svg-controls';
 
 import { createColorString, getContrastingBinaryColor } from '../../utils';
 
-const mapStateToProps = state => ({
-  backgroundColor: state.canvas.present.backgroundColor,
-  primarySVGColor: createColorString(state.canvas.present.colors[state.canvas.present.colors.length - 1]),
-  contrastPrimarySVGColor: getContrastingBinaryColor(state.canvas.present.colors[state.canvas.present.colors.length - 1]),
-  radialBackground: state.canvas.present.radialBackground,
-  radialBackgroundColor: state.canvas.present.radialBackgroundColor,
-  svgRef: state.canvas.svgRef
-});
+const mapStateToProps = state => {
+  const layout = state.canvas.present;
+
+  const shape = layout.shapes[0];
+
+  const shapeOuterColor = shape.colors[shape.colors.length - 1];
+
+  return {
+    backgroundColor: layout.backgroundColor,
+    primarySVGColor: createColorString(shapeOuterColor),
+    contrastPrimarySVGColor: getContrastingBinaryColor(shapeOuterColor),
+    radialBackground: layout.radialBackground,
+    radialBackgroundColor: layout.radialBackgroundColor,
+    svgRef: state.canvas.svgRef
+  };
+};
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   updateBackground: newBackground => updateBackground(newBackground),

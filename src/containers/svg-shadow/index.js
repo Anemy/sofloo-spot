@@ -2,16 +2,20 @@ import { connect } from 'react-redux';
 
 import SvgShadow from '../../components/svg-shadow';
 
-const mapStateToProps = state => ({
-  randomShadow: state.canvas.present.randomShadow,
-  shadowBlur: state.canvas.present.shadowBlur,
-  shadowColor: state.canvas.present.shadowColor,
-  shadowId: state.canvas.present.shadowId,
-  shadowInset: state.canvas.present.shadowInset,
-  shadowOffsetX: state.canvas.present.shadowOffsetX,
-  shadowOffsetY: state.canvas.present.shadowOffsetY,
-  shadowOpacity: state.canvas.present.shadowOpacity
-});
+const mapStateToProps = state => {
+  const layout = state.canvas.present;
+  const shape = layout.shapes[0];
+
+  return {
+    randomShadow: shape.randomShadow,
+    shadowBlur: shape.shadowBlur,
+    shadowColor: shape.shadowColor,
+    shadowInset: shape.shadowInset,
+    shadowOffsetX: shape.shadowOffsetX,
+    shadowOffsetY: shape.shadowOffsetY,
+    shadowOpacity: shape.shadowOpacity
+  }
+};
 
 export default connect(
   mapStateToProps, 

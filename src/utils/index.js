@@ -2,6 +2,7 @@ export * from './color';
 export * from './steps';
 
 export const floorRandom = max => Math.floor(Math.random() * max);
+export const floorRandomNegate = range => Math.floor(Math.random() * range) - Math.floor(Math.random() * range); 
 
 const defaultSeedRange = 5000;
 export const createRandomSeed = (range, existingSeed) => {

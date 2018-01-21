@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import { getStepColor } from './color';
 
 const createStartPoint = (radius, rotate, deviation, dropOffAmount) => {
@@ -266,13 +268,16 @@ export const buildSteps = ({
     });
   };
 
+  const toStep = [];
   for (let i = amountOfSteps - 1; i >= 0; i--) {
-    if (futureElementsAreHidden) {
-      break;
-    }
-
-    buildStep(centerX + (amountOfSteps - i) * stepCenterDeviationX, centerY + (amountOfSteps - i) * stepCenterDeviationY, i);
+    toStep.push(i);
   }
+
+  _.every(toStep, step => {
+    buildStep(centerX + (amountOfSteps - step) * stepCenterDeviationX, centerY + (amountOfSteps - step) * stepCenterDeviationY, step);
+    
+    return !futureElementsAreHidden;
+  });
 
   return steps;
 }

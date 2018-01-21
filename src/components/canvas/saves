@@ -650,3 +650,87 @@ transition();
       circles
     ];
   }
+
+
+
+
+
+
+  // renderSteps() {
+  //   const {
+  //     amountOfSteps,
+  //     randomShadow,
+  //     steps,
+  //     strokePath
+  //   } = this.props;
+
+  //   const stepComponenets = [];
+  //   const defs = [];
+
+  //   const shadowId = 'svg-shadow';
+
+  //   if (!randomShadow) {
+  //     console.log('random shadow', randomShadow);
+  //     defs.push(
+  //       <SvgShadow
+  //         key="svg-shadow"
+  //         shadowId={shadowId}
+  //       />
+  //     );
+  //   }
+      
+  //   _.each(steps, (step, index) => {
+  //     const pathId = `step-${step.id}`;
+  //     const clipId = `clip-${pathId}`;
+
+  //     if (randomShadow) {
+  //       console.log('new svg shadow');
+  //       defs.push(
+  //         <SvgShadow
+  //           key={`${shadowId}-${pathId}`}
+  //           shadowId={shadowId}
+  //         />
+  //       );
+  //     }
+
+  //     defs.push(
+  //       <clipPath
+  //         id={clipId}
+  //         key={clipId}
+  //       >
+  //         <ClipPath
+  //           points={step.clipPoints}
+  //         />
+  //       </clipPath>
+  //     );
+
+  //     const hasShadow = true;
+
+  //     const pathStyle = {
+  //       fill: !strokePath ? step.color : 'none',
+  //       stroke: strokePath ? step.color : 'none',
+  //       strokeWidth: strokePath ? '1px' : '0px'
+  //     };
+
+  //     stepComponenets.push(
+  //       <Path
+  //         clipId={clipId}
+  //         key={pathId}
+  //         id={pathId}
+  //         pathPoints={step.pathPoints}
+  //         shadowPathPoints={hasShadow && (strokePath ? step.pathPoints : step.clipPoints)}
+  //         shadowId={hasShadow && (randomShadow ? `${shadowId}-${pathId}` : shadowId)}
+  //         shadowStyle={pathStyle}
+  //         step={step}
+  //         style={pathStyle}
+  //       />
+  //     );
+  //   });
+
+  //   return [
+  //     <defs key="svg-defs">
+  //       {defs}
+  //     </defs>,
+  //     stepComponenets
+  //   ];
+  // }

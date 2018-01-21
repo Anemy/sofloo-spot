@@ -5,21 +5,19 @@ import { setSvgRef } from '../../modules/canvas';
 
 import SVG from '../../components/svg';
 
-const mapStateToProps = state => ({
-  applyShadowOnTopStep: state.canvas.present.applyShadowOnTopStep,
-  amountOfSteps: state.canvas.amountOfSteps,
-  backgroundColor: state.canvas.present.backgroundColor,
-  centerX: state.canvas.present.centerX,
-  centerY: state.canvas.present.centerY,
-  height: state.canvas.height,
-  randomShadow: state.canvas.present.randomShadow,
-  radialBackground: state.canvas.present.radialBackground,
-  radialBackgroundColor: state.canvas.present.radialBackgroundColor,
-  shadowId: state.canvas.present.shadowId,
-  steps: state.canvas.present.steps,
-  strokePath: state.canvas.present.strokePath,
-  width: state.canvas.width
-});
+const mapStateToProps = state => {
+  const layout = state.canvas.present;
+  const shape = layout.shapes[0];
+
+  return {
+    backgroundColor: layout.backgroundColor,
+    height: layout.height,
+    radialBackground: layout.radialBackground,
+    radialBackgroundColor: layout.radialBackgroundColor,
+    shapes: layout.shapes,
+    width: layout.width
+  };
+};
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   setSvgRef: ref => setSvgRef(ref)

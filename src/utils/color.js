@@ -2,6 +2,8 @@ import { floorRandom } from "./index";
 
 // import { floorRandom } from "./index";
 
+// colors https://github.com/arcticicestudio/nord
+
 // Nice blue backgorund
 // rgb(162, 198, 221)
 

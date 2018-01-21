@@ -11,12 +11,23 @@ import Controls from '../../components/controls';
 
 import { createColorString, getContrastingBinaryColor } from '../../utils';
 
-const mapStateToProps = state => ({
-  // TODO: This looks bad.
-  randomizeButtonBackgroundColor: createColorString(state.canvas.present.colors[state.canvas.present.colors.length - 1]),
-  randomizeButtonLabelColor: getContrastingBinaryColor(state.canvas.present.colors[state.canvas.present.colors.length - 1]),
-  svgRef: state.canvas.svgRef
-});
+// const defaultButtonColor = {
+//   r: 0,
+//   g: 0,
+//   b: 0
+// };
+
+const mapStateToProps = state => {
+  const layout = state.canvas.present;
+  let outerColor = layout.shapes[0].colors[layout.shapes[0].colors.length - 1];
+
+  return {
+    // TODO: This looks bad.
+    randomizeButtonBackgroundColor: createColorString(outerColor),
+    randomizeButtonLabelColor: getContrastingBinaryColor(outerColor),
+    svgRef: state.canvas.svgRef
+  }
+};
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   historyBack: () => historyBack(),

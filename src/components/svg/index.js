@@ -1,15 +1,10 @@
-// import '../../utils/clipper';
-
 import _ from 'lodash';
-// import Bezier from 'bezier-js';
 import React, { Component } from 'react';
 
 import './index.css';
 
-import SvgShadow from '../../containers/svg-shadow';
-
-import ClipPath from '../clip-path';
-import Path from '../path';
+import Shape from './shape';
+import ShapeDef from './shape-def';
 
 // TODO: https://tympanus.net/Development/CreativeGooeyEffects/send.html
 
@@ -27,73 +22,42 @@ class SVG extends Component {
     this.props.setSvgRef(this.svgRef);
   }
 
-  renderSteps() {
+  renderDefs() {
     const {
-      applyShadowOnTopStep,
-      amountOfSteps,
-      randomShadow,
-      shadowId,
-      steps,
-      strokePath
+      shapes
     } = this.props;
 
-    const stepComponenets = [];
-    const defs = [];
+    const renderedDefs = [];
 
-    if (!randomShadow) {
-      console.log('random shadow', randomShadow);
-      defs.push(<SvgShadow key="svg-shadow"/>);
-    }
-      
-    _.each(steps, (step, index) => {
-      const pathId = `step-${step.id}`;
-      const clipId = `clip-${pathId}`;
-
-      if (randomShadow) {
-        console.log('new svg shadow')
-        defs.push(<SvgShadow key={`${shadowId}-${pathId}`} id={`${shadowId}-${pathId}`}/>);
-      }
-
-      defs.push(
-        <clipPath
-          id={clipId}
-          key={clipId}
-        >
-          <ClipPath
-            points={step.clipPoints}
-          />
-        </clipPath>
-      );
-
-      const shadow = !(applyShadowOnTopStep && (index === amountOfSteps - 1));
-
-      const pathStyle = {
-        fill: !strokePath ? step.color : 'none',
-        stroke: strokePath ? step.color : 'none',
-        strokeWidth: strokePath ? '1px' : '0px'
-      };
-
-      stepComponenets.push(
-        <Path
-          clipId={clipId}
-          key={pathId}
-          id={pathId}
-          pathPoints={step.pathPoints}
-          shadowPathPoints={shadow && strokePath ? step.pathPoints : step.clipPoints}
-          shadowId={shadow && randomShadow ? `${shadowId}-${pathId}` : shadowId}
-          shadowStyle={pathStyle}
-          step={step}
-          style={pathStyle}
+    _.each(shapes, (shape, index) => {
+      renderedDefs.push(
+        <ShapeDef
+          id={index}
+          key={index}
         />
       );
     });
 
-    return [
-      <defs key="svg-defs">
-        {defs}
-      </defs>,
-      stepComponenets
-    ];
+    return renderedDefs;
+  }
+
+  renderShapes() {
+    const {
+      shapes
+    } = this.props;
+
+    const renderedShapes = [];
+
+    _.each(shapes, (shape, index) => {
+      renderedShapes.push(
+        <Shape
+          id={index}
+          key={index}
+        />
+      );
+    });
+
+    return renderedShapes;
   }
 
   render() {
@@ -116,7 +80,10 @@ class SVG extends Component {
         }}
         width={width}
       >
-        {this.renderSteps()}
+        <defs key="svg-defs">
+          {this.renderDefs()}
+        </defs>
+        {this.renderShapes()}
       </svg>
     );
   }
