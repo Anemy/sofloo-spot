@@ -12,7 +12,7 @@ import {
 
 import { buildSteps } from './steps';
 
-const generateRandomShapeConfig = (width, height) => {
+export const generateRandomShapeConfig = (width, height) => {
   const maxPoints = 1000;
   const points = 3 + floorRandom(floorRandom(3) === 1 ? maxPoints : 9); // 1 / 5 chance for possibly many points.
   const amountOfSteps = 2 + (100 - Math.floor(Math.pow(100, Math.random())));
