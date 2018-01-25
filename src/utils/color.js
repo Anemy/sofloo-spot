@@ -1,4 +1,4 @@
-import { floorRandom } from "./index";
+// import { floorRandom } from "./index";
 
 // import { floorRandom } from "./index";
 
@@ -28,16 +28,16 @@ export const getStepColor = (step, steps, colors) => {
   return `rgba(${r}, ${g}, ${b}, ${a})`;
 }
 
-export const createRandomColor = () => ({
-  r: floorRandom(255),
-  g: floorRandom(255),
-  b: floorRandom(255)
+export const createRandomColor = (seeder) => ({
+  r: Math.floor(seeder.rnd() * 255),
+  g: Math.floor(seeder.rnd() * 255),
+  b: Math.floor(seeder.rnd() * 255)
 });
 
 // Possible options and defaults:
 // - maxColorRandom - a color object used for giving a max random for each possible color.
 // - blackAndWhite
-export const createRandomColors = (amountOfColors, setOptions) => {
+export const createRandomColors = (amountOfColors, setOptions, seeder) => {
   const options = {
     maxColorRandom: {
       r: 255,
@@ -51,12 +51,12 @@ export const createRandomColors = (amountOfColors, setOptions) => {
   const colors = [];
 
   for (let i = 0; i < amountOfColors; i++) {
-    const blackAndWhiteColor = options.blackAndWhite ? floorRandom(options.maxColorRandom.r) : 0;
+    const blackAndWhiteColor = options.blackAndWhite ? Math.floor(seeder.rnd() * (options.maxColorRandom.r)) : 0;
 
     colors.push({
-      r: options.blackAndWhite ? blackAndWhiteColor : floorRandom(options.maxColorRandom.r),
-      g: options.blackAndWhite ? blackAndWhiteColor : floorRandom(options.maxColorRandom.g),
-      b: options.blackAndWhite ? blackAndWhiteColor : floorRandom(options.maxColorRandom.b),
+      r: options.blackAndWhite ? blackAndWhiteColor : Math.floor(seeder.rnd() * (options.maxColorRandom.r)),
+      g: options.blackAndWhite ? blackAndWhiteColor : Math.floor(seeder.rnd() * (options.maxColorRandom.g)),
+      b: options.blackAndWhite ? blackAndWhiteColor : Math.floor(seeder.rnd() * (options.maxColorRandom.b)),
       a: options.maxColorRandom.a
     });
   }

@@ -8,13 +8,12 @@ import Path from '../../path';
 class Shape extends Component {
   render() {
     const {
-      id,
       randomShadow,
       steps,
       strokePath
     } = this.props;
 
-    console.log('render shape', id, steps);
+    // console.log('render shape', id, steps);
 
     const stepComponenets = [];
 

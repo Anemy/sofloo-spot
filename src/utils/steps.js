@@ -66,6 +66,7 @@ const getXYPointsfromxyPoints = points => {
 // depth (probably just the index of the step) depth 0 is the center / deepest
 // pathPoints
 // color
+// TODO: I don't like how we pass the seeder to this method - let's do it differently.
 export const buildSteps = ({
   amountOfSteps,
   centerX,
@@ -84,7 +85,7 @@ export const buildSteps = ({
   stepCenterDeviationY,
   stepLength,
   stepLengthDropOff
-}) => {
+}, seeder) => {
   const steps = [];
 
   // https://sourceforge.net/p/jsclipper/wiki/documentation/#clipperlibcliptype
@@ -120,8 +121,8 @@ export const buildSteps = ({
     const stepCenterDeviationDropOffAmount = 1 - (((amountOfSteps - step) / amountOfSteps) * stepCenterDeviationDropOff);
 
     for (let i = 0; i < points; i++) {
-      const pointDeviationX = Math.random() * pointDeviationMaxX - Math.random() * pointDeviationMaxX;
-      const pointDeviationY = Math.random() * pointDeviationMaxY - Math.random() * pointDeviationMaxY;    
+      const pointDeviationX = seeder.rnd() * pointDeviationMaxX - seeder.rnd() * pointDeviationMaxX;
+      const pointDeviationY = seeder.rnd() * pointDeviationMaxY - seeder.rnd() * pointDeviationMaxY;    
 
       const deviation = {
         x: pointDeviationX,

@@ -11,8 +11,8 @@ import './index.css';
 // progenart.com
 // procgenart.com
 
-const buttonBackgroundColor = '#FAFAFA';
-const buttonLabelColor = '#333';
+// const buttonBackgroundColor = '#FAFAFA';
+// const buttonLabelColor = '#333';
 
 class SvgControls extends Component {
   setBackgroundColor = color => {
@@ -36,8 +36,8 @@ class SvgControls extends Component {
   render() {
     const {
       backgroundColor,
-      contrastPrimarySVGColor,
-      primarySVGColor,
+      // contrastPrimarySVGColor,
+      // primarySVGColor,
       radialBackground,
       radialBackgroundColor
     } = this.props;
@@ -45,6 +45,29 @@ class SvgControls extends Component {
     return (
       <div className="concentric-js-svg-controls">
         <List>
+          <div className="concentric-js-svg-controls-about">
+            <div className="concentric-js-svg-controls-about-desc">
+              Coded by
+            </div>
+            <a
+              href="http://rhyshowell.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Rhys
+            </a>
+            <div className="concentric-js-svg-controls-about-desc">
+              Inspired by the amazing works of
+            </div>
+            <a
+              href="https://www.facebook.com/1010art/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              1010
+            </a>
+          </div>
+          <Divider />
           <Subheader>Controls</Subheader>
           {/* <ListItem primaryText="Some option" /> */}
           <ListItem
@@ -81,10 +104,6 @@ class SvgControls extends Component {
             ]}
           />
         </List>
-        {/* <Divider />
-        <List>
-          <ListItem primaryText="Another option" />
-        </List> */}
       </div>
     );
   }

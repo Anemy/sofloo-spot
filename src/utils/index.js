@@ -1,18 +1,20 @@
 export * from './color';
 export * from './steps';
 
-export const floorRandom = max => Math.floor(Math.random() * max);
-export const floorRandomNegate = range => Math.floor(Math.random() * range) - Math.floor(Math.random() * range); 
+// export const floorRandom = max => Math.floor(Math.random() * max);
+// export const floorRandomNegate = range => Math.floor(Math.random() * range) - Math.floor(Math.random() * range); 
 
-const defaultSeedRange = 5000;
+// Only 10 million possible shapes right now... I think that's ok.
+// We can just increase if we need more.
+const defaultSeedRange = 9999999;
 export const createRandomSeed = (range, existingSeed) => {
   let randomRange = (range === undefined) ? defaultSeedRange : range;
 
-  let seed = floorRandom(randomRange);
+  let seed = Math.floor(Math.random() * randomRange);
 
   if (existingSeed !== undefined) {
     while (seed === existingSeed && range > 2) {
-      seed = floorRandom(randomRange);
+      seed = Math.floor(Math.random() * randomRange);
     }
   }
 

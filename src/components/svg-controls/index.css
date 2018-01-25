@@ -4,6 +4,7 @@
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
   left: 0;
   padding: 10px;
+  padding-top: 0;
   position: absolute;
   right: 0;
   text-align: left;
@@ -12,4 +13,22 @@
 
 .concentric-js-svg-controls-list-nested-item {
   margin-left: 15px;
+}
+
+.concentric-js-svg-controls-about {
+  color: #333;
+  padding: 10px;
+  padding-top: 6px;
+}
+
+.concentric-js-svg-controls-about a {
+  font-size: 16px;
+}
+
+.concentric-js-svg-controls-about-desc {
+  color: #666;
+}
+
+.concentric-js-svg-controls-about-desc:nth-child(3) {
+  margin-top: 10px;
 }

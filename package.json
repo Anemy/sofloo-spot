@@ -5,10 +5,12 @@
   "private": true,
   "dependencies": {
     "font-awesome": "^4.7.0",
+    "greiner-hormann": "^1.3.4",
     "history": "^4.7.2",
     "inset.js": "^1.0.2",
     "lodash": "^4.17.4",
     "material-ui": "^0.20.0",
+    "mersennetwister": "^0.2.3",
     "react": "^16.2.0",
     "react-color": "^2.13.8",
     "react-dom": "^16.2.0",

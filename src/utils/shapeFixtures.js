@@ -1,10 +1,4 @@
 import {
-  createRandomSeed,
-  floorRandom,
-  floorRandomNegate
-} from './index';
-
-import {
   buildSteps
 } from './steps';
 
@@ -102,7 +96,10 @@ export const whiteToBlack = [{
 
 const startColors = whiteToBlack;
 
-export const generateInitialShape = (width, height) => {
+export const generateInitialShape = (width, height, seeder) => {
+  const floorRandom = max => Math.floor(seeder.rnd() * max);
+  const floorRandomNegate = range => Math.floor(seeder.rnd() * range) - Math.floor(seeder.rnd() * range); 
+
   const initialShapeConfig = {
     amountOfSteps: 8,
     centerX: width / 2,
@@ -118,14 +115,13 @@ export const generateInitialShape = (width, height) => {
     randomShadow: false,
     rotateEachStep: floorRandomNegate(Math.PI),
     rotation: Math.PI / 8,
-    shadowBlur: 0,// 0.4,
+    shadowBlur: 5,
     shadowColor: `rgba(${0}, ${0}, ${0}, ${1})`,
     shadowId: 'svg-shadow',
     shadowInset: true,
     shadowOffsetX: 0,
     shadowOffsetY: 10,
     shadowOpacity: 1,
-    shapeSeed: createRandomSeed(),
     stepLength: 30,
     stepLengthDropOff: (Math.random() * 2) - 1,
     stepCenterDeviationDropOff: 1,// (Math.random() * 2) - 1,
@@ -136,6 +132,6 @@ export const generateInitialShape = (width, height) => {
 
   return {
     ...initialShapeConfig,
-    steps: buildSteps(initialShapeConfig)
+    steps: buildSteps(initialShapeConfig, seeder)
   };
 }

@@ -21,10 +21,16 @@ const mapStateToProps = state => {
   const layout = state.canvas.present;
   let outerColor = layout.shapes[0].colors[layout.shapes[0].colors.length - 1];
 
+  // TODO: This only supports 1 shape sharing - allow more.
+  let shareableString = `http://anemy.github.io/concentric/#/?shared=${layout.layoutSeed}`;
+  if (layout.isFirstGen) {
+    shareableString += `&v1=1`;
+  }
+
   return {
-    // TODO: This looks bad.
     randomizeButtonBackgroundColor: createColorString(outerColor),
     randomizeButtonLabelColor: getContrastingBinaryColor(outerColor),
+    shareableString,
     svgRef: state.canvas.svgRef
   }
 };

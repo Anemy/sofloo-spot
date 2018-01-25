@@ -34,8 +34,21 @@
   margin-top: 8px;
 }
 
+.concentric-js-controls-github-link {
+  width: 32px;
+  position: fixed;
+  top: 4px;
+  left: 4px;
+}
+
 .concentric-js-show-svg-code-button {
-  bottom: 12px;
+  bottom: 54px;
+  position: fixed;
+  right: 16px;
+}
+
+.concentric-js-show-link-button {
+  bottom: 6px;
   position: fixed;
   right: 16px;
 }
@@ -74,10 +87,11 @@
   text-align: left;
 }
 
-.concentric-js-svg-popup-top-area h2 {
+.concentric-js-svg-popup-top-title {
   font-size: 24px;
   margin: 0;
   padding: 0;
+  width: 90%;
 }
 
 .concentric-js-svg-popup-close-button {

@@ -13,13 +13,11 @@ class ShapeDefs extends Component {
       steps
     } = this.props;
 
-    const stepComponenets = [];
     const defs = [];
 
     const shadowId = 'svg-shadow';
 
     if (!randomShadow) {
-      console.log('random shadow', randomShadow);
       defs.push(
         <SvgShadow
           key="svg-shadow"
@@ -33,7 +31,7 @@ class ShapeDefs extends Component {
       const clipId = `clip-${pathId}`;
 
       if (randomShadow) {
-        console.log('new svg shadow');
+        console.log('new random svg shadow');
         defs.push(
           <SvgShadow
             key={`${shadowId}-${pathId}`}

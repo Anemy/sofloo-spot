@@ -7,7 +7,6 @@ import SVG from '../../components/svg';
 
 const mapStateToProps = state => {
   const layout = state.canvas.present;
-  const shape = layout.shapes[0];
 
   return {
     backgroundColor: layout.backgroundColor,

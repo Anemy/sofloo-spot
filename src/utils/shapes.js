@@ -4,18 +4,15 @@ import {
   createRandomColor
 } from './color';
 
-import {
-  createRandomSeed,
-  floorRandom,
-  floorRandomNegate
-} from './index';
-
 import { buildSteps } from './steps';
 
-export const generateRandomShapeConfig = (width, height) => {
+export const generateRandomShapeConfig = (width, height, seeder) => {  
+  const floorRandom = max => Math.floor(seeder.rnd() * max);
+  const floorRandomNegate = range => Math.floor(seeder.rnd() * range) - Math.floor(seeder.rnd() * range); 
+
   const maxPoints = 1000;
   const points = 3 + floorRandom(floorRandom(3) === 1 ? maxPoints : 9); // 1 / 5 chance for possibly many points.
-  const amountOfSteps = 2 + (100 - Math.floor(Math.pow(100, Math.random())));
+  const amountOfSteps = 2 + (100 - Math.floor(Math.pow(100, seeder.rnd())));
 
   const maxColorRandom = {
     r: floorRandom(12) === 1 ? 0 : 255,
@@ -39,7 +36,7 @@ export const generateRandomShapeConfig = (width, height) => {
   const maxPointDeviation = floorRandom(3) === 1 ? 0 : Math.max(60 - (points / 30), 0);
 
   const blackBasedShadow = floorRandom(2) === 1;
-  const shadowColor = blackBasedShadow ? `rgba(${0}, ${0}, ${0}, ${1})` : createColorString(createRandomColor());
+  const shadowColor = blackBasedShadow ? `rgba(${0}, ${0}, ${0}, ${1})` : createColorString(createRandomColor(seeder));
 
   // console.log('colors', createRandomColors(1 + floorRandom(steps), maxColorRandom));
   // Open street map for data.
@@ -48,13 +45,12 @@ export const generateRandomShapeConfig = (width, height) => {
     amountOfSteps,
     centerX: width / 2,
     centerY: height / 2,
-    colors: createRandomColors(amountOfColors, randomColorOptions),
+    colors: createRandomColors(amountOfColors, randomColorOptions, seeder),
     innerRadius: floorRandom(window.innerHeight / 8),
     pointDeviationMaxX: floorRandom(maxPointDeviation),
     pointDeviationMaxY: floorRandom(maxPointDeviation),
     points,
     previousPointDeviationInfluence: floorRandom(3) === 1, // 1 out of 3
-    randomSeed: createRandomSeed(),
     randomShadow: false, // true, // floorRandom(10) === 1,
     rotateEachStep: floorRandomNegate(Math.PI),
     rotation: floorRandom(Math.PI * 2),
@@ -63,25 +59,21 @@ export const generateRandomShapeConfig = (width, height) => {
     shadowInset: true,
     shadowOffsetX: floorRandomNegate(40),
     shadowOffsetY: floorRandomNegate(40),
-    shadowOpacity: Math.random() * 10 === 0 ? 0 : Math.random().toFixed(4),
+    shadowOpacity: seeder.rnd() * 10 === 0 ? 0 : seeder.rnd().toFixed(4),
     sharedPointDeviation: floorRandom(2) === 1,
     stepCenterDeviationX: floorRandomNegate(stepCenterMaxDeviationX),
     stepCenterDeviationY: floorRandomNegate(stepCenterMaxDeviationY),
-    stepCenterDeviationDropOff: 1, // (Math.random() * 2) - 1,
+    stepCenterDeviationDropOff: 1, // (seeder.rnd() * 2) - 1,
     stepLength: 2 + floorRandom((Math.min(height, width) / 3) / amountOfSteps),
-    stepLengthDropOff: (Math.random() * 2),
+    stepLengthDropOff: floorRandom(12) === 0 ? 1 : ((seeder.rnd() * 4) - 2),
     strokePath: floorRandom(8) === 1 // 1/8 chance for a stroke instead of a fill.
   };
 };
 
-export const generateRandomShape = (width, height) => {
-  const shape = generateRandomShapeConfig(width, height);
+export function generateRandomShape(width, height, seeder) {
+  const shape = generateRandomShapeConfig(width, height, seeder);
 
-  shape.steps = buildSteps(shape);
+  shape.steps = buildSteps(shape, seeder);
 
   return shape;
-}
-
-// export const buildShapes = (shapeConfig) => {
-//   return [];
-// }
+};

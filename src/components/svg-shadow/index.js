@@ -9,8 +9,6 @@ const getRandomColor = () => {
 }
 
 const SvgShadow = props => {
-  console.log('shadow props', props);
-
   return (
   <filter id={props.shadowId}>
     {/* Shadow offset */}

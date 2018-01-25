@@ -974,10 +974,6 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bezier-js@^2.2.3:
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/bezier-js/-/bezier-js-2.2.3.tgz#c5574116a4a3564a71538d73e0b0d515da8ddec5"
-
 big.js@^3.1.3:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/big.js/-/big.js-3.2.0.tgz#a5fc298b81b9e0dca2e458824784b65c52ba588e"
@@ -2874,6 +2870,10 @@ graceful-fs@4.1.11, graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6,
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
 
+greiner-hormann@^1.3.4:
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/greiner-hormann/-/greiner-hormann-1.3.4.tgz#b7e8fcc02211fe44c76cac4720ca96eac9dfe1fd"
+
 growly@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
@@ -4188,6 +4188,10 @@ merge-descriptors@1.0.1:
 merge@^1.1.3:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/merge/-/merge-1.2.0.tgz#7531e39d4949c281a66b8c5a6e0265e8b05894da"
+
+mersennetwister@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/mersennetwister/-/mersennetwister-0.2.3.tgz#269a42c9328f0b07d2acf7ff372c97accfe2e87b"
 
 methods@~1.1.2:
   version "1.1.2"
