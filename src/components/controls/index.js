@@ -38,9 +38,14 @@ class Controls extends Component {
         />
         <div className="concentric-js-svg-popup-modal">
           <div className="concentric-js-svg-popup-top-area">
-            <h2>
+            <a
+              className="concentric-js-svg-popup-top-title"
+              href={shareableString}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {shareableString}
-            </h2>
+            </a>
             <IconButton
               className="concentric-js-svg-popup-close-button"
               onClick={() => this.toggleShowLink()}

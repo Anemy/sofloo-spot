@@ -91,7 +91,7 @@
   font-size: 24px;
   margin: 0;
   padding: 0;
-  width: 90%;
+  word-wrap: break-word;
 }
 
 .concentric-js-svg-popup-close-button {

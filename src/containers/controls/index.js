@@ -1,21 +1,15 @@
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import {
   historyBack,
   historyForward,
-  randomizeVizual
+  randomizeVizual,
+  startBuildingVisual
 } from '../../modules/canvas';
 
 import Controls from '../../components/controls';
 
 import { createColorString, getContrastingBinaryColor } from '../../utils';
-
-// const defaultButtonColor = {
-//   r: 0,
-//   g: 0,
-//   b: 0
-// };
 
 const mapStateToProps = state => {
   const layout = state.canvas.present;
@@ -35,11 +29,42 @@ const mapStateToProps = state => {
   }
 };
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-  historyBack: () => historyBack(),
-  historyForward: () => historyForward(),
-  randomizeVizual: () => randomizeVizual()
-}, dispatch);
+const mapDispatchToProps = dispatch => {
+  let aboutToUpdate = false;
+
+  return {
+    historyBack: () => {
+      if (!aboutToUpdate) {
+        aboutToUpdate = true;
+        dispatch(startBuildingVisual());
+        setTimeout(() => {
+          dispatch(historyBack());
+          aboutToUpdate = false;
+        }, 15);
+      }
+    },
+    historyForward: () => {
+      if (!aboutToUpdate) {
+        aboutToUpdate = true;
+        dispatch(startBuildingVisual());
+        setTimeout(() => {
+          dispatch(historyForward());
+          aboutToUpdate = false;
+        }, 15);
+      }
+    },
+    randomizeVizual: () => {
+      if (!aboutToUpdate) {
+        aboutToUpdate = true;
+        dispatch(startBuildingVisual());
+        setTimeout(() => {
+          dispatch(randomizeVizual());
+          aboutToUpdate = false;
+        }, 15);
+      }
+    }
+  };
+};
 
 export default connect(
   mapStateToProps, 

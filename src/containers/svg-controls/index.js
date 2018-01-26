@@ -28,8 +28,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  updateBackground: newBackground => updateBackground(newBackground),
-  updateVisual: change => updateVisual(change)
+  updateBackground: newBackground => dispatch(updateBackground(newBackground)),
+  updateVisual: change => dispatch(updateVisual(change))
 }, dispatch);
 
 export default connect(

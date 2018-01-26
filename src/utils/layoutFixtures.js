@@ -31,8 +31,6 @@ export const generateInitialLayout = (width, height) => {
   // TODO: Put this in a smarter place.
   const sharedShapeString = getParameterByName('shared');
 
-  console.log('sharedShapeString', sharedShapeString);
-
   let layoutSeed = createRandomSeed();
   let hasSharedSeed = false;
 

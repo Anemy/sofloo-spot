@@ -123,8 +123,8 @@ export const generateInitialShape = (width, height, seeder) => {
     shadowOffsetY: 10,
     shadowOpacity: 1,
     stepLength: 30,
-    stepLengthDropOff: (Math.random() * 2) - 1,
-    stepCenterDeviationDropOff: 1,// (Math.random() * 2) - 1,
+    stepLengthDropOff: (seeder.rnd() * 2) - 1,
+    stepCenterDeviationDropOff: 1,// (seeder.rnd() * 2) - 1,
     stepCenterDeviationX: floorRandomNegate(30),
     stepCenterDeviationY: floorRandomNegate(30),
     strokePath: false

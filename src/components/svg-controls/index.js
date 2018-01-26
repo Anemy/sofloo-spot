@@ -69,7 +69,6 @@ class SvgControls extends Component {
           </div>
           <Divider />
           <Subheader>Controls</Subheader>
-          {/* <ListItem primaryText="Some option" /> */}
           <ListItem
             primaryText="Background"
             initiallyOpen={true}

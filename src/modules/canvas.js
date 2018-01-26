@@ -7,6 +7,7 @@ import {
 } from '../utils/layouts';
 
 export const RANDOMIZE = 'svg/RANDOMIZE';
+export const START_BUILDING = 'svg/START_BUILDING';
 export const SET_SVG_REF = 'svg/SET_SVG_REF';
 export const HISTORY_BACK = 'svg/HISTORY_BACK';
 export const HISTORY_FORWARD = 'svg/HISTORY_FORWARD';
@@ -27,6 +28,7 @@ const initialState = {
   height,
   history: [],
   future: [],
+  isBuilding: false,
   present: generateInitialLayout(width, height),
   svgRef: null,
   width
@@ -58,7 +60,8 @@ export default (state = initialState, action) => {
     case HISTORY_BACK:
       if (state.history && state.history.length > 0) {
         const newState = {
-          ...state
+          ...state,
+          isBuilding: false
         };
 
         newState.future.unshift({
@@ -76,13 +79,17 @@ export default (state = initialState, action) => {
 
         return newState;
       } else {
-        return state;
+        return {
+          ...state,
+          isBuilding: false
+        };
       }
 
     case HISTORY_FORWARD:
       if (state.future && state.future.length > 0) {
         const newState = {
-          ...state
+          ...state,
+          isBuilding: false
         };
 
         newState.history.unshift({
@@ -100,12 +107,22 @@ export default (state = initialState, action) => {
 
         return newState;
       } else {
-        return state;
+        return {
+          ...state,
+          isBuilding: false
+        };
       }
+
+    case START_BUILDING: 
+      return {
+        ...state,
+        isBuilding: true
+      };
 
     case RANDOMIZE:
       const newState = {
-        ...state
+        ...state,
+        isBuilding: false,
       };
 
       newState.history.unshift({
@@ -168,3 +185,9 @@ export const updateVisual = update => ({
   update,
   type: UPDATE_SVG
 });
+
+export const startBuildingVisual = () => {
+  return {
+    type: START_BUILDING
+  };
+};

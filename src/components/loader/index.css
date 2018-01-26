@@ -1,0 +1,45 @@
+.concentric-loader  {
+  width: 3em;
+  height: 3em;
+  animation: concentricLoaderAnim 1.25s infinite;
+  outline: 1px solid transparent;
+  z-index: 10000000;
+  position: absolute;
+  left: 3em;
+  bottom: 3em;
+}
+
+.concentric-loader-outer-box {
+  border-radius: 50%;
+  height: 3em;
+  width: 3em;
+  background-color: #eee;
+  outline: 1px solid transparent;
+  position: fixed;
+  animation: concentricLoaderOuterBoxAnim 0.5s;
+}
+.concentric-loader-inner-box {
+  border-radius: 50%;
+  height: 3em;
+  width: 3em;
+  background-color: #14abfc;
+  position: fixed;
+  z-index: 1;
+  outline: 1px solid transparent;
+  animation: concentricLoaderInnerBoxAnim 1.25s alternate infinite ease-in-out;
+}
+
+@keyframes concentricLoaderOuterBoxAnim {
+  0% {transform: scale(0);}
+  100% {transform: scale(1);}
+}
+
+@keyframes concentricLoaderInnerBoxAnim {
+  0% {transform: scale(0);}
+  100% {transform: scale(0.8);}
+}
+
+@keyframes concentricLoaderAnim {
+  0% {transform: rotate(45deg);}
+  100% {transform: rotate(135deg);}
+}
