@@ -56,7 +56,7 @@ export const generateRandomShapeConfig = (width, height, seeder) => {
     randomShadow: false, // true, // floorRandom(10) === 1,
     rotateEachStep: floorRandomNegate(Math.PI),
     rotation: floorRandom(Math.PI * 2),
-    shadowBlur: floorRandom(5),
+    shadowBlur: floorRandom(10),
     shadowColor,
     shadowInset: true,
     shadowOffsetX: floorRandomNegate(40),

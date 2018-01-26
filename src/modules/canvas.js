@@ -24,8 +24,6 @@ const minWidth = 200;
 const clientWidth = document.body.clientWidth;
 const clientHeight = document.body.clientHeight || window.innerHeight;
 
-console.log('window', clientWidth, clientHeight);
-
 export const height = Math.max(Math.floor(clientHeight - heightOfHeader), minHeight);
 export const width = Math.max(Math.floor(clientWidth), minWidth);
 
