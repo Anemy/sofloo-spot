@@ -1,3 +1,7 @@
+[Concentric](https://anemy.github.io/concentric) is a generative art project.
+Built by [Anemy](https://github.com/Anemy)
+Inspired by [1010](https://www.facebook.com/1010art)
+
 ## Installation
 
 Install node js from https://nodejs.org/en/download/
@@ -7,9 +11,23 @@ $ # Clone this repo and navigate to the cloned folder.
 $ npm install
 ```
 
-#### Development
+## Development
 
 ```bash
 $ npm start
 $ browser https://localhost:3000
 ```
+
+## Donate
+
+If you like this project - show your love! ❤️
+It will push me to make improvements and more projects like this!
+
+Eth Wallet:
+```0x4Daa587303C6929CC5b8f3FdB6F82B177c642eEc```
+
+BTC Wallet:
+```1CfnSzzMonCUSfKGeDN2C87vX13hZEcFHJ```
+
+
+If you'd like to see something added, create an issue or make a PR! 🚀
