@@ -41,12 +41,14 @@ export const generateRandomShapeConfig = (width, height, seeder) => {
   // console.log('colors', createRandomColors(1 + floorRandom(steps), maxColorRandom));
   // Open street map for data.
 
+  const innerRadius = floorRandom(window.innerHeight / 8);
+
   return {
     amountOfSteps,
     centerX: width / 2,
     centerY: height / 2,
     colors: createRandomColors(amountOfColors, randomColorOptions, seeder),
-    innerRadius: floorRandom(window.innerHeight / 8),
+    innerRadius,
     pointDeviationMaxX: floorRandom(maxPointDeviation),
     pointDeviationMaxY: floorRandom(maxPointDeviation),
     points,
@@ -64,7 +66,7 @@ export const generateRandomShapeConfig = (width, height, seeder) => {
     stepCenterDeviationX: floorRandomNegate(stepCenterMaxDeviationX),
     stepCenterDeviationY: floorRandomNegate(stepCenterMaxDeviationY),
     stepCenterDeviationDropOff: 1, // (seeder.rnd() * 2) - 1,
-    stepLength: 2 + floorRandom((Math.min(height, width) / 3) / amountOfSteps),
+    stepLength: 1 + floorRandom(((Math.min(height, width) - innerRadius) / 3) / amountOfSteps),
     stepLengthDropOff: floorRandom(12) === 0 ? 1 : ((seeder.rnd() * 4) - 2),
     strokePath: floorRandom(8) === 1 // 1/8 chance for a stroke instead of a fill.
   };
