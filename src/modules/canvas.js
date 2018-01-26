@@ -21,8 +21,13 @@ const heightOfHeader = 0; // 80;
 const minHeight = 200;
 const minWidth = 200;
 
-export const height = Math.max(Math.floor(window.innerHeight - heightOfHeader), minHeight);
-export const width = Math.max(Math.floor(window.innerWidth), minWidth);
+const clientWidth = document.body.clientWidth;
+const clientHeight = document.body.clientHeight || window.innerHeight;
+
+console.log('window', clientWidth, clientHeight);
+
+export const height = Math.max(Math.floor(clientHeight - heightOfHeader), minHeight);
+export const width = Math.max(Math.floor(clientWidth), minWidth);
 
 const initialState = {
   height,
