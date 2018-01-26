@@ -14,6 +14,10 @@ import {
 } from './shapes';
 
 import {
+  generateInitialShape
+} from '../utils/shapeFixtures';
+
+import {
   buildSteps
 } from './steps';
 
@@ -121,8 +125,10 @@ export const createPixelBridges = (pathArray) => {
   return newPathArray;
 }
 
-export const generateRandomLayout = (width, height) => {
-  const layoutSeed = createRandomSeed();
+export const generateRandomLayout = (width, height, layoutOptions) => {
+  const options = layoutOptions || {};
+
+  const layoutSeed = options.layoutSeed ? options.layoutSeed : createRandomSeed();
   const seeder = new MersenneTwister(layoutSeed);
 
   const amountOfShapes = 1;
@@ -131,7 +137,7 @@ export const generateRandomLayout = (width, height) => {
 
   const shapesToCombine = [];
 
-  const baseShape = generateRandomShapeConfig(width, height, seeder);
+  const baseShape = options.isFirstGen ? generateInitialShape(width, height, seeder) : generateRandomShapeConfig(width, height, seeder);
 
   const shapeSteps = [];
   // This part of the if is expiremental (broken ;)

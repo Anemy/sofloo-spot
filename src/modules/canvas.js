@@ -14,7 +14,7 @@ export const HISTORY_FORWARD = 'svg/HISTORY_FORWARD';
 export const UPDATE_BACKGROUND = 'svg/UPDATE_BACKGROUND';
 export const UPDATE_SVG = 'svg/UPDATE_SVG';
 
-const maxHistoryLength = 100;
+const maxHistoryLength = 1000;
 
 const heightOfHeader = 0; // 80;
 
@@ -68,12 +68,13 @@ export default (state = initialState, action) => {
         };
 
         newState.future.unshift({
-          ...state.present
+          isFirstGen: state.present.isFirstGen,
+          layoutSeed: state.present.layoutSeed
         });
 
         newState.present = {
           ...state.present,
-          ...newState.history.shift()
+          ...generateRandomLayout(width, height, { ...newState.history.shift() })
         };
 
         if (newState.future.length > maxHistoryLength) {
@@ -96,12 +97,13 @@ export default (state = initialState, action) => {
         };
 
         newState.history.unshift({
-          ...state.present
+          isFirstGen: state.present.isFirstGen,
+          layoutSeed: state.present.layoutSeed
         });
 
         newState.present = {
           ...state.present,
-          ...newState.future.shift()
+          ...generateRandomLayout(width, height, { ...newState.future.shift() })
         };
 
         if (newState.history.length > maxHistoryLength) {
@@ -129,7 +131,8 @@ export default (state = initialState, action) => {
       };
 
       newState.history.unshift({
-        ...state.present
+        isFirstGen: state.present.isFirstGen,
+        layoutSeed: state.present.layoutSeed
       });
 
       newState.present = {
