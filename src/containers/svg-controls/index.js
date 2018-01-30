@@ -8,7 +8,7 @@ import {
 
 import SVGControls from '../../components/svg-controls';
 
-import { createColorString, getContrastingBinaryColor } from '../../utils';
+import { createColorString, getContrastingBinaryColor } from '../../utils/color';
 
 const mapStateToProps = state => {
   const layout = state.canvas.present;

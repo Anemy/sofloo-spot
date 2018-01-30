@@ -16,6 +16,7 @@ const Path = props => {
 
   let shadowPathDString = '';
 
+  // TODO: Make this not ugly.
   _.each(shadowPathPoints, (point, index) => {
     if (point.type === 'C') {
       const cp = point.cp;
