@@ -15,7 +15,7 @@ const mapStateToProps = state => {
   const layout = state.canvas.present;
   const outerColor = layout.shapes[0].colors[layout.shapes[0].colors.length - 1];
 
-  const baseURL = `${window.location.protocol}//${window.location.hostname}${(window.location.port ? (':' + window.location.port) : '')}/#/`;
+  const baseURL = `${window.location.origin}${window.location.pathname}#/`;
   const shareableString = `${baseURL}?shared=${layout.seed}&v=${layout.version}`;
 
   return {
