@@ -1,7 +1,3 @@
-// import { floorRandom } from "./index";
-
-// import { floorRandom } from "./index";
-
 // colors https://github.com/arcticicestudio/nord
 
 // Nice blue backgorund
@@ -27,6 +23,28 @@ export const getStepColor = (step, steps, colors) => {
 
   return `rgba(${r}, ${g}, ${b}, ${a})`;
 }
+
+// export const logoColors = [{
+//   r: 245,
+//   g: 245,
+//   b: 255
+// }, {
+//   r: 2,
+//   g: 167,
+//   b: 254
+// }];
+
+export const whiteToBlack = [{
+  r: 0,
+  g: 0,
+  b: 0,
+  a: 1
+}, {
+  r: 255,
+  g: 255,
+  b: 255,
+  a: 1
+}];
 
 export const createRandomColor = (seeder) => ({
   r: Math.floor(seeder.rnd() * 255),
@@ -80,4 +98,3 @@ export const getContrastingBinaryColor = color => {
 };
 
 export const createColorString = c => `rgba(${c.r}, ${c.g}, ${c.b}, ${c.a || 1})`;
-

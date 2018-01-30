@@ -1,24 +1,28 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { setSvgRef } from '../../modules/canvas';
+import {
+  doneBuildingVisual,
+  setSvgRef
+} from '../../modules/canvas';
 
 import SVG from '../../components/svg';
 
 const mapStateToProps = state => {
   const layout = state.canvas.present;
 
+  console.log('huh', state);
+
   return {
-    backgroundColor: layout.backgroundColor,
     height: layout.height,
-    radialBackground: layout.radialBackground,
-    radialBackgroundColor: layout.radialBackgroundColor,
+    isBuilding: state.canvas.isBuilding,
     shapes: layout.shapes,
     width: layout.width
   };
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
+  doneBuildingVisual: () => doneBuildingVisual(),
   setSvgRef: ref => setSvgRef(ref)
 }, dispatch);
 

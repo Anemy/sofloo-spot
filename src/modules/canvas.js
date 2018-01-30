@@ -1,13 +1,12 @@
 import {
-  generateInitialLayout
-} from '../utils/layoutFixtures';
-
-import {
+  generateInitialLayout,
+  generateLayoutBySeedAndVersion,
   generateRandomLayout
 } from '../utils/layouts';
 
 export const RANDOMIZE = 'svg/RANDOMIZE';
 export const START_BUILDING = 'svg/START_BUILDING';
+export const DONE_BUILDING = 'svg/DONE_BUILDING';
 export const SET_SVG_REF = 'svg/SET_SVG_REF';
 export const HISTORY_BACK = 'svg/HISTORY_BACK';
 export const HISTORY_FORWARD = 'svg/HISTORY_FORWARD';
@@ -68,13 +67,15 @@ export default (state = initialState, action) => {
         };
 
         newState.future.unshift({
-          isFirstGen: state.present.isFirstGen,
-          layoutSeed: state.present.layoutSeed
+          version: state.present.version,
+          seed: state.present.seed
         });
+
+        const newPresent = newState.history.shift();
 
         newState.present = {
           ...state.present,
-          ...generateRandomLayout(width, height, { ...newState.history.shift() })
+          ...generateLayoutBySeedAndVersion(width, height, newPresent.seed, newPresent.version)
         };
 
         if (newState.future.length > maxHistoryLength) {
@@ -84,8 +85,7 @@ export default (state = initialState, action) => {
         return newState;
       } else {
         return {
-          ...state,
-          isBuilding: false
+          ...state
         };
       }
 
@@ -97,13 +97,15 @@ export default (state = initialState, action) => {
         };
 
         newState.history.unshift({
-          isFirstGen: state.present.isFirstGen,
-          layoutSeed: state.present.layoutSeed
+          version: state.present.version,
+          seed: state.present.seed
         });
+
+        const newPresent = newState.future.shift();
 
         newState.present = {
           ...state.present,
-          ...generateRandomLayout(width, height, { ...newState.future.shift() })
+          ...generateLayoutBySeedAndVersion(width, height, newPresent.seed, newPresent.version)
         };
 
         if (newState.history.length > maxHistoryLength) {
@@ -113,8 +115,7 @@ export default (state = initialState, action) => {
         return newState;
       } else {
         return {
-          ...state,
-          isBuilding: false
+          ...state
         };
       }
 
@@ -124,15 +125,21 @@ export default (state = initialState, action) => {
         isBuilding: true
       };
 
-    case RANDOMIZE:
-      const newState = {
+    case DONE_BUILDING:
+      return {
         ...state,
-        isBuilding: false,
+        isBuilding: false
+      };
+
+    case RANDOMIZE:
+      // Note: Not a deep copy.
+      const newState = {
+        ...state
       };
 
       newState.history.unshift({
-        isFirstGen: state.present.isFirstGen,
-        layoutSeed: state.present.layoutSeed
+        version: state.present.version,
+        seed: state.present.seed
       });
 
       newState.present = {
@@ -195,5 +202,11 @@ export const updateVisual = update => ({
 export const startBuildingVisual = () => {
   return {
     type: START_BUILDING
+  };
+};
+
+export const doneBuildingVisual = () => {
+  return {
+    type: DONE_BUILDING
   };
 };

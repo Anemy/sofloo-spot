@@ -1,28 +1,6 @@
-export * from './color';
-export * from './steps';
-
-// export const floorRandom = max => Math.floor(Math.random() * max);
-// export const floorRandomNegate = range => Math.floor(Math.random() * range) - Math.floor(Math.random() * range); 
-
-// Only 10 million possible shapes right now... I think that's ok.
-// We can just increase if we need more.
-const defaultSeedRange = 9999999;
-export const createRandomSeed = (range, existingSeed) => {
-  let randomRange = (range === undefined) ? defaultSeedRange : range;
-
-  let seed = Math.floor(Math.random() * randomRange);
-
-  if (existingSeed !== undefined) {
-    while (seed === existingSeed && range > 2) {
-      seed = Math.floor(Math.random() * randomRange);
-    }
-  }
-
-  return seed;
-}
-
 export const toDeg = angle => angle * (180/Math.PI);
 
+// TODO: This can be sped up.
 export const buildBezierControlPointsForCircleAt = (radius, x1, y1, x2, y2) => {
     // Visual to help understand bezier curves:
     // https://doc.babylonjs.com/how_to/how_to_use_curve3
@@ -34,18 +12,12 @@ export const buildBezierControlPointsForCircleAt = (radius, x1, y1, x2, y2) => {
     let startAngle = Math.atan2(y1, x1);
     let stopAngle = Math.atan2(y2, x2);
 
-    // console.log('start, stop angles', toDeg(startAngle), toDeg(stopAngle));
-
     const circleOffset = startAngle > stopAngle ? (Math.PI * 2) : 0;
     const halfOfAngle = Math.abs(circleOffset + (stopAngle - startAngle)) / 2;
-
-    // console.log('difference:', toDeg(halfOfAngle) * 2);
 
     const otherR = radius;
     const normalizedP1X = otherR * Math.cos(halfOfAngle);
     const normalizedP1Y = otherR * Math.sin(halfOfAngle);
-
-    // console.log('zeroed points:', normalizedP1X, normalizedP1Y);
 
     const zeroedCP1X = (4 * otherR - normalizedP1X) / 3;
     const zeroedCP1Y = -((1 * otherR - normalizedP1X) * (3 * otherR - normalizedP1X)) / (3 * normalizedP1Y);
@@ -72,17 +44,6 @@ export const buildBezierControlPointsForCircleAt = (radius, x1, y1, x2, y2) => {
       y: Math.sin(cp2xAngle) * controlPointDistance
     }];
 }
-
-// if (circleBase) {
-//   const cp = buildBezierControlPointsForCircleAt(radius, startx, starty, stopx, stopy);
-
-//   return {
-//     type: 'C',
-//     cp: cp,
-//     x: stopx,
-//     y: stopy
-//   };
-// } 
 
 export const pointInPolyon = (point, vs) => {
   // ray-casting algorithm based on

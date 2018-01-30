@@ -22,6 +22,14 @@ class SVG extends Component {
     this.props.setSvgRef(this.svgRef);
   }
 
+  componentDidUpdate() {
+    console.log('updated, props', this.props);
+    if (this.props.isBuilding) {
+      console.log('done build!');
+      this.props.doneBuildingVisual();
+    }
+  }
+
   renderDefs() {
     const {
       shapes
@@ -62,10 +70,7 @@ class SVG extends Component {
 
   render() {
     const {
-      backgroundColor,
       height,
-      radialBackground,
-      radialBackgroundColor,
       width
     } = this.props;
     
@@ -74,10 +79,6 @@ class SVG extends Component {
         className="visual-container"
         height={height}
         ref={ref => { this.svgRef = ref; }}
-        style={{
-          background: radialBackground ?
-            `radial-gradient(${radialBackgroundColor}, ${backgroundColor})` : backgroundColor
-        }}
         width={width}
       >
         <defs key="svg-defs">

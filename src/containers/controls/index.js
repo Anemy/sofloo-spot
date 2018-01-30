@@ -9,17 +9,14 @@ import {
 
 import Controls from '../../components/controls';
 
-import { createColorString, getContrastingBinaryColor } from '../../utils';
+import { createColorString, getContrastingBinaryColor } from '../../utils/color';
 
 const mapStateToProps = state => {
   const layout = state.canvas.present;
-  let outerColor = layout.shapes[0].colors[layout.shapes[0].colors.length - 1];
+  const outerColor = layout.shapes[0].colors[layout.shapes[0].colors.length - 1];
 
-  // TODO: This only supports 1 shape sharing - allow more.
-  let shareableString = `http://anemy.github.io/concentric/#/?shared=${layout.layoutSeed}`;
-  if (layout.isFirstGen) {
-    shareableString += `&v1=1`;
-  }
+  const baseURL = `${window.location.protocol}//${window.location.hostname}${(window.location.port ? (':' + window.location.port) : '')}/#/`;
+  const shareableString = `${baseURL}?shared=${layout.seed}&v=${layout.version}`;
 
   return {
     randomizeButtonBackgroundColor: createColorString(outerColor),
@@ -33,6 +30,7 @@ const mapDispatchToProps = dispatch => {
   let aboutToUpdate = false;
 
   return {
+    // TODO: This is hacky, clean up.
     historyBack: () => {
       if (!aboutToUpdate) {
         aboutToUpdate = true;
@@ -40,7 +38,7 @@ const mapDispatchToProps = dispatch => {
         setTimeout(() => {
           dispatch(historyBack());
           aboutToUpdate = false;
-        }, 15);
+        }, 5);
       }
     },
     historyForward: () => {
@@ -50,7 +48,7 @@ const mapDispatchToProps = dispatch => {
         setTimeout(() => {
           dispatch(historyForward());
           aboutToUpdate = false;
-        }, 15);
+        }, 5);
       }
     },
     randomizeVizual: () => {
@@ -60,7 +58,7 @@ const mapDispatchToProps = dispatch => {
         setTimeout(() => {
           dispatch(randomizeVizual());
           aboutToUpdate = false;
-        }, 15);
+        }, 5);
       }
     }
   };
