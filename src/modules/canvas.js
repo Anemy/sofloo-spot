@@ -20,7 +20,7 @@ const heightOfHeader = 0; // 80;
 const minHeight = 200;
 const minWidth = 200;
 
-const clientWidth = document.body.clientWidth;
+const clientWidth = window.innerWidth || document.body.clientWidth;
 const clientHeight = document.body.clientHeight || window.innerHeight;
 
 export const height = Math.max(Math.floor(clientHeight - heightOfHeader), minHeight);
@@ -43,14 +43,12 @@ export const randomizeVizual = () => ({
 /* Things to add:
 - past future
 - controls
-
 Future:
 - Interior things
 - Combinations
 - Custom import shape
 - Multiple scattered
 - Locked layers dont change
-
 Array elements:
 - Shadows - Color & direction ?
 - Color steps - done

@@ -14,8 +14,11 @@ const mapStateToProps = state => {
   console.log('huh', state);
 
   return {
+    backgroundColor: layout.backgroundColor,
     height: layout.height,
     isBuilding: state.canvas.isBuilding,
+    radialBackground: layout.radialBackground,
+    radialBackgroundColor: layout.radialBackgroundColor,
     shapes: layout.shapes,
     width: layout.width
   };

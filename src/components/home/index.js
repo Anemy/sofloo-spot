@@ -11,10 +11,6 @@ const Home = props => {
     <div className="concentric-js-home">
       <div
         className="concentric-js-home-background"
-        style={{
-          background: props.radialBackground ?
-            `radial-gradient(${props.radialBackgroundColor}, ${props.backgroundColor})` : props.backgroundColor
-        }}
       />
       <SVG />
       {props.isBuilding && <Loader />}

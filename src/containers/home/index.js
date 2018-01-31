@@ -5,10 +5,7 @@ import { connect } from 'react-redux';
 import Home from '../../components/home';
 
 const mapStateToProps = state => ({
-  backgroundColor: state.canvas.present.backgroundColor,
-  isBuilding: state.canvas.isBuilding,
-  radialBackground: state.canvas.present.radialBackground,
-  radialBackgroundColor: state.canvas.present.radialBackgroundColor
+  isBuilding: state.canvas.isBuilding
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
