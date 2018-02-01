@@ -37,17 +37,19 @@ export const generateLayoutBySeedAndVersion = (width, height, seed, version) => 
 
   switch(version) {
     case VERSIONS.BASIC_FIRST_GEN:
-    console.log('norm')
       layout.shapes = [generateRandomShape(width, height, seeder)];
       break;
 
     case VERSIONS.BASIC_FIRST_GEN_BW:
-      console.log('bw!');
       layout.shapes = [generateRandomShape(width, height, seeder, { blackAndWhite: true })];
       break;
 
     case VERSIONS.INIT_FIRST_GEN:
       layout.shapes = [generateInitialShape(width, height, seeder)];
+      break;
+
+    case VERSIONS.TOPOLOGY:
+      layout.shapes = [generateRandomShape(width, height, seeder, { blackAndWhite: true })];
       break;
 
     default:

@@ -63,25 +63,14 @@ class SvgControls extends Component {
         <List>
           <div className="concentric-js-svg-controls-about">
             <div className="concentric-js-svg-controls-about-desc">
-              Coded by
+              Coded by <a
+                href="http://rhyshowell.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Rhys
+              </a>
             </div>
-            <a
-              href="http://rhyshowell.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Rhys
-            </a>
-            <div className="concentric-js-svg-controls-about-desc">
-              Inspired by the amazing works of
-            </div>
-            <a
-              href="https://www.facebook.com/1010art/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              1010
-            </a>
           </div>
           <Divider />
           <Subheader
@@ -90,10 +79,14 @@ class SvgControls extends Component {
           <SelectField
             className="concentric-js-svg-controls-algorithm"
             floatingLabelText="Randomize Algorithm"
-            value={randomizeAlgorithm}
             onChange={this.handleAlgorithmChange}
+            selectedMenuItemStyle={{
+              color: '#3498db'
+            }}
+            value={randomizeAlgorithm}
           >
             <MenuItem value={VERSIONS.BASIC_FIRST_GEN} primaryText="Full random" />
+            <MenuItem value={VERSIONS.TOPOLOGY} primaryText="Topology" />
             <MenuItem value={VERSIONS.BASIC_FIRST_GEN_BW} primaryText="Random black and white" />
             <MenuItem value={VERSIONS.INIT_FIRST_GEN} primaryText="Initial" />
           </SelectField>
