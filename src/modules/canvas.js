@@ -4,12 +4,17 @@ import {
   generateRandomLayout
 } from '../utils/layouts';
 
-export const RANDOMIZE = 'svg/RANDOMIZE';
-export const START_BUILDING = 'svg/START_BUILDING';
+import {
+  VERSIONS
+} from '../constants';
+
 export const DONE_BUILDING = 'svg/DONE_BUILDING';
-export const SET_SVG_REF = 'svg/SET_SVG_REF';
 export const HISTORY_BACK = 'svg/HISTORY_BACK';
 export const HISTORY_FORWARD = 'svg/HISTORY_FORWARD';
+export const RANDOMIZE = 'svg/RANDOMIZE';
+export const SET_RANDOMIZE_ALGORITHM = 'svg/SET_RANDOMIZE_ALGORITHM';
+export const SET_SVG_REF = 'svg/SET_SVG_REF';
+export const START_BUILDING = 'svg/START_BUILDING';
 export const UPDATE_BACKGROUND = 'svg/UPDATE_BACKGROUND';
 export const UPDATE_SVG = 'svg/UPDATE_SVG';
 
@@ -32,6 +37,7 @@ const initialState = {
   future: [],
   isBuilding: false,
   present: generateInitialLayout(width, height),
+  randomizeAlgorithm: VERSIONS.BASIC_FIRST_GEN,
   svgRef: null,
   width
 };
@@ -142,7 +148,7 @@ export default (state = initialState, action) => {
 
       newState.present = {
         ...state.present,
-        ...generateRandomLayout(width, height)
+        ...generateRandomLayout(width, height, newState.randomizeAlgorithm)
       };
 
       if (newState.history.length > maxHistoryLength) {
@@ -151,11 +157,17 @@ export default (state = initialState, action) => {
 
       return newState;
 
+    case SET_RANDOMIZE_ALGORITHM:
+      return {
+        ...state,
+        randomizeAlgorithm: action.algorithm
+      };
+
     case SET_SVG_REF:
       return {
         ...state,
         svgRef: action.svgRef
-      }
+      };
 
     case UPDATE_BACKGROUND:
       const theNewState = {
@@ -207,4 +219,11 @@ export const doneBuildingVisual = () => {
   return {
     type: DONE_BUILDING
   };
+};
+
+export const setRandomizeAlgorithm = algorithm => {
+  return {
+    algorithm,
+    type: SET_RANDOMIZE_ALGORITHM
+  }
 };

@@ -2,7 +2,7 @@ import React from 'react';
 
 import './index.css';
 
-import Controls from '../../containers/controls';
+import Controls from '../controls';
 import Loader from '../loader';
 import SVG from '../../containers/svg';
 

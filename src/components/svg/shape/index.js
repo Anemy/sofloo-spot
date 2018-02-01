@@ -13,8 +13,6 @@ class Shape extends Component {
       strokePath
     } = this.props;
 
-    // console.log('render shape', id, steps);
-
     const stepComponenets = [];
 
     _.each(steps, (step, index) => {

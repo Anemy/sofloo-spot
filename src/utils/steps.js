@@ -237,9 +237,8 @@ export const buildSteps = ({
         futureElementsAreHidden = true;
       }
 
-      // console.log('clippingFilterPoints', clippingFilterPoints);
+      // TODO: Simplify polygons and account for splitting.
       // const after = ClipperLib.Clipper.SimplifyPolygons([clippingFilterPoints], ClipperLib.PolyFillType.pftNonZero)[0];
-      // console.log('after', after);
       // pftNonZero or pftEvenOdd
 
       for (let i = clippingFilterPoints.length - 1; i >= 0; i--) {

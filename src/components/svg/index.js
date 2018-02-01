@@ -23,9 +23,7 @@ class SVG extends Component {
   }
 
   componentDidUpdate() {
-    console.log('updated, props', this.props);
     if (this.props.isBuilding) {
-      console.log('done build!');
       this.props.doneBuildingVisual();
     }
   }

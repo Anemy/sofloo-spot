@@ -7,11 +7,15 @@ import {
 
 import { buildSteps } from './steps';
 
-export const generateRandomShapeConfig = (width, height, seeder) => {  
+export const generateRandomShapeConfig = (width, height, seeder, shapeOptions) => {
+  const options = {
+    ...shapeOptions
+  };
+
   const floorRandom = max => Math.floor(seeder.rnd() * max);
   const floorRandomNegate = range => Math.floor(seeder.rnd() * range) - Math.floor(seeder.rnd() * range); 
 
-  const maxPoints = 1000;
+  const maxPoints = 500;
   const points = 3 + floorRandom(floorRandom(3) === 1 ? maxPoints : 9); // 1 / 5 chance for possibly many points.
   const amountOfSteps = 2 + (100 - Math.floor(Math.pow(100, seeder.rnd())));
 
@@ -24,23 +28,20 @@ export const generateRandomShapeConfig = (width, height, seeder) => {
 
   const randomColorOptions = {
     maxColorRandom,
-    blackAndWhite: floorRandom(20) === 1
+    blackAndWhite: options.blackAndWhite || floorRandom(20) === 1
   };
 
   // 1/10 random colors, else nice gradient.
-  const amountOfColors = floorRandom(10) === 1 ? amountOfSteps : 1 + floorRandom(5);
+  const amountOfColors = floorRandom(10) === 1 ? amountOfSteps : 2 + floorRandom(3);
 
   const stepCenterMaxDeviationX = floorRandom(4) === 1 ? 0 : 30;
   const stepCenterMaxDeviationY = floorRandom(4) === 1 ? 0 : 30;
 
   // 1 / 2 chance for no deviation.
-  const maxPointDeviation = floorRandom(3) === 1 ? 0 : Math.max(60 - (points / 30), 0);
+  const maxPointDeviation = floorRandom(3) === 1 ? 0 : Math.max(60 - (points / 20), 0);
 
-  const blackBasedShadow = floorRandom(2) === 1;
+  const blackBasedShadow = options.blackAndWhite || floorRandom(2) === 1;
   const shadowColor = blackBasedShadow ? `rgba(${0}, ${0}, ${0}, ${1})` : createColorString(createRandomColor(seeder));
-
-  // console.log('colors', createRandomColors(1 + floorRandom(steps), maxColorRandom));
-  // Open street map for data.
 
   const innerRadius = floorRandom(window.innerHeight / 8);
 
@@ -73,8 +74,8 @@ export const generateRandomShapeConfig = (width, height, seeder) => {
   };
 };
 
-export function generateRandomShape(width, height, seeder) {
-  const shape = generateRandomShapeConfig(width, height, seeder);
+export function generateRandomShape(width, height, seeder, options) {
+  const shape = generateRandomShapeConfig(width, height, seeder, options);
 
   shape.steps = buildSteps(shape, seeder);
 

@@ -31,7 +31,6 @@ class ShapeDefs extends Component {
       const clipId = `clip-${pathId}`;
 
       if (randomShadow) {
-        console.log('new random svg shadow');
         defs.push(
           <SvgShadow
             key={`${shadowId}-${pathId}`}
