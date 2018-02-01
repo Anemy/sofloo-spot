@@ -47,6 +47,7 @@ export function buildSteps({
   centerY,
   colors,
   innerRadius,
+  pointDeviationChance,
   pointDeviationMaxX,
   pointDeviationMaxY,
   points,
@@ -95,9 +96,13 @@ export function buildSteps({
       const pointDeviationX = seeder.rnd() * pointDeviationMaxX - seeder.rnd() * pointDeviationMaxX;
       const pointDeviationY = seeder.rnd() * pointDeviationMaxY - seeder.rnd() * pointDeviationMaxY;    
 
+      // TODO: Move the deviation code into another function.
+      // &: Write something that helps make sure it doesn't generatie shapes which overlap on themselves.
+      // ^ Maybe just simplify the polygon later.
+      const hasDeviation = Math.floor(seeder.rnd() * pointDeviationChance) === 0;
       const deviation = {
-        x: pointDeviationX,
-        y: pointDeviationY
+        x: hasDeviation ? pointDeviationX : 0,
+        y: hasDeviation ? pointDeviationY : 0
       };
 
       if (previousPointDeviationInfluence) {

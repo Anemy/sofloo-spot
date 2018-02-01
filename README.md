@@ -50,5 +50,4 @@ If you'd like to see something added, create an issue or make a PR! 🚀
 - Clean up `src/utils/steps/polygon.js` - It could use a lot of love lol. (See `curves.js`).
 - Make it mobile friendly.
 - Use 'greiner-hormann' or another lib - not clipper - for polygon boolean operation.
-- Speed up the `createBezierControlPointsForCircleAt` function in `src/utils/steps/points/index.js`.
 - Clean up the SVG code - `src/components/svg/shape/index.js` and `src/components/path/index.js`

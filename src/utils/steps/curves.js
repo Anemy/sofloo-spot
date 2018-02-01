@@ -41,11 +41,21 @@ function createTopologyStep(config, x, y, step, firstStepDeviation, previousStep
   for (let i = 0; i < points; i++) {
     const isFirstPoint = i === 0;
 
-    const deviation = isFirstPoint ? getPointDeviation(config, step, previousDeviation, seeder) : copyPoint(nextDeviation);
+    if (isFirstPoint) {
+      previousDeviation = { x: 0, y: 0 };
+    }
+
+    // TODO: Write something that helps make sure it doesn't generatie shapes which overlap on themselves.
+    let deviation = isFirstPoint ? getPointDeviation(config, step, previousDeviation, seeder) : copyPoint(nextDeviation);
     nextDeviation = i === points - 1 ? firstDeviation : getPointDeviation(config, step, previousDeviation, seeder);
 
-    if (sharedPointDeviation && isFirstStep) {
-      firstStepDeviation.push(deviation);
+    if (sharedPointDeviation) {
+      if (isFirstStep) {
+        firstStepDeviation.push(deviation);
+      } else {
+        deviation = firstStepDeviation[i];
+        nextDeviation = i === points - 1 ? firstStepDeviation[0] : firstStepDeviation[i + 1];
+      }
     }
 
     if (isFirstPoint) {
@@ -55,6 +65,15 @@ function createTopologyStep(config, x, y, step, firstStepDeviation, previousStep
 
     const pathPoint = createPathPoint(config, pathPoints[pathPoints.length - 1], stepRadius, i, stepRotation, deviation, nextDeviation, x, y);
     pathPoints.push(pathPoint);
+    
+    previousDeviation = copyPoint(deviation);
+  }
+
+  // Smooth the first curve to make the last curve go through it nicely.
+  if (pathPoints.length > 2) {
+    const smoothing = 1;
+    pathPoints[1].cp[0].x = pathPoints[0].x + ((pathPoints[0].x - pathPoints[pathPoints.length - 1].cp[1].x) * smoothing);
+    pathPoints[1].cp[0].y = pathPoints[0].y + ((pathPoints[0].y - pathPoints[pathPoints.length - 1].cp[1].y) * smoothing);
   }
 
   // Translate the step to the center.
@@ -62,7 +81,7 @@ function createTopologyStep(config, x, y, step, firstStepDeviation, previousStep
     pathPoints[i].x += x;
     pathPoints[i].y += y;
 
-    if (i !== 0) {
+    if (pathPoints[i].cp) {
       pathPoints[i].cp[0].x += x;
       pathPoints[i].cp[0].y += y;
       pathPoints[i].cp[1].x += x;
@@ -111,8 +130,6 @@ export function buildTopologySteps(config, seeder) {
     
     steps.push(step);
   }
-
-  console.log('built topology steps', steps);
 
   return steps;
 }

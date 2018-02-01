@@ -57,6 +57,7 @@ const generateRandomShapeConfig = (width, height, seeder, shapeOptions) => {
     hasShadow: shadowOpacity > 0,
     innerRadius,
     isCurve: false,
+    pointDeviationChance: 1, // 1 out of this.
     pointDeviationMaxX: floorRandom(maxPointDeviation),
     pointDeviationMaxY: floorRandom(maxPointDeviation),
     points,
@@ -96,7 +97,7 @@ function generateRandomTopologyShapeConfig(width, height, seeder, shapeOptions) 
   const floorRandom = max => Math.floor(seeder.rnd() * max);
   const floorRandomNegate = range => Math.floor(seeder.rnd() * range) - Math.floor(seeder.rnd() * range); 
 
-  const maxPoints = 100;
+  const maxPoints = 30;
   const points = 3 + floorRandom(floorRandom(3) === 1 ? maxPoints : 9); // 1 / 5 chance for possibly many points.
   const amountOfSteps = 2 + (20 - Math.floor(Math.pow(20, seeder.rnd())));
 
@@ -118,11 +119,14 @@ function generateRandomTopologyShapeConfig(width, height, seeder, shapeOptions) 
   const stepCenterMaxDeviationX = floorRandom(4) === 1 ? 0 : 30;
   const stepCenterMaxDeviationY = floorRandom(4) === 1 ? 0 : 30;
 
-  // 1 / 2 chance for no deviation between points.
-  const maxPointDeviation = floorRandom(3) === 1 ? 0 : Math.max(60 - (points / 20), 0);
+  const minSize = Math.min(width, height);
 
-  const innerRadius = floorRandom(window.innerHeight / 8);
-  const stepLength = 1 + floorRandom(((Math.min(height, width) - innerRadius) / 3) / amountOfSteps);
+  // 1 / 2 chance for no deviation between points.
+  const deviationPossible = minSize / 4;
+  const maxPointDeviation = floorRandom(5) === 1 ? 0 : Math.max(deviationPossible - (points / (deviationPossible / 3)), 0);
+
+  const innerRadius = floorRandom(minSize / 8);
+  const stepLength = 3 + floorRandom(((minSize - innerRadius) / 3) / amountOfSteps);
 
   return {
     amountOfSteps,
@@ -132,15 +136,14 @@ function generateRandomTopologyShapeConfig(width, height, seeder, shapeOptions) 
     hasShadow: false,
     innerRadius,
     isCurve: true,
+    pointDeviationChance: floorRandom(points), // 1 out of this.
     pointDeviationMaxX: floorRandom(maxPointDeviation),
     pointDeviationMaxY: floorRandom(maxPointDeviation),
-    // pointDeviationMaxX: 10,
-    // pointDeviationMaxY: 10,
     points,
     previousPointDeviationInfluence: floorRandom(3) === 1,
     rotateEachStep: floorRandomNegate(Math.PI),
     shapeRotation: floorRandom(Math.PI * 2),
-    sharedPointDeviation: floorRandom(2) === 1,
+    sharedPointDeviation: floorRandom(5) < 3,
     stepCenterDeviationDropOff: floorRandom(5) === 1 ? (seeder.rnd() * 2) - 1 : 1,
     stepCenterDeviationX: floorRandomNegate(stepCenterMaxDeviationX),
     stepCenterDeviationY: floorRandomNegate(stepCenterMaxDeviationY),
@@ -193,6 +196,7 @@ export const generateInitialShape = (width, height, seeder) => {
     hasShadow: true,
     innerRadius: 0,
     isCurve: false,
+    pointDeviationChance: floorRandom(2), // 1 out of this.
     pointDeviationMaxX: floorRandom(minSize / 10),
     pointDeviationMaxY: floorRandom(minSize / 10),
     points: floorRandom(3) === 0 ? 3 : 3 + floorRandom(6),

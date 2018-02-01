@@ -87,6 +87,7 @@ export function copyPoints(toCopy) {
 // TODO: We should bring in first deviation and allow a smooth transfer from the last point back to first.
 export function getPointDeviation(config, step, previousDeviation, seeder) {
   const {
+    pointDeviationChance,
     pointDeviationMaxX,
     pointDeviationMaxY,
     previousPointDeviationInfluence
@@ -95,12 +96,14 @@ export function getPointDeviation(config, step, previousDeviation, seeder) {
   const pointDeviationX = seeder.rnd() * pointDeviationMaxX - seeder.rnd() * pointDeviationMaxX;
   const pointDeviationY = seeder.rnd() * pointDeviationMaxY - seeder.rnd() * pointDeviationMaxY;    
 
+  const hasDeviation = Math.floor(seeder.rnd() * pointDeviationChance) === 0;
+
   const deviation = {
-    x: pointDeviationX,
-    y: pointDeviationY
+    x: hasDeviation ? pointDeviationX : 0,
+    y: hasDeviation ? pointDeviationY : 0
   };
 
-  if (previousPointDeviationInfluence && previousDeviation) {
+  if (previousPointDeviationInfluence) {
     deviation.x += previousDeviation.x;
     deviation.y += previousDeviation.y;
   }
@@ -108,49 +111,40 @@ export function getPointDeviation(config, step, previousDeviation, seeder) {
   return deviation;
 }
 
-// TODO: This can be sped up.
 function createBezierControlPointsForCircleAt (radius, x1, y1, x2, y2) {
-  // Visual to help understand bezier curves:
-  // https://doc.babylonjs.com/how_to/how_to_use_curve3
-
-  // https://en.wikipedia.org/wiki/Composite_B%C3%A9zier_curve#Approximating_circular_arcs
-
-  // https://math.stackexchange.com/questions/873224/calculate-control-points-of-cubic-bezier-curve-approximating-a-part-of-a-circle
-
   let startAngle = Math.atan2(y1, x1);
   let stopAngle = Math.atan2(y2, x2);
 
   const circleOffset = startAngle > stopAngle ? (Math.PI * 2) : 0;
-  const halfOfAngle = Math.abs(circleOffset + (stopAngle - startAngle)) / 2;
+  let halfOfAngle = Math.abs(circleOffset + (stopAngle - startAngle)) / 2;
 
-  const calculatedRadius = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)) / 2;
-  const otherR = calculatedRadius;
-  const normalizedP1X = otherR * Math.cos(halfOfAngle);
-  const normalizedP1Y = otherR * Math.sin(halfOfAngle);
+  halfOfAngle = halfOfAngle % (Math.PI * (3 / 4));
 
-  const zeroedCP1X = (4 * otherR - normalizedP1X) / 3;
-  const zeroedCP1Y = -((1 * otherR - normalizedP1X) * (3 * otherR - normalizedP1X)) / (3 * normalizedP1Y);
+  const normalizedP1X = radius * Math.cos(halfOfAngle);
+  const normalizedP1Y = -(radius * Math.sin(halfOfAngle));
+
+  const zeroedCP1X = ((4 * radius) - normalizedP1X) / 3;
+  const zeroedCP1Y = ((radius - normalizedP1X) * ((3 * radius) - normalizedP1X)) / (3 * normalizedP1Y);
 
   const zeroedCP2X = zeroedCP1X;
   const zeroedCP2Y = -zeroedCP1Y;
 
   // Rotate the control points to their offset.
-  let cp1xAngle = Math.atan2(zeroedCP1Y, zeroedCP1X);
-  let cp2xAngle = Math.atan2(zeroedCP2Y, zeroedCP2X);
+  let cp1Angle = Math.atan2(zeroedCP1Y, zeroedCP1X);
+  let cp2Angle = Math.atan2(zeroedCP2Y, zeroedCP2X);
 
-  cp1xAngle += startAngle + halfOfAngle;
-  cp2xAngle += startAngle + halfOfAngle;
+  cp1Angle += startAngle + halfOfAngle;
+  cp2Angle += startAngle + halfOfAngle;
 
-  const randomNess = 0;
-  const deviation = Math.random() * randomNess + Math.random() * -randomNess;
-  const controlPointDistance = Math.sqrt((zeroedCP1X * zeroedCP1X) + (zeroedCP1Y * zeroedCP1Y)) + deviation;
+  const cp1Distance = Math.sqrt((zeroedCP1X * zeroedCP1X) + (zeroedCP1Y * zeroedCP1Y));
+  const cp2Distance = Math.sqrt((zeroedCP2X * zeroedCP2X) + (zeroedCP2Y * zeroedCP2Y));
 
   return [{
-    x: Math.cos(cp1xAngle) * controlPointDistance,
-    y: Math.sin(cp1xAngle) * controlPointDistance
+    x: Math.cos(cp1Angle) * cp1Distance,
+    y: Math.sin(cp1Angle) * cp1Distance
   }, {
-    x: Math.cos(cp2xAngle) * controlPointDistance,
-    y: Math.sin(cp2xAngle) * controlPointDistance
+    x: Math.cos(cp2Angle) * cp2Distance,
+    y: Math.sin(cp2Angle) * cp2Distance
   }];
 }
 
@@ -170,17 +164,17 @@ export function createPathPoint(config, previousPoint, radius, point, rotation, 
   const y = (Math.sin(stopAngle) * radius) + yDeviation;
 
   if (isCurve) {
-    // TODO: Use `S` to mirror the control point!
     const controlPoints = createBezierControlPointsForCircleAt(radius, previousPoint.x, previousPoint.y, x, y);
 
-    // controlPoints[0].x += xDeviation;
-    // controlPoints[0].y += yDeviation;
-    // controlPoints[1].x += xDeviation;
-    // controlPoints[1].y += yDeviation;
+    if (controlPoints[1].y < -500) {
+      // debugger;
+      // console.log('yo');
+      const test = createBezierControlPointsForCircleAt(radius, previousPoint.x, previousPoint.y, x, y);
+    }
 
     return {
       cp: controlPoints,
-      type: 'C',
+      type: point === 0 ? 'C' : 'S',
       x,
       y
     };
