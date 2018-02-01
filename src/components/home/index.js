@@ -1,4 +1,6 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 import './index.css';
 
@@ -19,4 +21,13 @@ const Home = props => {
   );
 };
 
-export default Home;
+const mapStateToProps = state => ({
+  isBuilding: state.canvas.isBuilding
+});
+
+const mapDispatchToProps = null;
+
+export default connect(
+  mapStateToProps, 
+  mapDispatchToProps
+)(Home);

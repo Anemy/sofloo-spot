@@ -23,7 +23,15 @@ export const generateRandomLayout = (width, height, version) => {
   return generateLayoutBySeedAndVersion(width, height, seed, version);
 };
 
-export const generateLayoutBySeedAndVersion = (width, height, seed, version) => {
+export const generateLayoutBySeedAndVersion = (width, height, seed, layoutVersion) => {
+  let version = layoutVersion;
+  if (version === VERSIONS.FULL_RANDOM) {
+    const versionKeys = Object.keys(VERSIONS);
+    while(version === VERSIONS.FULL_RANDOM || version === VERSIONS.INIT_FIRST_GEN) {
+      version = VERSIONS[versionKeys[Math.floor(Math.random() * versionKeys.length)]];
+    }
+  }
+
   const layout = {
     height,
     seed,

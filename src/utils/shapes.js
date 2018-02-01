@@ -11,6 +11,27 @@ import {
   buildTopologySteps
 } from './steps';
 
+function generateRandomGradientDirection(seeder) {
+  const floorRandom = rnd => Math.floor(seeder.rnd() * (rnd ? rnd : 1));
+
+  const x1 = 100 * floorRandom(2);
+  const y1 = 100 * floorRandom(2);
+  let y2 = 100 * floorRandom(2);
+  const x2 = 100 * floorRandom(2);
+
+  // When a gradient wasn't really made we just make it vertical.
+  if (x1 === x2 && y1 === y2) {
+    y2 = 100 - y1;
+  }
+
+  return {
+    x1,
+    y1,
+    x2,
+    y2
+  };
+}
+
 function generateRandomShadowConfig(seeder, shapeOptions) {
   const options = { ...shapeOptions };
 
@@ -83,7 +104,7 @@ const generateRandomShapeConfig = (width, height, seeder, shapeOptions) => {
     centerY: height / 2,
     colors,
     gradientColor: options.gradientColor,
-    gradientDirection: {x1: floorRandom(100), y1: floorRandom(100), x2: floorRandom(100), y2: floorRandom(100)},
+    gradientDirection: generateRandomGradientDirection(seeder),
     innerRadius,
     isCurve: false,
     pointDeviationChance: 1, // 1 out of this.
@@ -162,7 +183,7 @@ function generateRandomTopologyShapeConfig(width, height, seeder, shapeOptions) 
     centerY: height / 2,
     colors,
     gradientColor: options.gradientColor,
-    gradientDirection: {x1: floorRandom(100), y1: floorRandom(100), x2: floorRandom(100), y2: floorRandom(100)},
+    gradientDirection: generateRandomGradientDirection(seeder),
     innerRadius,
     isCurve: true,
     pointDeviationChance: floorRandom(points), // 1 out of this.

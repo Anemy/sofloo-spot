@@ -37,7 +37,7 @@ const initialState = {
   future: [],
   isBuilding: false,
   present: generateInitialLayout(width, height),
-  randomizeAlgorithm: VERSIONS.TOPOLOGY_GRADIENTS,
+  randomizeAlgorithm: VERSIONS.FULL_RANDOM,
   svgRef: null,
   width
 };
@@ -52,7 +52,7 @@ export default (state = initialState, action) => {
       if (state.history && state.history.length > 0) {
         const newState = {
           ...state,
-          isBuilding: false
+          isBuilding: true
         };
 
         newState.future.unshift({
@@ -82,7 +82,7 @@ export default (state = initialState, action) => {
       if (state.future && state.future.length > 0) {
         const newState = {
           ...state,
-          isBuilding: false
+          isBuilding: true
         };
 
         newState.history.unshift({
