@@ -40,14 +40,17 @@ If you'd like to see something added, create an issue or make a PR! 🚀
 - Interior elements inside of steps - like bridges, or columns inside of the shape.
 - Combinations of multiple shapes which build a bigger shape.
 - Custom imported shape or text to use as the initial shape.
-- Colors pulled from some place - there are nice color gradient websites we can scrape.
 - Multiple scattered shapes.
 - Controls
   - A control for everything that is in random shape configs `src/utils/shapes`.
   - Ability to lock certain controls when randomizing.
 - Animations
+- Colors
+  - More sources and curated.
+  - Gradients with changing step darkness kind of thing.
 #### Code
 - Clean up `src/utils/steps/polygon.js` - It could use a lot of love lol. (See `curves.js`).
 - Make it mobile friendly.
 - Use 'greiner-hormann' or another lib - not clipper - for polygon boolean operation.
 - Clean up the SVG code - `src/components/svg/shape/index.js` and `src/components/path/index.js`
+- 

@@ -77,7 +77,7 @@ class SVG extends Component {
     
     return (
       <svg
-        className="visual-container"
+        className="concentric-js-visual-container"
         height={height}
         ref={ref => { this.svgRef = ref; }}
         style={{

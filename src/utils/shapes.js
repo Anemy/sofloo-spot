@@ -11,6 +11,34 @@ import {
   buildTopologySteps
 } from './steps';
 
+function generateRandomShadowConfig(seeder, shapeOptions) {
+  const options = { ...shapeOptions };
+
+  if (options.disableShadow) {
+    return {
+      hasShadow: false
+    };
+  }
+
+  const floorRandom = max => Math.floor(seeder.rnd() * max);
+  const floorRandomNegate = range => Math.floor(seeder.rnd() * range) - Math.floor(seeder.rnd() * range); 
+
+  const blackBasedShadow = options.blackAndWhite || floorRandom(2) === 1;
+  const shadowColor = blackBasedShadow ? `rgba(${0}, ${0}, ${0}, ${1})` : createColorString(createRandomColor(seeder));
+  const shadowOpacity = seeder.rnd() * 4 === 0 ? 0 : seeder.rnd().toFixed(4);
+
+  return {
+    hasShadow: shadowOpacity > 0,
+    randomShadow: false,
+    shadowBlur: floorRandom(10),
+    shadowColor,
+    shadowInset: true,
+    shadowOffsetX: floorRandomNegate(40),
+    shadowOffsetY: floorRandomNegate(40),
+    shadowOpacity,
+  };
+};
+
 const generateRandomShapeConfig = (width, height, seeder, shapeOptions) => {
   const options = {
     ...shapeOptions
@@ -44,20 +72,18 @@ const generateRandomShapeConfig = (width, height, seeder, shapeOptions) => {
   // 1 / 2 chance for no deviation.
   const maxPointDeviation = floorRandom(3) === 1 ? 0 : Math.max(60 - (points / 20), 0);
 
-  const blackBasedShadow = options.blackAndWhite || floorRandom(2) === 1;
-  const shadowColor = blackBasedShadow ? `rgba(${0}, ${0}, ${0}, ${1})` : createColorString(createRandomColor(seeder));
-  const shadowOpacity = seeder.rnd() * 4 === 0 ? 0 : seeder.rnd().toFixed(4);
-
   const innerRadius = floorRandom(window.innerHeight / 8);
 
   const colors = options.gradientPack ? getRandomGradientPackColors(seeder) : createRandomColors(amountOfColors, randomColorOptions, seeder);
 
   return {
+    ...generateRandomShadowConfig(seeder, options),
     amountOfSteps,
     centerX: width / 2,
     centerY: height / 2,
     colors,
-    hasShadow: shadowOpacity > 0,
+    gradientColor: options.gradientColor,
+    gradientDirection: {x1: floorRandom(100), y1: floorRandom(100), x2: floorRandom(100), y2: floorRandom(100)},
     innerRadius,
     isCurve: false,
     pointDeviationChance: 1, // 1 out of this.
@@ -65,15 +91,8 @@ const generateRandomShapeConfig = (width, height, seeder, shapeOptions) => {
     pointDeviationMaxY: floorRandom(maxPointDeviation),
     points,
     previousPointDeviationInfluence: floorRandom(3) === 1, // 1 out of 3
-    randomShadow: false, // true, // floorRandom(10) === 1,
     rotateEachStep: floorRandomNegate(Math.PI),
     shapeRotation: floorRandom(3) === 0 ? 0 : floorRandom(Math.PI * 2),
-    shadowBlur: floorRandom(10),
-    shadowColor,
-    shadowInset: true,
-    shadowOffsetX: floorRandomNegate(40),
-    shadowOffsetY: floorRandomNegate(40),
-    shadowOpacity,
     sharedPointDeviation: floorRandom(2) === 1,
     stepCenterDeviationX: floorRandomNegate(stepCenterMaxDeviationX),
     stepCenterDeviationY: floorRandomNegate(stepCenterMaxDeviationY),
@@ -95,7 +114,10 @@ export function generateRandomShape(width, height, seeder, options) {
 // This is seperate from the regular shape config because it doesn't have
 // inset shadows and therefore can use bezier curves in rendering.
 function generateRandomTopologyShapeConfig(width, height, seeder, shapeOptions) {
-  const options = { ...shapeOptions };
+  const options = {
+    ...shapeOptions,
+    disableShadow: true
+  };
 
   const floorRandom = max => Math.floor(seeder.rnd() * max);
   const floorRandomNegate = range => Math.floor(seeder.rnd() * range) - Math.floor(seeder.rnd() * range); 
@@ -134,11 +156,13 @@ function generateRandomTopologyShapeConfig(width, height, seeder, shapeOptions) 
   const colors = options.gradientPack ? getRandomGradientPackColors(seeder) : createRandomColors(amountOfColors, randomColorOptions, seeder);
 
   return {
+    ...generateRandomShadowConfig(seeder, options),
     amountOfSteps,
     centerX: width / 2,
     centerY: height / 2,
     colors,
-    hasShadow: false,
+    gradientColor: options.gradientColor,
+    gradientDirection: {x1: floorRandom(100), y1: floorRandom(100), x2: floorRandom(100), y2: floorRandom(100)},
     innerRadius,
     isCurve: true,
     pointDeviationChance: floorRandom(points), // 1 out of this.

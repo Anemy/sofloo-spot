@@ -88,8 +88,10 @@ class SvgControls extends Component {
             <MenuItem value={VERSIONS.BASIC_FIRST_GEN} primaryText="Full random" />
             <MenuItem value={VERSIONS.TOPOLOGY} primaryText="Topology 💥" />
             <MenuItem value={VERSIONS.TOPOLOGY_GRADIENT_PACK} primaryText="Topology curated colors" />
+            <MenuItem value={VERSIONS.TOPOLOGY_GRADIENTS} primaryText="Topology with curated gradients" />
             <MenuItem value={VERSIONS.BASIC_FIRST_GEN_BW} primaryText="Random black and white" />
             <MenuItem value={VERSIONS.BASIC_FIRST_GEN_GRADIENT_PACK} primaryText="Random curated colors" />
+            <MenuItem value={VERSIONS.BASIC_FIRST_GEN_GRADIENTS} primaryText="Random curated gradient" />
             <MenuItem value={VERSIONS.INIT_FIRST_GEN} primaryText="Initial" />
           </SelectField>
           <ListItem

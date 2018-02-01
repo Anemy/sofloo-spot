@@ -3,12 +3,15 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import ClipPath from '../../clip-path';
+import ColorGradient from '../../svg-color-gradient';
 import SvgShadow from '../../../containers/svg-shadow';
 
 class ShapeDefs extends Component {
   render() {
     const {
+      gradientColor,
       hasShadow,
+      id,
       isCurve,
       randomShadow,
       steps
@@ -23,6 +26,15 @@ class ShapeDefs extends Component {
         <SvgShadow
           key="svg-shadow"
           shadowId={shadowId}
+        />
+      );
+    }
+
+    if (gradientColor) {
+      defs.push(
+        <ColorGradient
+          key={`${id}-color-gradient`}
+          shapeId={id}
         />
       );
     }
@@ -80,6 +92,7 @@ const mapStateToProps = (state, ownProps) => {
   const shape = layout.shapes[ownProps.id];
 
   return {
+    gradientColor: shape.gradientColor,
     hasShadow: shape.hasShadow,
     isCurve: shape.isCurve,
     randomShadow: shape.randomShadow,

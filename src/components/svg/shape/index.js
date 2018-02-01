@@ -8,6 +8,8 @@ import Path from '../../path';
 class Shape extends Component {
   render() {
     const {
+      gradientColor,
+      id,
       randomShadow,
       steps,
       strokePath
@@ -20,11 +22,17 @@ class Shape extends Component {
       const clipId = `clip-${pathId}`;
       const shadowId = 'svg-shadow';
 
+      const stepColor = gradientColor ? `url(#gradient-${id})` : step.color;
+
       const pathStyle = {
-        fill: !strokePath ? step.color : 'none',
-        stroke: strokePath ? step.color : 'none',
+        fill: !strokePath ? stepColor : 'none',
+        stroke: strokePath ? stepColor : 'none',
         strokeWidth: strokePath ? '1px' : '0px'
       };
+
+      if (gradientColor) {
+        pathStyle.fillOpacity = (index / steps.length);
+      }
 
       stepComponenets.push(
         <Path
@@ -51,6 +59,7 @@ const mapStateToProps = (state, ownProps) => {
   const shape = layout.shapes[ownProps.id];
 
   return {
+    gradientColor: shape.gradientColor,
     randomShadow: shape.randomShadow,
     steps: shape.steps,
     strokePath: shape.strokePath

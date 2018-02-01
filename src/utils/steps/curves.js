@@ -14,6 +14,7 @@ function createTopologyStep(config, x, y, step, firstStepDeviation, previousStep
   const {
     amountOfSteps,
     colors,
+    hasShadow,
     innerRadius,
     points,
     rotateEachStep,
@@ -93,7 +94,7 @@ function createTopologyStep(config, x, y, step, firstStepDeviation, previousStep
     // When it isn't the first step we want to use the last step as the clip layer mask.
     clipPoints: isFirstStep ? [] : copyPoints(previousStepClip),
     color: getStepColor(step, amountOfSteps, colors),
-    hasShadow: false,
+    hasShadow,
     id: step,
     pathPoints: pathPoints
   };
