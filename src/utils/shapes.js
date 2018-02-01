@@ -5,9 +5,12 @@ import {
   whiteToBlack
 } from './color';
 
-import { buildSteps } from './steps';
+import {
+  buildSteps,
+  buildTopologySteps
+} from './steps';
 
-export const generateRandomShapeConfig = (width, height, seeder, shapeOptions) => {
+const generateRandomShapeConfig = (width, height, seeder, shapeOptions) => {
   const options = {
     ...shapeOptions
   };
@@ -31,7 +34,7 @@ export const generateRandomShapeConfig = (width, height, seeder, shapeOptions) =
     blackAndWhite: options.blackAndWhite || floorRandom(20) === 1
   };
 
-  // 1/10 random colors, else nice gradient.
+  // 1/10 random color for each step, otherwise gradient a few colors.
   const amountOfColors = floorRandom(10) === 1 ? amountOfSteps : 2 + floorRandom(3);
 
   const stepCenterMaxDeviationX = floorRandom(4) === 1 ? 0 : 30;
@@ -42,6 +45,7 @@ export const generateRandomShapeConfig = (width, height, seeder, shapeOptions) =
 
   const blackBasedShadow = options.blackAndWhite || floorRandom(2) === 1;
   const shadowColor = blackBasedShadow ? `rgba(${0}, ${0}, ${0}, ${1})` : createColorString(createRandomColor(seeder));
+  const shadowOpacity = seeder.rnd() * 4 === 0 ? 0 : seeder.rnd().toFixed(4);
 
   const innerRadius = floorRandom(window.innerHeight / 8);
 
@@ -50,20 +54,22 @@ export const generateRandomShapeConfig = (width, height, seeder, shapeOptions) =
     centerX: width / 2,
     centerY: height / 2,
     colors: createRandomColors(amountOfColors, randomColorOptions, seeder),
+    hasShadow: shadowOpacity > 0,
     innerRadius,
+    isCurve: false,
     pointDeviationMaxX: floorRandom(maxPointDeviation),
     pointDeviationMaxY: floorRandom(maxPointDeviation),
     points,
     previousPointDeviationInfluence: floorRandom(3) === 1, // 1 out of 3
     randomShadow: false, // true, // floorRandom(10) === 1,
     rotateEachStep: floorRandomNegate(Math.PI),
-    rotation: floorRandom(Math.PI * 2),
+    shapeRotation: floorRandom(3) === 0 ? 0 : floorRandom(Math.PI * 2),
     shadowBlur: floorRandom(10),
     shadowColor,
     shadowInset: true,
     shadowOffsetX: floorRandomNegate(40),
     shadowOffsetY: floorRandomNegate(40),
-    shadowOpacity: seeder.rnd() * 10 === 0 ? 0 : seeder.rnd().toFixed(4),
+    shadowOpacity,
     sharedPointDeviation: floorRandom(2) === 1,
     stepCenterDeviationX: floorRandomNegate(stepCenterMaxDeviationX),
     stepCenterDeviationY: floorRandomNegate(stepCenterMaxDeviationY),
@@ -82,6 +88,76 @@ export function generateRandomShape(width, height, seeder, options) {
   return shape;
 };
 
+// This is seperate from the regular shape config because it doesn't have
+// inset shadows and therefore can use bezier curves in rendering.
+function generateRandomTopologyShapeConfig(width, height, seeder, shapeOptions) {
+  const options = { ...shapeOptions };
+
+  const floorRandom = max => Math.floor(seeder.rnd() * max);
+  const floorRandomNegate = range => Math.floor(seeder.rnd() * range) - Math.floor(seeder.rnd() * range); 
+
+  const maxPoints = 100;
+  const points = 3 + floorRandom(floorRandom(3) === 1 ? maxPoints : 9); // 1 / 5 chance for possibly many points.
+  const amountOfSteps = 2 + (20 - Math.floor(Math.pow(20, seeder.rnd())));
+
+  const maxColorRandom = {
+    r: floorRandom(12) === 1 ? 0 : 255,
+    g: floorRandom(12) === 1 ? 0 : 255,
+    b: floorRandom(12) === 1 ? 0 : 255,
+    a: 1
+  };
+
+  const randomColorOptions = {
+    maxColorRandom,
+    blackAndWhite: options.blackAndWhite || floorRandom(20) === 1
+  };
+
+  // 1/10 random color for each step, otherwise gradient a few colors.
+  const amountOfColors = floorRandom(10) === 1 ? amountOfSteps : 2 + floorRandom(3);
+
+  const stepCenterMaxDeviationX = floorRandom(4) === 1 ? 0 : 30;
+  const stepCenterMaxDeviationY = floorRandom(4) === 1 ? 0 : 30;
+
+  // 1 / 2 chance for no deviation between points.
+  const maxPointDeviation = floorRandom(3) === 1 ? 0 : Math.max(60 - (points / 20), 0);
+
+  const innerRadius = floorRandom(window.innerHeight / 8);
+  const stepLength = 1 + floorRandom(((Math.min(height, width) - innerRadius) / 3) / amountOfSteps);
+
+  return {
+    amountOfSteps,
+    centerX: width / 2,
+    centerY: height / 2,
+    colors: createRandomColors(amountOfColors, randomColorOptions, seeder),
+    hasShadow: false,
+    innerRadius,
+    isCurve: true,
+    pointDeviationMaxX: floorRandom(maxPointDeviation),
+    pointDeviationMaxY: floorRandom(maxPointDeviation),
+    // pointDeviationMaxX: 10,
+    // pointDeviationMaxY: 10,
+    points,
+    previousPointDeviationInfluence: floorRandom(3) === 1,
+    rotateEachStep: floorRandomNegate(Math.PI),
+    shapeRotation: floorRandom(Math.PI * 2),
+    sharedPointDeviation: floorRandom(2) === 1,
+    stepCenterDeviationDropOff: floorRandom(5) === 1 ? (seeder.rnd() * 2) - 1 : 1,
+    stepCenterDeviationX: floorRandomNegate(stepCenterMaxDeviationX),
+    stepCenterDeviationY: floorRandomNegate(stepCenterMaxDeviationY),
+    stepLength,
+    stepLengthDropOff: floorRandom(12) === 0 ? 1 : ((seeder.rnd() * 4) - 2),
+    strokePath: floorRandom(8) === 1 // 1/8 chance for a stroke instead of a fill.
+  };
+}
+
+export function generateRandomTopologyShape(width, height, seeder) {
+  const shape = generateRandomTopologyShapeConfig(width, height, seeder);
+
+  shape.steps = buildTopologySteps(shape, seeder);
+
+  return shape;
+}
+
 // const logo = {
 //   innerRadius: -3,
 //   colors: logoColors, // From ./color
@@ -89,7 +165,7 @@ export function generateRandomShape(width, height, seeder, options) {
 //   pointDeviationMaxY: 0,
 //   points: 500,
 //   rotateEachStep: 0,
-//   rotation: Math.PI / 4,
+//   shapeRotation: Math.PI / 4,
 //   shadowOffsetX: 0,
 //   shadowOffsetY: 0,
 //   stepCenterDeviationX: 0,
@@ -105,33 +181,39 @@ export const generateInitialShape = (width, height, seeder) => {
   const floorRandom = max => Math.floor(seeder.rnd() * max);
   const floorRandomNegate = range => Math.floor(seeder.rnd() * range) - Math.floor(seeder.rnd() * range); 
 
+  const minSize = Math.min(width, height);
+
+  const amountOfSteps = 5 + floorRandom(7);
+
   const initialShapeConfig = {
-    amountOfSteps: 8,
+    amountOfSteps,
     centerX: width / 2,
     centerY: height / 2,
     colors: startColors,
+    hasShadow: true,
     innerRadius: 0,
-    pointDeviationMaxX: floorRandom(50),
-    pointDeviationMaxY: floorRandom(50),
-    points: 3 + floorRandom(6),
+    isCurve: false,
+    pointDeviationMaxX: floorRandom(minSize / 10),
+    pointDeviationMaxY: floorRandom(minSize / 10),
+    points: floorRandom(3) === 0 ? 3 : 3 + floorRandom(6),
     previousPointDeviationInfluence: false,
     radialBackground: false,
     radialBackgroundColor: `#333`,
     randomShadow: false,
     rotateEachStep: floorRandomNegate(Math.PI),
-    rotation: Math.PI / 8,
-    shadowBlur: 5,
-    shadowColor: `rgba(${0}, ${0}, ${0}, ${1})`,
+    shapeRotation: Math.PI / 8,
+    shadowBlur: 4 + floorRandom(8),
+    shadowColor: `rgba(${0}, ${0}, ${0}, ${1 - (0.1 * floorRandom(8))})`,
     shadowId: 'svg-shadow',
     shadowInset: true,
     shadowOffsetX: 0,
-    shadowOffsetY: 10,
+    shadowOffsetY: 2 + floorRandom(minSize / 10),
     shadowOpacity: 1,
-    stepLength: 30,
+    stepLength: 5 + ((minSize / amountOfSteps) / 3),
     stepLengthDropOff: (seeder.rnd() * 2) - 1,
-    stepCenterDeviationDropOff: 1,// (seeder.rnd() * 2) - 1,
-    stepCenterDeviationX: floorRandomNegate(30),
-    stepCenterDeviationY: floorRandomNegate(30),
+    stepCenterDeviationDropOff: 1,
+    stepCenterDeviationX: floorRandomNegate(minSize / 10),
+    stepCenterDeviationY: floorRandomNegate(minSize / 10),
     strokePath: false
   };
 

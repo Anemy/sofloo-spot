@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -9,6 +8,8 @@ import SvgShadow from '../../../containers/svg-shadow';
 class ShapeDefs extends Component {
   render() {
     const {
+      hasShadow,
+      isCurve,
       randomShadow,
       steps
     } = this.props;
@@ -17,7 +18,7 @@ class ShapeDefs extends Component {
 
     const shadowId = 'svg-shadow';
 
-    if (!randomShadow) {
+    if (hasShadow && !randomShadow) {
       defs.push(
         <SvgShadow
           key="svg-shadow"
@@ -26,11 +27,14 @@ class ShapeDefs extends Component {
       );
     }
       
-    _.each(steps, (step, index) => {
+    const previousPaths = [];
+    for(let i = 0; i < steps.length; i++) {
+      const step = steps[i];
+
       const pathId = `step-${step.id}`;
       const clipId = `clip-${pathId}`;
 
-      if (randomShadow) {
+      if (hasShadow && randomShadow) {
         defs.push(
           <SvgShadow
             key={`${shadowId}-${pathId}`}
@@ -39,17 +43,34 @@ class ShapeDefs extends Component {
         );
       }
 
-      defs.push(
-        <clipPath
-          id={clipId}
-          key={clipId}
-        >
-          <ClipPath
-            points={step.clipPoints}
-          />
-        </clipPath>
-      );
-    });
+      if (step.clipPoints && step.clipPoints.length > 0) {
+        if (isCurve) {
+          // TODO: Use this technique for everything.
+          defs.push(
+            <clipPath
+              clipPath={i === 0 ? '' : `url(#clip-step-${steps[i - 1].id})`}
+              id={clipId}
+              key={clipId}
+            >
+              <ClipPath
+                points={step.clipPoints}
+              />
+            </clipPath>
+          );
+        } else {
+          defs.push(
+            <clipPath
+              id={clipId}
+              key={clipId}
+            >
+              <ClipPath
+                points={step.clipPoints}
+              />
+            </clipPath>
+          );
+        }
+      }
+    }
 
     return defs;
   }
@@ -60,6 +81,8 @@ const mapStateToProps = (state, ownProps) => {
   const shape = layout.shapes[ownProps.id];
 
   return {
+    hasShadow: shape.hasShadow,
+    isCurve: shape.isCurve,
     randomShadow: shape.randomShadow,
     steps: shape.steps
   };

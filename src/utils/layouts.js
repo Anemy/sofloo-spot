@@ -1,15 +1,13 @@
 import MersenneTwister from 'mersennetwister';
 
-// TODO: Use this lib and not clipper for polygon boolean operation.
-// import greinerHormann from 'greiner-hormann';
-
 import {
   createRandomSeed
 } from './seeds';
 
 import {
   generateInitialShape,
-  generateRandomShape
+  generateRandomShape,
+  generateRandomTopologyShape
 } from './shapes';
 
 import { VERSIONS } from '../constants';
@@ -49,7 +47,7 @@ export const generateLayoutBySeedAndVersion = (width, height, seed, version) => 
       break;
 
     case VERSIONS.TOPOLOGY:
-      layout.shapes = [generateRandomShape(width, height, seeder, { blackAndWhite: true })];
+      layout.shapes = [generateRandomTopologyShape(width, height, seeder)];
       break;
 
     default:

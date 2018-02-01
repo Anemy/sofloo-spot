@@ -37,7 +37,7 @@ const initialState = {
   future: [],
   isBuilding: false,
   present: generateInitialLayout(width, height),
-  randomizeAlgorithm: VERSIONS.BASIC_FIRST_GEN,
+  randomizeAlgorithm: VERSIONS.TOPOLOGY, // VERSIONS.BASIC_FIRST_GEN,
   svgRef: null,
   width
 };
@@ -45,21 +45,6 @@ const initialState = {
 export const randomizeVizual = () => ({
   type: RANDOMIZE
 });
-
-/* Things to add:
-- past future
-- controls
-Future:
-- Interior things
-- Combinations
-- Custom import shape
-- Multiple scattered
-- Locked layers dont change
-Array elements:
-- Shadows - Color & direction ?
-- Color steps - done
-- Step points
-*/
 
 export default (state = initialState, action) => {
   switch (action.type) {

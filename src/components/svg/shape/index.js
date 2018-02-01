@@ -20,8 +20,6 @@ class Shape extends Component {
       const clipId = `clip-${pathId}`;
       const shadowId = 'svg-shadow';
 
-      const hasShadow = true;
-
       const pathStyle = {
         fill: !strokePath ? step.color : 'none',
         stroke: strokePath ? step.color : 'none',
@@ -32,10 +30,11 @@ class Shape extends Component {
         <Path
           clipId={clipId}
           key={pathId}
+          hasShadow={step.hasShadow}
           id={pathId}
           pathPoints={step.pathPoints}
-          shadowPathPoints={hasShadow && (strokePath ? step.pathPoints : step.clipPoints)}
-          shadowId={hasShadow && (randomShadow ? `${shadowId}-${pathId}` : shadowId)}
+          shadowPathPoints={strokePath ? step.pathPoints : step.clipPoints}
+          shadowId={randomShadow ? `${shadowId}-${pathId}` : shadowId}
           shadowStyle={pathStyle}
           step={step}
           style={pathStyle}

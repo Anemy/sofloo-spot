@@ -86,7 +86,7 @@ class SvgControls extends Component {
             value={randomizeAlgorithm}
           >
             <MenuItem value={VERSIONS.BASIC_FIRST_GEN} primaryText="Full random" />
-            <MenuItem value={VERSIONS.TOPOLOGY} primaryText="Topology" />
+            <MenuItem value={VERSIONS.TOPOLOGY} primaryText="Topology 💥" />
             <MenuItem value={VERSIONS.BASIC_FIRST_GEN_BW} primaryText="Random black and white" />
             <MenuItem value={VERSIONS.INIT_FIRST_GEN} primaryText="Initial" />
           </SelectField>
