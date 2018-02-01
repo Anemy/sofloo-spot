@@ -2,6 +2,7 @@ import {
   createColorString,
   createRandomColors,
   createRandomColor,
+  getRandomGradientPackColors,
   whiteToBlack
 } from './color';
 
@@ -49,11 +50,13 @@ const generateRandomShapeConfig = (width, height, seeder, shapeOptions) => {
 
   const innerRadius = floorRandom(window.innerHeight / 8);
 
+  const colors = options.gradientPack ? getRandomGradientPackColors(seeder) : createRandomColors(amountOfColors, randomColorOptions, seeder);
+
   return {
     amountOfSteps,
     centerX: width / 2,
     centerY: height / 2,
-    colors: createRandomColors(amountOfColors, randomColorOptions, seeder),
+    colors,
     hasShadow: shadowOpacity > 0,
     innerRadius,
     isCurve: false,
@@ -128,11 +131,13 @@ function generateRandomTopologyShapeConfig(width, height, seeder, shapeOptions) 
   const innerRadius = floorRandom(minSize / 8);
   const stepLength = 3 + floorRandom(((minSize - innerRadius) / 3) / amountOfSteps);
 
+  const colors = options.gradientPack ? getRandomGradientPackColors(seeder) : createRandomColors(amountOfColors, randomColorOptions, seeder);
+
   return {
     amountOfSteps,
     centerX: width / 2,
     centerY: height / 2,
-    colors: createRandomColors(amountOfColors, randomColorOptions, seeder),
+    colors,
     hasShadow: false,
     innerRadius,
     isCurve: true,
@@ -153,8 +158,8 @@ function generateRandomTopologyShapeConfig(width, height, seeder, shapeOptions) 
   };
 }
 
-export function generateRandomTopologyShape(width, height, seeder) {
-  const shape = generateRandomTopologyShapeConfig(width, height, seeder);
+export function generateRandomTopologyShape(width, height, seeder, options) {
+  const shape = generateRandomTopologyShapeConfig(width, height, seeder, options);
 
   shape.steps = buildTopologySteps(shape, seeder);
 

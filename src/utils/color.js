@@ -1,4 +1,4 @@
-// colors https://github.com/arcticicestudio/nord
+import gradientPack from './gradients';
 
 // Nice blue backgorund
 // rgb(162, 198, 221)
@@ -45,6 +45,28 @@ export const whiteToBlack = [{
   b: 255,
   a: 1
 }];
+
+function hexToRgb(hex) {
+  const bigint = parseInt(hex, 16);
+
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+
+  return { r, g, b};
+}
+
+export function getRandomGradientPackColors(seeder) {
+  const gradient = gradientPack[Math.floor(seeder.rnd() * gradientPack.length)];
+
+  const rgbGradient = [];
+
+  for (let i = 0; i < gradient.colors.length; i++) {
+    rgbGradient.push(hexToRgb(gradient.colors[i].slice(1)));
+  }
+  
+  return rgbGradient;
+};
 
 export const createRandomColor = (seeder) => ({
   r: Math.floor(seeder.rnd() * 255),

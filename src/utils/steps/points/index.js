@@ -164,16 +164,8 @@ export function createPathPoint(config, previousPoint, radius, point, rotation, 
   const y = (Math.sin(stopAngle) * radius) + yDeviation;
 
   if (isCurve) {
-    const controlPoints = createBezierControlPointsForCircleAt(radius, previousPoint.x, previousPoint.y, x, y);
-
-    if (controlPoints[1].y < -500) {
-      // debugger;
-      // console.log('yo');
-      const test = createBezierControlPointsForCircleAt(radius, previousPoint.x, previousPoint.y, x, y);
-    }
-
     return {
-      cp: controlPoints,
+      cp: createBezierControlPointsForCircleAt(radius, previousPoint.x, previousPoint.y, x, y),
       type: point === 0 ? 'C' : 'S',
       x,
       y

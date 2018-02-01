@@ -42,12 +42,20 @@ export const generateLayoutBySeedAndVersion = (width, height, seed, version) => 
       layout.shapes = [generateRandomShape(width, height, seeder, { blackAndWhite: true })];
       break;
 
+    case VERSIONS.BASIC_FIRST_GEN_GRADIENT_PACK:
+      layout.shapes = [generateRandomShape(width, height, seeder, { gradientPack: true })];
+      break;
+
     case VERSIONS.INIT_FIRST_GEN:
       layout.shapes = [generateInitialShape(width, height, seeder)];
       break;
 
     case VERSIONS.TOPOLOGY:
       layout.shapes = [generateRandomTopologyShape(width, height, seeder)];
+      break;
+
+    case VERSIONS.TOPOLOGY_GRADIENT_PACK:
+      layout.shapes = [generateRandomTopologyShape(width, height, seeder, { gradientPack: true })];
       break;
 
     default:

@@ -37,7 +37,7 @@ const initialState = {
   future: [],
   isBuilding: false,
   present: generateInitialLayout(width, height),
-  randomizeAlgorithm: VERSIONS.TOPOLOGY, // VERSIONS.BASIC_FIRST_GEN,
+  randomizeAlgorithm: VERSIONS.TOPOLOGY_GRADIENT_PACK, // VERSIONS.TOPOLOGY, // VERSIONS.BASIC_FIRST_GEN,
   svgRef: null,
   width
 };
