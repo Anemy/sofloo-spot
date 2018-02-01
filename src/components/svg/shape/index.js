@@ -13,16 +13,12 @@ class Shape extends Component {
       strokePath
     } = this.props;
 
-    // console.log('render shape', id, steps);
-
     const stepComponenets = [];
 
     _.each(steps, (step, index) => {
       const pathId = `step-${step.id}`;
       const clipId = `clip-${pathId}`;
       const shadowId = 'svg-shadow';
-
-      const hasShadow = true;
 
       const pathStyle = {
         fill: !strokePath ? step.color : 'none',
@@ -34,10 +30,11 @@ class Shape extends Component {
         <Path
           clipId={clipId}
           key={pathId}
+          hasShadow={step.hasShadow}
           id={pathId}
           pathPoints={step.pathPoints}
-          shadowPathPoints={hasShadow && (strokePath ? step.pathPoints : step.clipPoints)}
-          shadowId={hasShadow && (randomShadow ? `${shadowId}-${pathId}` : shadowId)}
+          shadowPathPoints={strokePath ? step.pathPoints : step.clipPoints}
+          shadowId={randomShadow ? `${shadowId}-${pathId}` : shadowId}
           shadowStyle={pathStyle}
           step={step}
           style={pathStyle}

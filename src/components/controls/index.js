@@ -7,10 +7,20 @@ import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import RaisedButton from 'material-ui/RaisedButton';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
+import { createColorString, getContrastingBinaryColor } from '../../utils/color';
+
+import {
+  historyBack,
+  historyForward,
+  randomizeVizual,
+  startBuildingVisual
+} from '../../modules/canvas';
 
 import './index.css';
 
-import SvgControls from '../../containers/svg-controls';
+import SvgControls from '../svg-controls';
 
 // symshapes.com
 // progenart.com
@@ -202,4 +212,60 @@ class Controls extends Component {
   }
 }
 
-export default Controls;
+const mapStateToProps = state => {
+  const layout = state.canvas.present;
+  const outerColor = layout.shapes[0].colors[layout.shapes[0].colors.length - 1];
+
+  const baseURL = `${window.location.origin}${window.location.pathname}#/`;
+  const shareableString = `${baseURL}?shared=${layout.seed}&v=${layout.version}`;
+
+  return {
+    randomizeButtonBackgroundColor: createColorString(outerColor),
+    randomizeButtonLabelColor: getContrastingBinaryColor(outerColor),
+    shareableString,
+    svgRef: state.canvas.svgRef
+  }
+};
+
+const mapDispatchToProps = dispatch => {
+  let aboutToUpdate = false;
+
+  return {
+    // TODO: This is hacky, clean up.
+    historyBack: () => {
+      if (!aboutToUpdate) {
+        aboutToUpdate = true;
+        dispatch(startBuildingVisual());
+        setTimeout(() => {
+          dispatch(historyBack());
+          aboutToUpdate = false;
+        }, 5);
+      }
+    },
+    historyForward: () => {
+      if (!aboutToUpdate) {
+        aboutToUpdate = true;
+        dispatch(startBuildingVisual());
+        setTimeout(() => {
+          dispatch(historyForward());
+          aboutToUpdate = false;
+        }, 5);
+      }
+    },
+    randomizeVizual: () => {
+      if (!aboutToUpdate) {
+        aboutToUpdate = true;
+        dispatch(startBuildingVisual());
+        setTimeout(() => {
+          dispatch(randomizeVizual());
+          aboutToUpdate = false;
+        }, 5);
+      }
+    }
+  };
+};
+
+export default connect(
+  mapStateToProps, 
+  mapDispatchToProps
+)(Controls);

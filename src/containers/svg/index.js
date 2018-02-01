@@ -11,8 +11,6 @@ import SVG from '../../components/svg';
 const mapStateToProps = state => {
   const layout = state.canvas.present;
 
-  console.log('huh', state);
-
   return {
     backgroundColor: layout.backgroundColor,
     height: layout.height,

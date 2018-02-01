@@ -1,26 +1,22 @@
-import _ from 'lodash';
+import {
+  getStepColor
+} from '../color';
 
-import { getStepColor } from './color';
+import {
+  createStartPoint
+} from './points';
 
-const createStartPoint = (radius, rotate, deviation, dropOffAmount) => {
-  const startAngle = rotate;
+// TODO: Don't use this lib.
+// https://sourceforge.net/p/jsclipper/wiki/documentation/#clipperlibcliptype
+const ClipperLib = window.ClipperLib;
 
-  const startx = Math.cos(startAngle) * radius + deviation.x * dropOffAmount;
-  const starty = Math.sin(startAngle) * radius + deviation.y * dropOffAmount;
-
-  return {
-    x: startx,
-    y: starty
-  }
-}
-
-const createPathPoint = (radius, point, points, rotate, deviation, firstDeviation, dropOffAmount) => {
+const createPathPoint = (radius, point, points, rotate, deviation, firstDeviation) => {
   const stopAngle = 2 * Math.PI * ((point + 1) / points) + rotate;
 
   const isLastPoint = point === points - 1;
 
-  const stopx = (Math.cos(stopAngle) * radius) + (isLastPoint ? firstDeviation.x * dropOffAmount : deviation.x * dropOffAmount);
-  const stopy = (Math.sin(stopAngle) * radius) + (isLastPoint ? firstDeviation.y * dropOffAmount : deviation.y * dropOffAmount);
+  const stopx = (Math.cos(stopAngle) * radius) + (isLastPoint ? firstDeviation.x : deviation.x);
+  const stopy = (Math.sin(stopAngle) * radius) + (isLastPoint ? firstDeviation.y : deviation.y);
 
   return {
     type: 'L',
@@ -29,7 +25,7 @@ const createPathPoint = (radius, point, points, rotate, deviation, firstDeviatio
   };
 };
 
-const getXYPointsfromxyPoints = points => {
+function getXYPointsfromxyPoints(points) {
   const newPoints = [];
 
   for (let i = 0; i < points.length; i++) {
@@ -42,54 +38,32 @@ const getXYPointsfromxyPoints = points => {
   }
 
   return newPoints;
-};
+}
 
-// const getxyPointsfromXYPoints = points => {
-//   const newPoints = [];
-
-//   for (let i = 0; i < points.length; i++) {
-//     const point = points[i];
-
-//     newPoints.push({
-//       x: point.X,
-//       y: point.Y
-//     });
-//   }
-
-//   return newPoints;
-// };
-
-// Returns an array of all of the steps.
-// Where a step is an object with the properties:
-// clipPoints
-// id (probably just the index of the step right now.)
-// depth (probably just the index of the step) depth 0 is the center / deepest
-// pathPoints
-// color
-// TODO: I don't like how we pass the seeder to this method - let's do it differently.
-export const buildSteps = ({
+// TODO: Clean this up - it's ugly code XD
+export function buildSteps({
   amountOfSteps,
   centerX,
   centerY,
   colors,
   innerRadius,
+  pointDeviationChance,
   pointDeviationMaxX,
   pointDeviationMaxY,
   points,
   previousPointDeviationInfluence,
   rotateEachStep,
-  rotation,
+  shadowOpacity,
+  shapeRotation,
   sharedPointDeviation,
   stepCenterDeviationDropOff,
   stepCenterDeviationX,
   stepCenterDeviationY,
   stepLength,
   stepLengthDropOff
-}, seeder) => {
+}, seeder) {
   const steps = [];
 
-  // https://sourceforge.net/p/jsclipper/wiki/documentation/#clipperlibcliptype
-  const ClipperLib = window.ClipperLib;
   let clippingFilterPoints = ClipperLib.Paths();
 
   let futureElementsAreHidden = false;
@@ -116,17 +90,19 @@ export const buildSteps = ({
       y: 0
     };
 
-    const rotate = rotateEachStep * step + rotation;
-
-    const stepCenterDeviationDropOffAmount = 1 - (((amountOfSteps - step) / amountOfSteps) * stepCenterDeviationDropOff);
+    const rotate = rotateEachStep * step + shapeRotation;
 
     for (let i = 0; i < points; i++) {
       const pointDeviationX = seeder.rnd() * pointDeviationMaxX - seeder.rnd() * pointDeviationMaxX;
       const pointDeviationY = seeder.rnd() * pointDeviationMaxY - seeder.rnd() * pointDeviationMaxY;    
 
+      // TODO: Move the deviation code into another function.
+      // &: Write something that helps make sure it doesn't generatie shapes which overlap on themselves.
+      // ^ Maybe just simplify the polygon later.
+      const hasDeviation = Math.floor(seeder.rnd() * pointDeviationChance) === 0;
       const deviation = {
-        x: pointDeviationX,
-        y: pointDeviationY
+        x: hasDeviation ? pointDeviationX : 0,
+        y: hasDeviation ? pointDeviationY : 0
       };
 
       if (previousPointDeviationInfluence) {
@@ -154,8 +130,6 @@ export const buildSteps = ({
             deviation.y += undeviateY * (realClose ? 4 : 1);
           }
         }
-
-        // TODO: Undeviate more on the last couple points.
       }
 
       if (sharedPointDeviation && isFirstStep) {
@@ -166,30 +140,28 @@ export const buildSteps = ({
         firstDeviation.x = deviation.x;
         firstDeviation.y = deviation.y;
 
-        pathPoints.push(createStartPoint(radius, rotate, sharedPointDeviation ? pointDeviations[0] : deviation, stepCenterDeviationDropOffAmount));
+        pathPoints.push(createStartPoint(radius, rotate, sharedPointDeviation ? pointDeviations[0] : deviation));
       }
       
       if (sharedPointDeviation) {
+        // NOTE: `createPathPoint` is a local function.
         pathPoints.push(createPathPoint(
           radius,
           i,
           points,
           rotate,
           pointDeviations[i],
-          pointDeviations[0],
-          stepCenterDeviationDropOffAmount
+          pointDeviations[0]
         ));
-      }
-      
-      if (!sharedPointDeviation) {
+      } else {
+        // NOTE: `createPathPoint` is a local function.
         pathPoints.push(createPathPoint(
           radius,
           i,
           points,
           rotate,
           deviation,
-          firstDeviation,
-          stepCenterDeviationDropOffAmount
+          firstDeviation
         ));
       }
 
@@ -210,6 +182,7 @@ export const buildSteps = ({
         const point = pathPoints[i];
 
         pathPointsForClip.push({
+          type: i === pathPoints.length - 1 ? 'M' : 'L',
           x: point.x,
           y: point.y
         });
@@ -237,15 +210,15 @@ export const buildSteps = ({
         futureElementsAreHidden = true;
       }
 
-      // console.log('clippingFilterPoints', clippingFilterPoints);
+      // TODO: Simplify polygons and account for splitting.
       // const after = ClipperLib.Clipper.SimplifyPolygons([clippingFilterPoints], ClipperLib.PolyFillType.pftNonZero)[0];
-      // console.log('after', after);
       // pftNonZero or pftEvenOdd
 
       for (let i = clippingFilterPoints.length - 1; i >= 0; i--) {
         const point = clippingFilterPoints[i];
 
         pathPointsForClip.push({
+          type: i === clippingFilterPoints.length - 1 ? 'M' : 'L',
           x: point.X,
           y: point.Y
         });
@@ -264,26 +237,24 @@ export const buildSteps = ({
     steps.push({
       clipPoints: pathPointsForClip,
       color: getStepColor(step, amountOfSteps, colors),
+      hasShadow: shadowOpacity > 0,
       id: step,
       pathPoints: pathPoints
     });
   };
 
-  const toStep = [];
   for (let i = amountOfSteps - 1; i >= 0; i--) {
-    toStep.push(i);
-  }
-
-  _.every(toStep, step => {
-    buildStep(centerX + (amountOfSteps - step) * stepCenterDeviationX, centerY + (amountOfSteps - step) * stepCenterDeviationY, step);
+    const stepCenterDeviationDropOffAmount = 1 - (((amountOfSteps - i) / amountOfSteps) * stepCenterDeviationDropOff);
     
-    return !futureElementsAreHidden;
-  });
+    const stepCenterX = centerX + (((amountOfSteps - i) * stepCenterDeviationX) * stepCenterDeviationDropOffAmount);
+    const stepCenterY = centerY + (((amountOfSteps - i) * stepCenterDeviationY) * stepCenterDeviationDropOffAmount);
+      
+    buildStep(stepCenterX, stepCenterY, i);
+    
+    if (futureElementsAreHidden) {
+      break;
+    }
+  }
 
   return steps;
 }
-
-
-
-// TODO: Depth for shadow
-// Depth for each step.
