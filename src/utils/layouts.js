@@ -7,7 +7,8 @@ import {
 import {
   generateInitialShape,
   generateRandomShape,
-  generateRandomTopologyShape
+  generateRandomTopologyShape,
+  generateRandomTriangles
 } from './shapes';
 
 import { VERSIONS } from '../constants';
@@ -27,7 +28,7 @@ export const generateLayoutBySeedAndVersion = (width, height, seed, layoutVersio
   let version = layoutVersion;
   if (version === VERSIONS.FULL_RANDOM) {
     const versionKeys = Object.keys(VERSIONS);
-    while(version === VERSIONS.FULL_RANDOM || version === VERSIONS.INIT_FIRST_GEN) {
+    while(version === VERSIONS.FULL_RANDOM || version === VERSIONS.INIT_FIRST_GEN || version === VERSIONS.TRIANGLES_MULTI) {
       version = VERSIONS[versionKeys[Math.floor(Math.random() * versionKeys.length)]];
     }
   }
@@ -82,6 +83,14 @@ export const generateLayoutBySeedAndVersion = (width, height, seed, layoutVersio
 
     case VERSIONS.TOPOLOGY_GRADIENT_PACK:
       layout.shapes = [generateRandomTopologyShape(width, height, seeder, { gradientPack: true })];
+      break;
+
+    case VERSIONS.TRIANGLES:
+      layout.shapes = [generateRandomShape(width, height, seeder, { triangleMode: true })];
+      break;
+
+    case VERSIONS.TRIANGLES_MULTI:
+      layout.shapes = generateRandomTriangles(width, height, seeder);
       break;
 
     default:

@@ -69,7 +69,12 @@ const generateRandomShapeConfig = (width, height, seeder, shapeOptions) => {
   const floorRandomNegate = range => Math.floor(seeder.rnd() * range) - Math.floor(seeder.rnd() * range); 
 
   const maxPoints = 500;
-  const points = 3 + floorRandom(floorRandom(3) === 1 ? maxPoints : 9); // 1 / 5 chance for possibly many points.
+  let points = 3 + floorRandom(floorRandom(3) === 1 ? maxPoints : 9); // 1 / 5 chance for possibly many points.
+  if (options.triangleMode) {
+    points = 3;
+    options.gradientColor = floorRandom(4) === 0;
+    options.gradientPack = floorRandom(4) === 0;
+  }
   const amountOfSteps = 2 + (100 - Math.floor(Math.pow(100, seeder.rnd())));
 
   const maxColorRandom = {
@@ -276,3 +281,79 @@ export const generateInitialShape = (width, height, seeder) => {
     steps: buildSteps(initialShapeConfig, seeder)
   };
 };
+
+
+export function doesTriangleIntersectsOtherTriangles (triangle, triangles) {
+  for(let i = 0; i < triangles.length; i++) {
+    if (Math.abs(triangle.centerX - triangles[i].centerX) < triangle.triangleSize + triangles[i].triangleSize + 2 ||
+        Math.abs(triangle.centerY - triangles[i].centerY) < triangle.triangleSize + triangles[i].triangleSize + 2
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+export function generateRandomTriangles(width, height, seeder) {
+  const triangles = [];
+
+  const floorRandom = max => Math.floor(seeder.rnd() * max);
+
+  const minSize = Math.min(width, height);
+
+  // TODO: This is coupled and could be done in a nicer way.
+  const baseTriangleShapeConfig = generateRandomShapeConfig(width, height, seeder, { triangleMode: true });
+  baseTriangleShapeConfig.amountOfSteps = 3 + Math.floor(Math.pow(30, seeder.rnd()));
+  baseTriangleShapeConfig.stepCenterDeviationDropOff = 0;
+
+  const amountOfTriangles = 3 + floorRandom(3);
+  const maxTriangleSize = floorRandom((minSize / 2) / (amountOfTriangles + 1));
+
+  const coreCenterX = floorRandom(width);
+  const coreCenterY = floorRandom(height);
+
+  for (let i = 0; i < amountOfTriangles; i++) {
+    const triangleConfig = {
+      ...baseTriangleShapeConfig
+    };
+
+    triangleConfig.triangleSize = 10 + floorRandom(maxTriangleSize) + baseTriangleShapeConfig.innerRadius;
+    // This step length may be wrong? ^ before size should be.
+    triangleConfig.stepLength = 1 + floorRandom(triangleConfig.triangleSize / (triangleConfig.amountOfSteps + 1));
+    triangleConfig.shapeRotation = seeder.rnd() * Math.PI * 2;
+
+    let counter = 0;
+
+    do {
+      // Position the triangle in a random location.
+      triangleConfig.centerX = floorRandom(width);
+      triangleConfig.centerY = floorRandom(height);
+
+      // Ensure they don't go over boundaries.
+      triangleConfig.centerX = Math.min(Math.max(triangleConfig.centerX, triangleConfig.triangleSize), width - triangleConfig.triangleSize);
+      triangleConfig.centerY = Math.min(Math.max(triangleConfig.centerY, triangleConfig.triangleSize), height - triangleConfig.triangleSize);
+      counter++;
+    } while (doesTriangleIntersectsOtherTriangles(triangleConfig, triangles) && counter < 20);
+
+    const adjacent = coreCenterX - triangleConfig.centerX;
+    const opposite = coreCenterY - triangleConfig.centerY;
+    // const hypotenuse = Math.sqrt(Math.pow(adjacent, 2) + Math.pow(opposite, 2));
+
+    const size = (triangleConfig.amountOfSteps * triangleConfig.stepLength);
+    triangleConfig.stepCenterDeviationX = adjacent / size;
+    triangleConfig.stepCenterDeviationY = opposite / size;
+
+    triangles.push({
+      ...triangleConfig,
+      steps: buildSteps(triangleConfig, seeder)
+    });
+  }
+
+  triangles.push({
+    ...baseTriangleShapeConfig,
+    steps: buildSteps(baseTriangleShapeConfig, seeder)
+  })
+
+  return triangles;
+}
