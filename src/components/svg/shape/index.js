@@ -18,7 +18,7 @@ class Shape extends Component {
     const stepComponenets = [];
 
     _.each(steps, (step, index) => {
-      const pathId = `step-${step.id}`;
+      const pathId = `step-${step.id}-shape-${id}`;
       const clipId = `clip-${pathId}`;
       const shadowId = 'svg-shadow';
 
