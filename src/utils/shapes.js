@@ -365,7 +365,7 @@ export function generateRandomWaterColorShape(width, height, seeder) {
 
   const minSize = Math.min(width, height);
 
-  const maxPointDeviation = minSize / (1920 / 10);
+  const maxPointDeviation = minSize / (1920 / 20);
 
   const waterColorShape = {
     ...basicRandomShape,
