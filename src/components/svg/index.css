@@ -1,5 +1,5 @@
 .concentric-js-visual-container {
   /* shape-rendering: crispEdges; */
   /* shape-rendering: optimizeSpeed; */
-  shape-rendering: geometricPrecision;
+  /* shape-rendering: geometricPrecision; */
 }
