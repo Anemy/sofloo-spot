@@ -8,6 +8,7 @@ const Path = props => {
   const {
     clipId,
     hasShadow,
+    hidePath,
     id,
     pathPoints,
     shadowPathPoints,
@@ -15,7 +16,6 @@ const Path = props => {
     shadowStyle,
     style
   } = props;
-
 
   let shadowPathDString = '';
 
@@ -35,28 +35,31 @@ const Path = props => {
 
   let pathDString = '';
 
-  _.each(pathPoints, (point, index) => {
-    pathDString += `${point.type} `;
-    if (point.type === 'C') {
-      const cp = point.cp;
-      pathDString += `${cp[0].x} ${cp[0].y} ${cp[1].x} ${cp[1].y} `;
-    } else if (point.type === 'S') {
-      const cp = point.cp;
-      pathDString += `${cp[1].x} ${cp[1].y} `;
-    }
-    pathDString += `${point.x} ${point.y} `;
-  });
+  // TODO: I was lazy and did gradient shadows hacky, fix.
+  if (!hidePath) {
+    _.each(pathPoints, (point, index) => {
+      pathDString += `${point.type} `;
+      if (point.type === 'C') {
+        const cp = point.cp;
+        pathDString += `${cp[0].x} ${cp[0].y} ${cp[1].x} ${cp[1].y} `;
+      } else if (point.type === 'S') {
+        const cp = point.cp;
+        pathDString += `${cp[1].x} ${cp[1].y} `;
+      }
+      pathDString += `${point.x} ${point.y} `;
+    });
+  }
 
   return (
     <g
       clipPath={clipId ? `url(#${clipId})` : ''}
       id={id}
     >
-      <path
+      {!hidePath && <path
         className={`step-path path-${id}`}
         d={pathDString}
         style={style}
-      />
+      />}
       {hasShadow && 
         <path
           d={shadowPathDString}

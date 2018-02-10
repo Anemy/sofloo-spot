@@ -32,7 +32,6 @@ BTC Wallet:
 
 If you'd like to see something added, create an issue or make a PR! 🚀
 
-
 ## TODO:
 #### Features
 - Depth for each step which impacts shadow.

@@ -8,7 +8,8 @@ import {
   generateInitialShape,
   generateRandomShape,
   generateRandomTopologyShape,
-  generateRandomTriangles
+  generateRandomTriangles,
+  generateRandomWaterColorShape
 } from './shapes';
 
 import { VERSIONS } from '../constants';
@@ -28,7 +29,7 @@ export const generateLayoutBySeedAndVersion = (width, height, seed, layoutVersio
   let version = layoutVersion;
   if (version === VERSIONS.FULL_RANDOM) {
     const versionKeys = Object.keys(VERSIONS);
-    while(version === VERSIONS.FULL_RANDOM || version === VERSIONS.INIT_FIRST_GEN || version === VERSIONS.TRIANGLES_MULTI) {
+    while(version === VERSIONS.FULL_RANDOM || version === VERSIONS.INIT_FIRST_GEN || version === VERSIONS.TRIANGLES_MULTI || version === VERSIONS.BASIC_FIRST_GEN_GRADIENTS) {
       version = VERSIONS[versionKeys[Math.floor(Math.random() * versionKeys.length)]];
     }
   }
@@ -91,6 +92,10 @@ export const generateLayoutBySeedAndVersion = (width, height, seed, layoutVersio
 
     case VERSIONS.TRIANGLES_MULTI:
       layout.shapes = generateRandomTriangles(width, height, seeder);
+      break;
+
+    case VERSIONS.WATER_COLOR:
+      layout.shapes = [generateRandomWaterColorShape(width, height, seeder)];
       break;
 
     default:

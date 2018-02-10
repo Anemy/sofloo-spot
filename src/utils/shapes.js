@@ -46,7 +46,7 @@ function generateRandomShadowConfig(seeder, shapeOptions) {
 
   const blackBasedShadow = options.blackAndWhite || floorRandom(2) === 1;
   const shadowColor = blackBasedShadow ? `rgba(${0}, ${0}, ${0}, ${1})` : createColorString(createRandomColor(seeder));
-  const shadowOpacity = seeder.rnd() * 4 === 0 ? 0 : seeder.rnd().toFixed(4);
+  const shadowOpacity = Math.floor(seeder.rnd() * 4) === 0 ? 0 : seeder.rnd().toFixed(4);
 
   return {
     hasShadow: shadowOpacity > 0,
@@ -142,7 +142,7 @@ export function generateRandomShape(width, height, seeder, options) {
 function generateRandomTopologyShapeConfig(width, height, seeder, shapeOptions) {
   const options = {
     ...shapeOptions,
-    disableShadow: true
+    disableShadow: false
   };
 
   const floorRandom = max => Math.floor(seeder.rnd() * max);
@@ -356,4 +356,26 @@ export function generateRandomTriangles(width, height, seeder) {
   })
 
   return triangles;
+}
+
+export function generateRandomWaterColorShape(width, height, seeder) {
+  const basicRandomShape = generateRandomShapeConfig(width, height, seeder);
+
+  const floorRandom = max => Math.floor(seeder.rnd() * max);
+
+  const minSize = Math.min(width, height);
+
+  const maxPointDeviation = minSize / (1920 / 10);
+
+  const waterColorShape = {
+    ...basicRandomShape,
+    pointDeviationMaxX: seeder.rnd() * maxPointDeviation,
+    pointDeviationMaxY: seeder.rnd() * maxPointDeviation,
+    points: 50 + floorRandom(250),
+    previousPointDeviationInfluence: true
+  }
+
+  waterColorShape.steps = buildSteps(waterColorShape, seeder);
+
+  return waterColorShape;
 }

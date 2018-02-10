@@ -93,6 +93,7 @@ class SvgControls extends Component {
             <MenuItem value={VERSIONS.BASIC_FIRST_GEN_BW} primaryText="Random polygon black and white" />
             <MenuItem value={VERSIONS.BASIC_FIRST_GEN_GRADIENT_PACK} primaryText="Random polygon with select colors" />
             <MenuItem value={VERSIONS.BASIC_FIRST_GEN_GRADIENTS} primaryText="Random polygons with select gradients" />
+            <MenuItem value={VERSIONS.WATER_COLOR} primaryText="'Water color'" />
             <MenuItem value={VERSIONS.TRIANGLES} primaryText="Triangles" />
             <MenuItem value={VERSIONS.TRIANGLES_MULTI} primaryText="Triangles 🎉🎉 - Work in progress" />
             <MenuItem value={VERSIONS.INIT_FIRST_GEN} primaryText="Initial" />
