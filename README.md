@@ -1,5 +1,4 @@
 [Concentric](https://anemy.github.io/concentric) is a generative art project.
-Built by [Anemy](https://github.com/Anemy)
 
 ## Installation
 
