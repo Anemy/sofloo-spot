@@ -41,6 +41,12 @@
   left: 4px;
 }
 
+.concentric-js-make-png-button {
+  bottom: 108px;
+  position: fixed;
+  right: 16px;
+}
+
 .concentric-js-show-svg-code-button {
   bottom: 60px;
   position: fixed;

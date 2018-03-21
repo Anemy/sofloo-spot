@@ -1,5 +1,12 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+import {
+  doneBuildingVisual,
+  setSvgRef
+} from '../../modules/canvas';
 
 import './index.css';
 
@@ -20,12 +27,6 @@ import ShapeDef from './shape-def';
 class SVG extends Component {
   componentDidMount() {
     this.props.setSvgRef(this.svgRef);
-  }
-
-  componentDidUpdate() {
-    if (this.props.isBuilding) {
-      this.props.doneBuildingVisual();
-    }
   }
 
   renderDefs() {
@@ -74,7 +75,7 @@ class SVG extends Component {
       radialBackgroundColor,
       width
     } = this.props;
-    
+
     return (
       <svg
         className="concentric-js-visual-container"
@@ -95,4 +96,26 @@ class SVG extends Component {
   }
 };
 
-export default SVG;
+const mapStateToProps = state => {
+  const layout = state.canvas.present;
+
+  return {
+    backgroundColor: layout.backgroundColor,
+    height: layout.height,
+    isBuilding: state.canvas.isBuilding,
+    radialBackground: layout.radialBackground,
+    radialBackgroundColor: layout.radialBackgroundColor,
+    shapes: layout.shapes,
+    width: layout.width
+  };
+};
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  doneBuildingVisual: () => doneBuildingVisual(),
+  setSvgRef: ref => setSvgRef(ref)
+}, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SVG);

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import ClipPath from '../../clip-path';
 import ColorGradient from '../../svg-color-gradient';
-import SvgShadow from '../../../containers/svg-shadow';
+import SvgShadow from '../../svg-shadow';
 
 class ShapeDefs extends Component {
   render() {
@@ -38,8 +38,8 @@ class ShapeDefs extends Component {
         />
       );
     }
-      
-    for(let i = 0; i < steps.length; i++) {
+
+    for (let i = 0; i < steps.length; i++) {
       const step = steps[i];
 
       const pathId = `step-${step.id}-shape-${id}`;
@@ -103,6 +103,6 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch);
 
 export default connect(
-  mapStateToProps, 
+  mapStateToProps,
   mapDispatchToProps
 )(ShapeDefs);

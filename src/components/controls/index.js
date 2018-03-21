@@ -4,7 +4,7 @@ import Close from 'material-ui/svg-icons/navigation/close';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui/svg-icons/navigation/menu';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -29,6 +29,15 @@ import SvgControls from '../svg-controls';
 const buttonBackgroundColor = '#FAFAFA';
 const buttonLabelColor = '#333';
 
+function downloadURI(uri, name) {
+  const link = document.createElement('a');
+  link.download = name;
+  link.href = uri;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 class Controls extends Component {
   state = {
     showShareableLink: false,
@@ -36,6 +45,28 @@ class Controls extends Component {
     showSVGControls: false,
     svgCode: 'The svg has not yet loaded or an error has occured.'
   };
+
+  generatePNGImage() {
+    const { width, height } = this.props;
+
+    const svg = document.querySelector('svg');
+    const svgData = new XMLSerializer().serializeToString(svg);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+
+    const img = document.createElement('img');
+    img.setAttribute('src', `data:image/svg+xml;base64,${btoa(svgData)}`);
+
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, width, height);
+
+      const imargURI = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+      downloadURI(imargURI, `Concentric-${Date.now()}.png`);
+    };
+  }
 
   showLinkPopup() {
     const { shareableString } = this.props;
@@ -138,7 +169,7 @@ class Controls extends Component {
       showSVGCode,
       showSVGControls
     } = this.state;
-    
+
     return (
       <MuiThemeProvider>
         <div
@@ -189,6 +220,13 @@ class Controls extends Component {
           </div>
           <RaisedButton
             backgroundColor={buttonBackgroundColor}
+            className="concentric-js-make-png-button"
+            onClick={() => this.generatePNGImage()}
+            label="Generate PNG"
+            labelColor={buttonLabelColor}
+          />
+          <RaisedButton
+            backgroundColor={buttonBackgroundColor}
             className="concentric-js-show-svg-code-button"
             onClick={() => this.toggleShowSVGCode()}
             label="Show Svg Code"
@@ -201,7 +239,7 @@ class Controls extends Component {
             label="Get Shareable Link"
             labelColor={buttonLabelColor}
           />
-          {showSVGControls && 
+          {showSVGControls &&
             <div className="concentric-js-svg-controls-container">
               <SvgControls />
             </div>
@@ -220,18 +258,20 @@ const mapStateToProps = state => {
   const shareableString = `${baseURL}?shared=${layout.seed}&v=${layout.version}`;
 
   return {
+    height: layout.height,
+    width: layout.width,
     randomizeButtonBackgroundColor: createColorString(outerColor),
     randomizeButtonLabelColor: getContrastingBinaryColor(outerColor),
     shareableString,
     svgRef: state.canvas.svgRef
-  }
+  };
 };
 
 const mapDispatchToProps = dispatch => {
   let aboutToUpdate = false;
 
   return {
-    // TODO: This is hacky, clean up.
+    // TODO: This is hacky, clean up - should be done with thunk.
     historyBack: () => {
       if (!aboutToUpdate) {
         aboutToUpdate = true;
@@ -266,6 +306,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(
-  mapStateToProps, 
+  mapStateToProps,
   mapDispatchToProps
 )(Controls);

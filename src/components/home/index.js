@@ -5,7 +5,7 @@ import './index.css';
 
 import Controls from '../controls';
 import Loader from '../loader';
-import SVG from '../../containers/svg';
+import SVG from '../svg';
 
 const Home = props => {
   return (
@@ -27,6 +27,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = null;
 
 export default connect(
-  mapStateToProps, 
+  mapStateToProps,
   mapDispatchToProps
 )(Home);

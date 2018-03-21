@@ -29,7 +29,7 @@ export const generateLayoutBySeedAndVersion = (width, height, seed, layoutVersio
   let version = layoutVersion;
   if (version === VERSIONS.FULL_RANDOM) {
     const versionKeys = Object.keys(VERSIONS);
-    while(version === VERSIONS.FULL_RANDOM || version === VERSIONS.INIT_FIRST_GEN || version === VERSIONS.TRIANGLES_MULTI || version === VERSIONS.BASIC_FIRST_GEN_GRADIENTS) {
+    while (version === VERSIONS.FULL_RANDOM || version === VERSIONS.INIT_FIRST_GEN || version === VERSIONS.TRIANGLES_MULTI || version === VERSIONS.BASIC_FIRST_GEN_GRADIENTS) {
       version = VERSIONS[versionKeys[Math.floor(Math.random() * versionKeys.length)]];
     }
   }
@@ -43,7 +43,7 @@ export const generateLayoutBySeedAndVersion = (width, height, seed, layoutVersio
 
   const seeder = new MersenneTwister(seed);
 
-  switch(version) {
+  switch (version) {
     case VERSIONS.BASIC_FIRST_GEN:
       layout.shapes = [generateRandomShape(width, height, seeder)];
       break;
@@ -56,7 +56,7 @@ export const generateLayoutBySeedAndVersion = (width, height, seed, layoutVersio
       layout.shapes = [generateRandomShape(width, height, seeder, { gradientPack: true })];
       break;
 
-    case VERSIONS.BASIC_FIRST_GEN_GRADIENTS:
+    case VERSIONS.BASIC_FIRST_GEN_GRADIENTS: {
       const shapeOptions = {
         colorDropWithDepth: true,
         gradientPack: true,
@@ -64,6 +64,7 @@ export const generateLayoutBySeedAndVersion = (width, height, seed, layoutVersio
       };
       layout.shapes = [generateRandomShape(width, height, seeder, shapeOptions)];
       break;
+    }
 
     case VERSIONS.INIT_FIRST_GEN:
       layout.shapes = [generateInitialShape(width, height, seeder)];
@@ -73,7 +74,7 @@ export const generateLayoutBySeedAndVersion = (width, height, seed, layoutVersio
       layout.shapes = [generateRandomTopologyShape(width, height, seeder)];
       break;
 
-    case VERSIONS.TOPOLOGY_GRADIENTS:
+    case VERSIONS.TOPOLOGY_GRADIENTS: {
       const options = {
         colorDropWithDepth: true,
         gradientPack: true,
@@ -81,6 +82,7 @@ export const generateLayoutBySeedAndVersion = (width, height, seed, layoutVersio
       };
       layout.shapes = [generateRandomTopologyShape(width, height, seeder, options)];
       break;
+    }
 
     case VERSIONS.TOPOLOGY_GRADIENT_PACK:
       layout.shapes = [generateRandomTopologyShape(width, height, seeder, { gradientPack: true })];
@@ -112,6 +114,9 @@ export const generateInitialLayout = (width, height) => {
 
   const seed = sharedUrlSeed ? sharedUrlSeed : createRandomSeed();
   const version = sharedUrlVersion ? sharedUrlVersion : VERSIONS.INIT_FIRST_GEN;
-  
-  return generateLayoutBySeedAndVersion(width, height, seed, version);
+
+  return {
+    ...generateLayoutBySeedAndVersion(width, height, seed, version),
+    backgroundColor: '#FFFFFF'
+  };
 };
