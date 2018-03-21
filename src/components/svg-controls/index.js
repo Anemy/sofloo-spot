@@ -20,20 +20,17 @@ import { createColorString, getContrastingBinaryColor } from '../../utils/color'
 
 import './index.css';
 
-// symshapes.com
-// progenart.com
-// procgenart.com
-
-// const buttonBackgroundColor = '#FAFAFA';
-// const buttonLabelColor = '#333';
-
 class SvgControls extends Component {
+  handleAlgorithmChange = (event, index, value) => {
+    this.props.setRandomizeAlgorithm(value);
+  }
+
   setBackgroundColor = color => {
     this.props.updateBackground({
       backgroundColor: color.hex
     });
   }
-  
+
   setRadialBackgroundColor = color => {
     this.props.updateBackground({
       radialBackgroundColor: color.hex
@@ -44,10 +41,6 @@ class SvgControls extends Component {
     this.props.updateBackground({
       radialBackground: !this.props.radialBackground
     });
-  }
-
-  handleAlgorithmChange = (event, index, value) => {
-    this.props.setRandomizeAlgorithm(value);
   }
 
   render() {
@@ -164,6 +157,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(
-  mapStateToProps, 
+  mapStateToProps,
   mapDispatchToProps
 )(SvgControls);

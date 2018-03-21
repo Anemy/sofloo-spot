@@ -1,12 +1,13 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-const getRandomColor = () => {
+function getRandomColor() {
   const r = Math.floor(Math.random()*255);
   const g = Math.floor(Math.random()*255);
   const b = Math.floor(Math.random()*255);
 
   return `rgb(${r}, ${g}, ${b})`;
-}
+};
 
 const SvgShadow = props => {
   return (
@@ -16,7 +17,7 @@ const SvgShadow = props => {
       {/* Shadow Blur */}
       <feGaussianBlur stdDeviation={props.shadowBlur}  result="offset-blur"/>
       {/* Invert the drop shadow to create an inner shadow  */}
-      <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result={props.shadowInset && "inverse"}/>
+      <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result={props.shadowInset && 'inverse'}/>
       {/* Color & Opacity */}
       <feFlood floodColor={props.randomShadow ? getRandomColor() : props.shadowColor} floodOpacity={props.shadowOpacity} result="color"/>
       {/* Clip color inside shadow */}
@@ -31,4 +32,22 @@ const SvgShadow = props => {
   );
 };
 
-export default SvgShadow;
+const mapStateToProps = state => {
+  const layout = state.canvas.present;
+  const shape = layout.shapes[0];
+
+  return {
+    randomShadow: shape.randomShadow,
+    shadowBlur: shape.shadowBlur,
+    shadowColor: shape.shadowColor,
+    shadowInset: shape.shadowInset,
+    shadowOffsetX: shape.shadowOffsetX,
+    shadowOffsetY: shape.shadowOffsetY,
+    shadowOpacity: shape.shadowOpacity
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  null // mapDispatchToProps
+)(SvgShadow);

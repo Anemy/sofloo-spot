@@ -4,7 +4,7 @@
   animation: concentricLoaderAnim 1.25s infinite;
   outline: 1px solid transparent;
   z-index: 10000000;
-  position: absolute;
+  position: fixed;
   left: 3em;
   bottom: 3em;
 }

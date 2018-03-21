@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import store, { history } from './store';
-import App from './containers/app';
+import App from './app';
 
 import './index.css';
 import 'font-awesome/css/font-awesome.min.css';
