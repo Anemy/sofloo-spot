@@ -46,7 +46,8 @@ function generateRandomShadowConfig(seeder, shapeOptions) {
 
   const blackBasedShadow = options.blackAndWhite || floorRandom(2) === 1;
   const shadowColor = blackBasedShadow ? `rgba(${0}, ${0}, ${0}, ${1})` : createColorString(createRandomColor(seeder));
-  const shadowOpacity = Math.floor(seeder.rnd() * 4) === 0 ? 0 : seeder.rnd().toFixed(4);
+
+  let shadowOpacity = Math.floor(seeder.rnd() * 4) === 0 ? 0 : seeder.rnd().toFixed(2);
 
   return {
     hasShadow: shadowOpacity > 0,

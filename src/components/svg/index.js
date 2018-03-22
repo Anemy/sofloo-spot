@@ -13,17 +13,6 @@ import './index.css';
 import Shape from './shape';
 import ShapeDef from './shape-def';
 
-// TODO: https://tympanus.net/Development/CreativeGooeyEffects/send.html
-
-// Zero width tunnel:
-// https://css-tricks.com/cutting-inner-part-element-using-clip-path/
-
-// Things to write about:
-// - inset shadows in canvas
-// - inset shadows in svg
-// - draw circle with bezier curves
-// - prog gen art
-
 class SVG extends Component {
   componentDidMount() {
     this.props.setSvgRef(this.svgRef);
@@ -95,7 +84,7 @@ class SVG extends Component {
       </svg>
     );
   }
-};
+}
 
 const mapStateToProps = state => {
   const layout = state.canvas.present;

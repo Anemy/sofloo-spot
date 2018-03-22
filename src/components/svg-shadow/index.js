@@ -7,11 +7,11 @@ function getRandomColor() {
   const b = Math.floor(Math.random()*255);
 
   return `rgb(${r}, ${g}, ${b})`;
-};
+}
 
 const SvgShadow = props => {
   return (
-    <filter id={props.shadowId}>
+    <filter id={props.shadowId} y="-40%" x="-40%" height="180%" width="180%">
       {/* Shadow offset */}
       <feOffset dx={props.shadowOffsetX} dy={props.shadowOffsetY}/>
       {/* Shadow Blur */}
