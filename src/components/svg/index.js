@@ -86,6 +86,8 @@ class SVG extends Component {
             `radial-gradient(${radialBackgroundColor}, ${backgroundColor})` : backgroundColor
         }}
         width={width}
+        preserveAspectRatio
+        viewBox={`0 0 ${width} ${height}`}
       >
         <defs key="svg-defs">
           {this.renderDefs()}

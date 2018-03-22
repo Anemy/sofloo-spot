@@ -33,7 +33,9 @@ function downloadURI(uri, name) {
   const link = document.createElement('a');
   link.download = name;
   link.href = uri;
+  link.target = '_blank';
   document.body.appendChild(link);
+
   link.click();
   document.body.removeChild(link);
 }
@@ -53,18 +55,20 @@ class Controls extends Component {
     const svgData = new XMLSerializer().serializeToString(svg);
 
     const canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = width * 4;
+    canvas.height = height * 4;
     const ctx = canvas.getContext('2d');
 
     const img = document.createElement('img');
     img.setAttribute('src', `data:image/svg+xml;base64,${btoa(svgData)}`);
 
     img.onload = () => {
-      ctx.drawImage(img, 0, 0, width, height);
+      ctx.drawImage(img, 0, 0, width * 4, height * 4);
 
-      const imargURI = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
-      downloadURI(imargURI, `Concentric-${Date.now()}.png`);
+      canvas.toBlob(blobData => {
+        const blobUrl = window.URL.createObjectURL(blobData);
+        downloadURI(blobUrl, `Concentric-${Date.now()}.png`);
+      });
     };
   }
 

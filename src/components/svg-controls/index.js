@@ -3,6 +3,7 @@ import { List, ListItem } from 'material-ui/List';
 import MenuItem from 'material-ui/MenuItem';
 import Subheader from 'material-ui/Subheader';
 import SelectField from 'material-ui/SelectField';
+import TextField from 'material-ui/TextField';
 import Toggle from 'material-ui/Toggle';
 import React, { Component } from 'react';
 import { CompactPicker } from 'react-color';
@@ -120,6 +121,29 @@ class SvgControls extends Component {
                 <CompactPicker
                   color={radialBackgroundColor}
                   onChange={this.setRadialBackgroundColor}
+                />
+              </div>
+            ]}
+          />
+          <ListItem
+            primaryText="Render Options"
+            initiallyOpen={true}
+            primaryTogglesNestedList={true}
+            nestedItems={[
+              <div
+                className="concentric-js-svg-controls-list-nested-item"
+                key="1"
+              >
+                <TextField
+                  hintText="Width (px)"
+                />
+              </div>,
+              <div
+                className="concentric-js-svg-controls-list-nested-item"
+                key="2"
+              >
+                <TextField
+                  hintText="Height (px)"
                 />
               </div>
             ]}
