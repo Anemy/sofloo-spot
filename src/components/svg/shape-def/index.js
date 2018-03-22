@@ -71,6 +71,7 @@ class ShapeDefs extends Component {
         } else {
           defs.push(
             <clipPath
+              clipPath={i === 0 ? '' : `url(#clip-step-${steps[i - 1].id}-shape-${id})`}
               id={clipId}
               key={clipId}
             >

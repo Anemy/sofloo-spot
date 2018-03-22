@@ -60,9 +60,9 @@ class Controls extends Component {
 
     if (preserveRenderAspectRatio) {
       if (renderWidth > renderHeight) {
-        outputHeight = renderWidth * (1 / renderAspectRatio);
+        outputHeight = Math.round(renderWidth * (1 / renderAspectRatio));
       } else {
-        outputWidth = renderHeight * renderAspectRatio;
+        outputWidth = Math.round(renderHeight * renderAspectRatio);
       }
     }
 

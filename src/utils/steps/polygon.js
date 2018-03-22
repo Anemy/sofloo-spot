@@ -6,10 +6,6 @@ import {
   createStartPoint
 } from './points';
 
-// TODO: Don't use this lib.
-// https://sourceforge.net/p/jsclipper/wiki/documentation/#clipperlibcliptype
-const ClipperLib = window.ClipperLib;
-
 const createPathPoint = (radius, point, points, rotate, deviation, firstDeviation) => {
   const stopAngle = 2 * Math.PI * ((point + 1) / points) + rotate;
 
@@ -24,21 +20,6 @@ const createPathPoint = (radius, point, points, rotate, deviation, firstDeviatio
     y: stopy
   };
 };
-
-function getXYPointsfromxyPoints(points) {
-  const newPoints = [];
-
-  for (let i = 0; i < points.length; i++) {
-    const point = points[i];
-
-    newPoints.push({
-      X: point.x,
-      Y: point.y
-    });
-  }
-
-  return newPoints;
-}
 
 // TODO: Clean this up - it's ugly code XD
 export function buildSteps({
@@ -63,8 +44,6 @@ export function buildSteps({
   stepLengthDropOff
 }, seeder) {
   const steps = [];
-
-  let clippingFilterPoints = ClipperLib.Paths();
 
   let futureElementsAreHidden = false;
 
@@ -171,71 +150,27 @@ export function buildSteps({
     for (let i = 0; i < pathPoints.length; i++) {
       pathPoints[i].x += x;
       pathPoints[i].y += y;
+
+      pathPoints[i].x = Math.floor(pathPoints[i].x);
+      pathPoints[i].y = Math.floor(pathPoints[i].y);
     }
 
     const pathPointsForClip = [];
 
-    if (isFirstStep) {
-      for (let i = pathPoints.length - 1; i >= 0; i--) {
-        const point = pathPoints[i];
+    for (let i = pathPoints.length - 1; i >= 0; i--) {
+      const point = pathPoints[i];
 
-        pathPointsForClip.push({
-          type: i === pathPoints.length - 1 ? 'M' : 'L',
-          x: point.x,
-          y: point.y
-        });
-      }
-    } else {
-      const pointsToAddToClip = getXYPointsfromxyPoints(pathPoints);
-
-      const clipSolution = new ClipperLib.Paths();
-      const c = new ClipperLib.Clipper();
-
-      // NOTE: If these arrays contain NaN then it will infinite loop.
-      c.AddPath(pointsToAddToClip, ClipperLib.PolyType.ptSubject, true);
-      c.AddPath(clippingFilterPoints, ClipperLib.PolyType.ptClip, true);
-      c.Execute(ClipperLib.ClipType.ctIntersection, clipSolution);
-
-      if (clipSolution && clipSolution.length > 0) {
-        clippingFilterPoints.length = 0;
-        for (let i = 0; i < clipSolution[0].length; i++) {
-          clippingFilterPoints[i] = {
-            X: clipSolution[0][i].X,
-            Y: clipSolution[0][i].Y
-          };
-        }
-      } else {
-        futureElementsAreHidden = true;
-      }
-
-      // TODO: Simplify polygons and account for splitting.
-      // const after = ClipperLib.Clipper.SimplifyPolygons([clippingFilterPoints], ClipperLib.PolyFillType.pftNonZero)[0];
-      // pftNonZero or pftEvenOdd
-
-      for (let i = clippingFilterPoints.length - 1; i >= 0; i--) {
-        const point = clippingFilterPoints[i];
-
-        pathPointsForClip.push({
-          type: i === clippingFilterPoints.length - 1 ? 'M' : 'L',
-          x: point.X,
-          y: point.Y
-        });
-      }
-    }
-
-    for (let i = 0; i < pathPointsForClip.length; i++) {
-      const point = isFirstStep ? pathPoints[i] : pathPointsForClip[i];
-
-      clippingFilterPoints[i] = {
-        X: point.x,
-        Y: point.y
-      };
+      pathPointsForClip.push({
+        type: i === pathPoints.length - 1 ? 'M' : 'L',
+        x: point.x,
+        y: point.y
+      });
     }
 
     steps.push({
       clipPoints: pathPointsForClip,
       color: getStepColor(step, amountOfSteps, colors),
-      hasShadow: shadowOpacity > 0,
+      hasShadow: shadowOpacity > 0.1,
       id: step,
       pathPoints: pathPoints
     });

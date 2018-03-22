@@ -107,13 +107,14 @@ export const setRandomizeAlgorithm = algorithm => {
 
 // We default to rendering the pic at 5k pixels for the greater
 // aspect ratio number (or the screensize if bigger).
+const defaultMinMaxSize = 5000;
 let initialRenderHeight;
 let initialRenderWidth;
 if (height > width) {
-  initialRenderHeight = Math.round(Math.max(height, 5000));
+  initialRenderHeight = Math.round(Math.max(height, defaultMinMaxSize));
   initialRenderWidth = Math.round((initialRenderHeight / height) * width);
 } else {
-  initialRenderWidth = Math.round(Math.max(width, 5000));
+  initialRenderWidth = Math.round(Math.max(width, defaultMinMaxSize));
   initialRenderHeight = Math.round((initialRenderWidth / width) * height);
 }
 const initialRenderAspectRatio = initialRenderWidth / initialRenderHeight;
