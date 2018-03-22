@@ -33,11 +33,15 @@ function downloadURI(uri, name) {
   const link = document.createElement('a');
   link.download = name;
   link.href = uri;
-  link.target = '_blank';
   document.body.appendChild(link);
 
-  link.click();
-  document.body.removeChild(link);
+  setTimeout(() => {
+    link.click();
+
+    setTimeout(() => {
+      document.body.removeChild(link);
+    }, 10);
+  }, 10);
 }
 
 class Controls extends Component {
@@ -49,21 +53,32 @@ class Controls extends Component {
   };
 
   generatePNGImage() {
-    const { width, height } = this.props;
+    const { preserveRenderAspectRatio, renderAspectRatio, renderWidth, renderHeight } = this.props;
+
+    let outputWidth = renderWidth;
+    let outputHeight = renderHeight;
+
+    if (preserveRenderAspectRatio) {
+      if (renderWidth > renderHeight) {
+        outputHeight = renderWidth * (1 / renderAspectRatio);
+      } else {
+        outputWidth = renderHeight * renderAspectRatio;
+      }
+    }
 
     const svg = document.querySelector('svg');
     const svgData = new XMLSerializer().serializeToString(svg);
 
     const canvas = document.createElement('canvas');
-    canvas.width = width * 4;
-    canvas.height = height * 4;
+    canvas.width = outputWidth;
+    canvas.height = outputHeight;
     const ctx = canvas.getContext('2d');
 
     const img = document.createElement('img');
     img.setAttribute('src', `data:image/svg+xml;base64,${btoa(svgData)}`);
 
     img.onload = () => {
-      ctx.drawImage(img, 0, 0, width * 4, height * 4);
+      ctx.drawImage(img, 0, 0, outputWidth, outputHeight);
 
       canvas.toBlob(blobData => {
         const blobUrl = window.URL.createObjectURL(blobData);
@@ -263,11 +278,15 @@ const mapStateToProps = state => {
 
   return {
     height: layout.height,
-    width: layout.width,
+    preserveRenderAspectRatio: state.canvas.preserveRenderAspectRatio,
     randomizeButtonBackgroundColor: createColorString(outerColor),
     randomizeButtonLabelColor: getContrastingBinaryColor(outerColor),
+    renderAspectRatio: state.canvas.renderAspectRatio,
+    renderHeight: state.canvas.renderHeight,
+    renderWidth: state.canvas.renderWidth,
     shareableString,
-    svgRef: state.canvas.svgRef
+    svgRef: state.canvas.svgRef,
+    width: layout.width
   };
 };
 

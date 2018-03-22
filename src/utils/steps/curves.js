@@ -66,7 +66,7 @@ function createTopologyStep(config, x, y, step, firstStepDeviation, previousStep
 
     const pathPoint = createPathPoint(config, pathPoints[pathPoints.length - 1], stepRadius, i, stepRotation, deviation, nextDeviation, x, y);
     pathPoints.push(pathPoint);
-    
+
     previousDeviation = copyPoint(deviation);
   }
 
@@ -114,7 +114,7 @@ export function buildTopologySteps(config, seeder) {
 
   const firstStepDeviation = [];
   let previousStepClip = [];
-  
+
   for (let i = amountOfSteps - 1; i >= 0; i--) {
     const stepCenterDeviationDropOffAmount = 1 - (((amountOfSteps - i) / amountOfSteps) * stepCenterDeviationDropOff);
 
@@ -122,13 +122,13 @@ export function buildTopologySteps(config, seeder) {
     const stepY = centerY + (((amountOfSteps - i) * stepCenterDeviationY) * stepCenterDeviationDropOffAmount);
 
     const step = createTopologyStep(config, stepX, stepY, i, firstStepDeviation, previousStepClip, seeder);
-    
+
     if (!step) {
       break;
     }
 
     previousStepClip = step.pathPoints;
-    
+
     steps.push(step);
   }
 

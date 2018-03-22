@@ -8,15 +8,17 @@ import {
   VERSIONS
 } from '../constants';
 
-export const DONE_BUILDING = 'svg/DONE_BUILDING';
-export const HISTORY_BACK = 'svg/HISTORY_BACK';
-export const HISTORY_FORWARD = 'svg/HISTORY_FORWARD';
-export const RANDOMIZE = 'svg/RANDOMIZE';
-export const SET_RANDOMIZE_ALGORITHM = 'svg/SET_RANDOMIZE_ALGORITHM';
-export const SET_SVG_REF = 'svg/SET_SVG_REF';
-export const START_BUILDING = 'svg/START_BUILDING';
-export const UPDATE_BACKGROUND = 'svg/UPDATE_BACKGROUND';
-export const UPDATE_SVG = 'svg/UPDATE_SVG';
+const DONE_BUILDING = 'svg/DONE_BUILDING';
+const HISTORY_BACK = 'svg/HISTORY_BACK';
+const HISTORY_FORWARD = 'svg/HISTORY_FORWARD';
+const RANDOMIZE = 'svg/RANDOMIZE';
+const SET_RANDOMIZE_ALGORITHM = 'svg/SET_RANDOMIZE_ALGORITHM';
+const SET_SVG = 'svg/SET_SVG';
+const SET_SVG_REF = 'svg/SET_SVG_REF';
+const START_BUILDING = 'svg/START_BUILDING';
+const TOGGLE_RENDER_ASPECT_RATIO = 'svg/TOGGLE_RENDER_ASPECT_RATIO';
+const UPDATE_BACKGROUND = 'svg/UPDATE_BACKGROUND';
+const UPDATE_SVG = 'svg/UPDATE_SVG';
 
 const maxHistoryLength = 1000;
 
@@ -50,10 +52,34 @@ export const historyForward = () => ({
   type: HISTORY_FORWARD
 });
 
+export function togglePreserveAspectRatio() {
+  return {
+    type: TOGGLE_RENDER_ASPECT_RATIO
+  };
+}
+
 export const updateBackground = newBackground => ({
   newBackground,
   type: UPDATE_BACKGROUND
 });
+
+export function updateRenderHeight(newHeight) {
+  return {
+    type: SET_SVG,
+    payload: {
+      renderHeight: newHeight
+    }
+  };
+}
+
+export function updateRenderWidth(newWidth) {
+  return {
+    type: SET_SVG,
+    payload: {
+      renderWidth: newWidth
+    }
+  };
+}
 
 export const updateVisual = update => ({
   update,
@@ -79,6 +105,18 @@ export const setRandomizeAlgorithm = algorithm => {
   };
 };
 
+// We default to rendering the pic at 5k pixels for the greater
+// aspect ratio number (or the screensize if bigger).
+let initialRenderHeight;
+let initialRenderWidth;
+if (height > width) {
+  initialRenderHeight = Math.round(Math.max(height, 5000));
+  initialRenderWidth = Math.round((initialRenderHeight / height) * width);
+} else {
+  initialRenderWidth = Math.round(Math.max(width, 5000));
+  initialRenderHeight = Math.round((initialRenderWidth / width) * height);
+}
+const initialRenderAspectRatio = initialRenderWidth / initialRenderHeight;
 
 const initialState = {
   height,
@@ -86,9 +124,13 @@ const initialState = {
   future: [],
   isBuilding: false,
   present: generateInitialLayout(width, height),
+  preserveRenderAspectRatio: true,
   randomizeAlgorithm: VERSIONS.FULL_RANDOM,
   svgRef: null,
-  width
+  width,
+  renderAspectRatio: initialRenderAspectRatio,
+  renderHeight: initialRenderHeight,
+  renderWidth: initialRenderWidth
 };
 
 
@@ -205,6 +247,13 @@ export default (state = initialState, action) => {
         svgRef: action.svgRef
       };
 
+    case TOGGLE_RENDER_ASPECT_RATIO: {
+      return {
+        ...state,
+        preserveRenderAspectRatio: !state.preserveRenderAspectRatio
+      };
+    }
+
     case UPDATE_BACKGROUND: {
       const theNewState = {
         ...state
@@ -216,6 +265,13 @@ export default (state = initialState, action) => {
       };
 
       return theNewState;
+    }
+
+    case SET_SVG: {
+      return {
+        ...state,
+        ...action.payload
+      };
     }
 
     default:

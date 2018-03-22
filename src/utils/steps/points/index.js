@@ -8,31 +8,31 @@ export function createStartPoint(radius, rotate, deviation) {
     type: 'M',
     x: startx,
     y: starty
-  }
+  };
 }
 
 // TODO: Remove? Unused?
 export function pointInPolyon(point, vs) {
   // ray-casting algorithm based on
   // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
-  
+
   const x = point.x;
   const y = point.y;
-  
+
   let inside = false;
   for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
     const xi = vs[i].x;
     const yi = vs[i].y;
     const xj = vs[j].x;
     const yj = vs[j].y;
-    
+
     const intersect = ((yi > y) !== (yj > y))
         && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
     if (intersect) {
       inside = !inside;
     }
   }
-  
+
   return inside;
 }
 
@@ -57,7 +57,7 @@ export function copyPoint(toCopy) {
 
 export function copyPoints(toCopy) {
   const copy = [];
-  
+
   for (let i = toCopy.length - 1; i >= 0; i--) {
     const point = toCopy[i];
 
@@ -94,7 +94,7 @@ export function getPointDeviation(config, step, previousDeviation, seeder) {
   } = config;
 
   const pointDeviationX = seeder.rnd() * pointDeviationMaxX - seeder.rnd() * pointDeviationMaxX;
-  const pointDeviationY = seeder.rnd() * pointDeviationMaxY - seeder.rnd() * pointDeviationMaxY;    
+  const pointDeviationY = seeder.rnd() * pointDeviationMaxY - seeder.rnd() * pointDeviationMaxY;
 
   const hasDeviation = Math.floor(seeder.rnd() * pointDeviationChance) === 0;
 
@@ -111,7 +111,7 @@ export function getPointDeviation(config, step, previousDeviation, seeder) {
   return deviation;
 }
 
-function createBezierControlPointsForCircleAt (radius, x1, y1, x2, y2) {
+function createBezierControlPointsForCircleAt(radius, x1, y1, x2, y2) {
   let startAngle = Math.atan2(y1, x1);
   let stopAngle = Math.atan2(y2, x2);
 

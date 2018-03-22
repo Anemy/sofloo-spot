@@ -94,7 +94,7 @@ export function buildSteps({
 
     for (let i = 0; i < points; i++) {
       const pointDeviationX = seeder.rnd() * pointDeviationMaxX - seeder.rnd() * pointDeviationMaxX;
-      const pointDeviationY = seeder.rnd() * pointDeviationMaxY - seeder.rnd() * pointDeviationMaxY;    
+      const pointDeviationY = seeder.rnd() * pointDeviationMaxY - seeder.rnd() * pointDeviationMaxY;
 
       // TODO: Move the deviation code into another function.
       // &: Write something that helps make sure it doesn't generatie shapes which overlap on themselves.
@@ -114,17 +114,15 @@ export function buildSteps({
         if (i > points - (points / 4)) {
           const realClose = i > points - (points / 12);
 
-          if (Math.abs(pointDeviationMaxX) > 0 && 
-            ((pointDeviationX < 0 && previousDeviation.x > 0) || (pointDeviationX > 0 && previousDeviation.x < 0)))
-          {
+          if (Math.abs(pointDeviationMaxX) > 0 &&
+            ((pointDeviationX < 0 && previousDeviation.x > 0) || (pointDeviationX > 0 && previousDeviation.x < 0))) {
             const undeviateX = pointDeviationX / 2;
 
             deviation.x += undeviateX * (realClose ? 4 : 1);
           }
 
-          if (Math.abs(pointDeviationMaxY) > 0 && 
-            ((pointDeviationY < 0 && previousDeviation.y > 0) || (pointDeviationY > 0 && previousDeviation.y < 0)))
-          {
+          if (Math.abs(pointDeviationMaxY) > 0 &&
+            ((pointDeviationY < 0 && previousDeviation.y > 0) || (pointDeviationY > 0 && previousDeviation.y < 0))) {
             const undeviateY = pointDeviationY / 2;
 
             deviation.y += undeviateY * (realClose ? 4 : 1);
@@ -142,7 +140,7 @@ export function buildSteps({
 
         pathPoints.push(createStartPoint(radius, rotate, sharedPointDeviation ? pointDeviations[0] : deviation));
       }
-      
+
       if (sharedPointDeviation) {
         // NOTE: `createPathPoint` is a local function.
         pathPoints.push(createPathPoint(
@@ -200,7 +198,7 @@ export function buildSteps({
 
       if (clipSolution && clipSolution.length > 0) {
         clippingFilterPoints.length = 0;
-        for(let i = 0; i < clipSolution[0].length; i++) {
+        for (let i = 0; i < clipSolution[0].length; i++) {
           clippingFilterPoints[i] = {
             X: clipSolution[0][i].X,
             Y: clipSolution[0][i].Y
@@ -231,7 +229,7 @@ export function buildSteps({
       clippingFilterPoints[i] = {
         X: point.x,
         Y: point.y
-      }
+      };
     }
 
     steps.push({
@@ -245,12 +243,12 @@ export function buildSteps({
 
   for (let i = amountOfSteps - 1; i >= 0; i--) {
     const stepCenterDeviationDropOffAmount = 1 - (((amountOfSteps - i) / amountOfSteps) * stepCenterDeviationDropOff);
-    
+
     const stepCenterX = centerX + (((amountOfSteps - i) * stepCenterDeviationX) * stepCenterDeviationDropOffAmount);
     const stepCenterY = centerY + (((amountOfSteps - i) * stepCenterDeviationY) * stepCenterDeviationDropOffAmount);
-      
+
     buildStep(stepCenterX, stepCenterY, i);
-    
+
     if (futureElementsAreHidden) {
       break;
     }

@@ -42,7 +42,7 @@ function generateRandomShadowConfig(seeder, shapeOptions) {
   }
 
   const floorRandom = max => Math.floor(seeder.rnd() * max);
-  const floorRandomNegate = range => Math.floor(seeder.rnd() * range) - Math.floor(seeder.rnd() * range); 
+  const floorRandomNegate = range => Math.floor(seeder.rnd() * range) - Math.floor(seeder.rnd() * range);
 
   const blackBasedShadow = options.blackAndWhite || floorRandom(2) === 1;
   const shadowColor = blackBasedShadow ? `rgba(${0}, ${0}, ${0}, ${1})` : createColorString(createRandomColor(seeder));
@@ -56,7 +56,7 @@ function generateRandomShadowConfig(seeder, shapeOptions) {
     shadowInset: true,
     shadowOffsetX: floorRandomNegate(40),
     shadowOffsetY: floorRandomNegate(40),
-    shadowOpacity,
+    shadowOpacity
   };
 };
 
@@ -66,7 +66,7 @@ const generateRandomShapeConfig = (width, height, seeder, shapeOptions) => {
   };
 
   const floorRandom = max => Math.floor(seeder.rnd() * max);
-  const floorRandomNegate = range => Math.floor(seeder.rnd() * range) - Math.floor(seeder.rnd() * range); 
+  const floorRandomNegate = range => Math.floor(seeder.rnd() * range) - Math.floor(seeder.rnd() * range);
 
   const maxPoints = 500;
   let points = 3 + floorRandom(floorRandom(3) === 1 ? maxPoints : 9); // 1 / 5 chance for possibly many points.
@@ -146,7 +146,7 @@ function generateRandomTopologyShapeConfig(width, height, seeder, shapeOptions) 
   };
 
   const floorRandom = max => Math.floor(seeder.rnd() * max);
-  const floorRandomNegate = range => Math.floor(seeder.rnd() * range) - Math.floor(seeder.rnd() * range); 
+  const floorRandomNegate = range => Math.floor(seeder.rnd() * range) - Math.floor(seeder.rnd() * range);
 
   const maxPoints = 30;
   const points = 3 + floorRandom(floorRandom(3) === 1 ? maxPoints : 9); // 1 / 5 chance for possibly many points.
@@ -237,7 +237,7 @@ const startColors = whiteToBlack;
 
 export const generateInitialShape = (width, height, seeder) => {
   const floorRandom = max => Math.floor(seeder.rnd() * max);
-  const floorRandomNegate = range => Math.floor(seeder.rnd() * range) - Math.floor(seeder.rnd() * range); 
+  const floorRandomNegate = range => Math.floor(seeder.rnd() * range) - Math.floor(seeder.rnd() * range);
 
   const minSize = Math.min(width, height);
 
@@ -257,7 +257,7 @@ export const generateInitialShape = (width, height, seeder) => {
     points: floorRandom(3) === 0 ? 3 : 3 + floorRandom(6),
     previousPointDeviationInfluence: false,
     radialBackground: false,
-    radialBackgroundColor: `#333`,
+    radialBackgroundColor: '#333',
     randomShadow: false,
     rotateEachStep: floorRandomNegate(Math.PI),
     shapeRotation: Math.PI / 8,
@@ -283,8 +283,8 @@ export const generateInitialShape = (width, height, seeder) => {
 };
 
 
-export function doesTriangleIntersectsOtherTriangles (triangle, triangles) {
-  for(let i = 0; i < triangles.length; i++) {
+export function doesTriangleIntersectsOtherTriangles(triangle, triangles) {
+  for (let i = 0; i < triangles.length; i++) {
     if (Math.abs(triangle.centerX - triangles[i].centerX) < triangle.triangleSize + triangles[i].triangleSize + 2 ||
         Math.abs(triangle.centerY - triangles[i].centerY) < triangle.triangleSize + triangles[i].triangleSize + 2
     ) {
@@ -353,7 +353,7 @@ export function generateRandomTriangles(width, height, seeder) {
   triangles.push({
     ...baseTriangleShapeConfig,
     steps: buildSteps(baseTriangleShapeConfig, seeder)
-  })
+  });
 
   return triangles;
 }
@@ -373,7 +373,7 @@ export function generateRandomWaterColorShape(width, height, seeder) {
     pointDeviationMaxY: seeder.rnd() * maxPointDeviation,
     points: 50 + floorRandom(250),
     previousPointDeviationInfluence: true
-  }
+  };
 
   waterColorShape.steps = buildSteps(waterColorShape, seeder);
 

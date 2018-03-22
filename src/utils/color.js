@@ -7,7 +7,7 @@ import gradientPack from './gradients';
 export const cb = color => Math.min(Math.max(Math.floor(color), 0), 255);
 export const colorBound = cb;
 
-export const getStepColor = (step, steps, colors) => {
+export function getStepColor(step, steps, colors) {
   const amountOfColors = colors.length;
 
   const percentage = step / (steps - 1);
@@ -64,20 +64,22 @@ export function getRandomGradientPackColors(seeder) {
   for (let i = 0; i < gradient.colors.length; i++) {
     rgbGradient.push(hexToRgb(gradient.colors[i].slice(1)));
   }
-  
+
   return rgbGradient;
 };
 
-export const createRandomColor = (seeder) => ({
-  r: Math.floor(seeder.rnd() * 255),
-  g: Math.floor(seeder.rnd() * 255),
-  b: Math.floor(seeder.rnd() * 255)
-});
+export function createRandomColor(seeder) {
+  return {
+    r: Math.floor(seeder.rnd() * 255),
+    g: Math.floor(seeder.rnd() * 255),
+    b: Math.floor(seeder.rnd() * 255)
+  };
+}
 
 // Possible options and defaults:
 // - maxColorRandom - a color object used for giving a max random for each possible color.
 // - blackAndWhite
-export const createRandomColors = (amountOfColors, setOptions, seeder) => {
+export function createRandomColors(amountOfColors, setOptions, seeder) {
   const options = {
     maxColorRandom: {
       r: 255,
@@ -102,12 +104,12 @@ export const createRandomColors = (amountOfColors, setOptions, seeder) => {
   }
 
   return colors;
-};
+}
 
-export const getContrastingBinaryColor = color => {
+export function getContrastingBinaryColor(color) {
   let d = 0;
 
-  // Counting the perceptive luminance - human eye favors green color... 
+  // Counting the perceptive luminance - human eye favors green color...
   const a = 1 - (0.299 * color.r + 0.587 * color.g + 0.114 * color.b) / 255;
 
   if (a < 0.5) {
@@ -117,6 +119,6 @@ export const getContrastingBinaryColor = color => {
   }
 
   return `rgb(${d}, ${d}, ${d})`;
-};
+}
 
 export const createColorString = c => `rgba(${c.r}, ${c.g}, ${c.b}, ${c.a || 1})`;
