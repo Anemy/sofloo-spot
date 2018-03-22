@@ -1,3 +1,4 @@
+/* eslint-disable */
 export default [
   {
     "name": "Berimbolo",
@@ -2088,3 +2089,4 @@ export default [
     ]
   }
 ];
+/* eslint-enable */

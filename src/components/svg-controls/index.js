@@ -10,9 +10,12 @@ import { CompactPicker } from 'react-color';
 import { connect } from 'react-redux';
 
 import {
+  setRandomizeAlgorithm,
+  togglePreserveAspectRatio,
   updateBackground,
-  updateVisual,
-  setRandomizeAlgorithm
+  updateRenderHeight,
+  updateRenderWidth,
+  updateVisual
 } from '../../modules/canvas';
 
 import { VERSIONS } from '../../constants';
@@ -47,9 +50,12 @@ class SvgControls extends Component {
   render() {
     const {
       backgroundColor,
+      preserveRenderAspectRatio,
       radialBackground,
       radialBackgroundColor,
-      randomizeAlgorithm
+      randomizeAlgorithm,
+      renderHeight,
+      renderWidth
     } = this.props;
 
     return (
@@ -136,6 +142,8 @@ class SvgControls extends Component {
               >
                 <TextField
                   hintText="Width (px)"
+                  onChange={(e, newWidth) => this.props.updateRenderWidth(newWidth)}
+                  value={renderWidth}
                 />
               </div>,
               <div
@@ -144,8 +152,19 @@ class SvgControls extends Component {
               >
                 <TextField
                   hintText="Height (px)"
+                  onChange={(e, newHeight) => this.props.updateRenderHeight(newHeight)}
+                  value={renderHeight}
                 />
-              </div>
+              </div>,
+              <ListItem
+                key={2}
+                primaryText="Preserve Aspect Ratio"
+                secondaryText="Uses initial ratio with max w/h"
+                rightToggle={<Toggle
+                  onToggle={this.props.togglePreserveAspectRatio}
+                  toggled={preserveRenderAspectRatio}
+                />}
+              />
             ]}
           />
         </List>
@@ -165,9 +184,12 @@ const mapStateToProps = state => {
     backgroundColor: layout.backgroundColor,
     primarySVGColor: createColorString(shapeOuterColor),
     contrastPrimarySVGColor: getContrastingBinaryColor(shapeOuterColor),
+    preserveRenderAspectRatio: state.canvas.preserveRenderAspectRatio,
     radialBackground: layout.radialBackground,
     radialBackgroundColor: layout.radialBackgroundColor,
     randomizeAlgorithm: state.canvas.randomizeAlgorithm,
+    renderHeight: state.canvas.renderHeight,
+    renderWidth: state.canvas.renderWidth,
     svgRef: state.canvas.svgRef
   };
 };
@@ -175,7 +197,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     setRandomizeAlgorithm: newAlgorithm => dispatch(setRandomizeAlgorithm(newAlgorithm)),
+    togglePreserveAspectRatio: () => dispatch(togglePreserveAspectRatio()),
     updateBackground: newBackground => dispatch(updateBackground(newBackground)),
+    updateRenderHeight: newHeight => dispatch(updateRenderHeight(newHeight)),
+    updateRenderWidth: newWidth => dispatch(updateRenderWidth(newWidth)),
     updateVisual: change => dispatch(updateVisual(change))
   };
 };
