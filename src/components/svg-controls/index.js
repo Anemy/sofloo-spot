@@ -157,7 +157,7 @@ class SvgControls extends Component {
                 />
               </div>,
               <ListItem
-                key={2}
+                key="3"
                 primaryText="Preserve Aspect Ratio"
                 secondaryText="Uses initial ratio with max w/h"
                 rightToggle={<Toggle

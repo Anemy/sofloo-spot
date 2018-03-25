@@ -10,7 +10,6 @@ class Shape extends Component {
     const {
       gradientColor,
       id,
-      isCurve,
       randomShadow,
       steps,
       strokePath
@@ -57,15 +56,15 @@ class Shape extends Component {
         const pathId = `step-${step.id}-shape-${id}`;
         const clipId = `clip-${pathId}`;
         const shadowId = 'svg-shadow';
-  
+
         const stepColor = gradientColor ? `url(#gradient-${id})` : step.color;
-  
+
         const pathStyle = {
           fill: !strokePath ? stepColor : 'none',
           stroke: strokePath ? stepColor : 'none',
           strokeWidth: strokePath ? '1px' : '0px'
         };
-  
+
         if (gradientColor) {
           pathStyle.fillOpacity = (index / steps.length);
         }
@@ -88,7 +87,7 @@ class Shape extends Component {
         );
       }
     });
-  
+
     return stepComponenets;
   }
 };
@@ -109,6 +108,6 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch);
 
 export default connect(
-  mapStateToProps, 
+  mapStateToProps,
   mapDispatchToProps
 )(Shape);

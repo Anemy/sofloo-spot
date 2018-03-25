@@ -20,7 +20,7 @@ const Path = props => {
   let shadowPathDString = '';
 
   if (hasShadow) {
-    _.each(shadowPathPoints, (point, index) => {
+    _.each(shadowPathPoints, point => {
       shadowPathDString += `${point.type} `;
       if (point.type === 'C') {
         const cp = point.cp;
@@ -37,7 +37,7 @@ const Path = props => {
 
   // TODO: I was lazy and did gradient shadows hacky, fix.
   if (!hidePath) {
-    _.each(pathPoints, (point, index) => {
+    _.each(pathPoints, point => {
       pathDString += `${point.type} `;
       if (point.type === 'C') {
         const cp = point.cp;
@@ -60,7 +60,7 @@ const Path = props => {
         d={pathDString}
         style={style}
       />}
-      {hasShadow && 
+      {hasShadow &&
         <path
           d={shadowPathDString}
           style={{

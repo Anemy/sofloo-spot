@@ -66,6 +66,8 @@ class Controls extends Component {
       }
     }
 
+    console.log(`Using SVG to create PNG with dimensions ${outputWidth}x${outputHeight}`);
+
     const svg = document.querySelector('svg');
     const svgData = new XMLSerializer().serializeToString(svg);
 
