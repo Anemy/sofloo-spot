@@ -9,10 +9,12 @@ import SVG from '../svg';
 
 const Home = props => {
   return (
-    <div className="concentric-js-home">
-      <div
-        className="concentric-js-home-background"
-      />
+    <div
+      className="concentric-js-home"
+      style={props.radialBackground ? {
+        background: `radial-gradient(${props.radialBackgroundColor}, ${props.backgroundColor})`
+      } : { backgroundColor: props.backgroundColor }}
+    >
       <SVG />
       {props.isBuilding && <Loader />}
       <Controls />
@@ -21,7 +23,10 @@ const Home = props => {
 };
 
 const mapStateToProps = state => ({
-  isBuilding: state.canvas.isBuilding
+  backgroundColor: state.canvas.present.backgroundColor,
+  isBuilding: state.canvas.isBuilding,
+  radialBackground: state.canvas.present.radialBackground,
+  radialBackgroundColor: state.canvas.present.radialBackgroundColor
 });
 
 const mapDispatchToProps = null;

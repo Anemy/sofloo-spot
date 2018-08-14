@@ -72,7 +72,7 @@ class SVG extends Component {
         ref={ref => { this.svgRef = ref; }}
         style={{
           background: radialBackground ?
-            `radial-gradient(${radialBackgroundColor}, ${backgroundColor})` : backgroundColor
+            `radial-gradient(${radialBackgroundColor}, ${backgroundColor})` : 'none'
         }}
         width={width}
         viewBox={`0 0 ${width} ${height}`}

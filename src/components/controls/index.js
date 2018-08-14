@@ -53,7 +53,7 @@ class Controls extends Component {
   };
 
   generatePNGImage() {
-    const { preserveRenderAspectRatio, renderAspectRatio, renderWidth, renderHeight } = this.props;
+    const { preserveRenderAspectRatio, renderAspectRatio, renderWidth, renderHeight, shareableShortString } = this.props;
 
     let outputWidth = renderWidth;
     let outputHeight = renderHeight;
@@ -84,7 +84,7 @@ class Controls extends Component {
 
       canvas.toBlob(blobData => {
         const blobUrl = window.URL.createObjectURL(blobData);
-        downloadURI(blobUrl, `Concentric-${Date.now()}.png`);
+        downloadURI(blobUrl, `Concentric-${shareableShortString}.png`);
       });
     };
   }
@@ -287,6 +287,7 @@ const mapStateToProps = state => {
     renderHeight: state.canvas.renderHeight,
     renderWidth: state.canvas.renderWidth,
     shareableString,
+    shareableShortString: `?shared=${layout.seed}&v=${layout.version}`,
     svgRef: state.canvas.svgRef,
     width: layout.width
   };
