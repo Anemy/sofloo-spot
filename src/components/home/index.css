@@ -1,25 +1,9 @@
 .concentric-js-home {
-  background-color: #FAFAFA;
   color: #333;
   font-family: 'Roboto',arial,sans-serif;
   margin: 0;
   padding: 0;
   text-align: center;
-}
-
-.concentric-js-home-background {
-  background-color: #FAFAFA;
-  /* background-image: -webkit-gradient(radial,center center,0,center center,460,from(#f5f6f7),to(#FAFAFA));
-  background-image: -webkit-radial-gradient(circle,#f5f6f7,#FAFAFA);
-  background-image: -moz-radial-gradient(circle,#f5f6f7,#FAFAFA);
-  background-image: -o-radial-gradient(circle,#f5f6f7,#FAFAFA);
-  background-repeat: no-repeat; */
-  bottom: 0;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  z-index: -5;
 }
 
 .concentric-js-dotted-background {
