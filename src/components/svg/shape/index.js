@@ -15,7 +15,7 @@ class Shape extends Component {
       strokePath
     } = this.props;
 
-    const stepComponenets = [];
+    const stepComponents = [];
 
     _.each(steps, (step, index) => {
       const pathId = `step-${step.id}-shape-${id}`;
@@ -35,7 +35,7 @@ class Shape extends Component {
       }
 
       // TODO: I was lazy and did gradient shadows hacky, fix.
-      stepComponenets.push(
+      stepComponents.push(
         <Path
           clipId={clipId}
           key={pathId}
@@ -69,7 +69,7 @@ class Shape extends Component {
           pathStyle.fillOpacity = (index / steps.length);
         }
 
-        stepComponenets.push(
+        stepComponents.push(
           <Path
             clipId={clipId}
             key={`${pathId}-shadow`}
@@ -88,9 +88,9 @@ class Shape extends Component {
       }
     });
 
-    return stepComponenets;
+    return stepComponents;
   }
-};
+}
 
 const mapStateToProps = (state, ownProps) => {
   const layout = state.canvas.present;

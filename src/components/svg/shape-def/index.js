@@ -86,7 +86,7 @@ class ShapeDefs extends Component {
 
     return defs;
   }
-};
+}
 
 const mapStateToProps = (state, ownProps) => {
   const layout = state.canvas.present;
