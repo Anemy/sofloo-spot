@@ -10,7 +10,7 @@ const ClipPath = props => {
 
   let pathDString = '';
 
-  _.each(points, (point, index) => {
+  _.each(points, point => {
     pathDString += `${point.type} `;
     if (point.type === 'C') {
       const cp = point.cp;
