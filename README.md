@@ -30,6 +30,11 @@ BTC Wallet:
 
 If you'd like to see something added, create an issue or make a PR! 🚀
 
+
+Usage:
+- If you want to use this algorithm or it's output: please contact me.
+copyright 2018 @ rhys howell
+
 ## TODO:
 #### Features
 - Depth for each step which impacts shadow.
