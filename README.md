@@ -1,4 +1,4 @@
-[Concentric](https://anemy.github.io/concentric) is a generative art project.
+[Sofloo](https://anemy.github.io/sofloo-spot) is a generative art project.
 
 ## Installation
 
