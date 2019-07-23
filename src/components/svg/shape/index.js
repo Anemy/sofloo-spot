@@ -27,7 +27,7 @@ class Shape extends Component {
       const pathStyle = {
         fill: !strokePath ? stepColor : 'none',
         stroke: strokePath ? stepColor : 'none',
-        strokeWidth: strokePath ? '1px' : '0px'
+        strokeWidth: strokePath ? '4px' : '0px'
       };
 
       if (gradientColor) {
@@ -62,7 +62,7 @@ class Shape extends Component {
         const pathStyle = {
           fill: !strokePath ? stepColor : 'none',
           stroke: strokePath ? stepColor : 'none',
-          strokeWidth: strokePath ? '1px' : '0px'
+          strokeWidth: strokePath ? '4px' : '0px'
         };
 
         if (gradientColor) {

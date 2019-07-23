@@ -72,6 +72,12 @@ export function updateRenderHeight(newHeight) {
   };
 }
 
+export function setStreamSofloo() {
+  return {
+    type: RANDOMIZE
+  };
+}
+
 export function updateRenderWidth(newWidth) {
   return {
     type: SET_SVG,
