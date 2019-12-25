@@ -200,7 +200,7 @@ class Controls extends Component {
           {showShareableLink && this.showLinkPopup()}
           <a
             className="concentric-js-controls-github-link"
-            href="https://github.com/Anemy/concentric"
+            href="https://github.com/Anemy/sofloo-spot"
             target="_blank"
             rel="noopener noreferrer"
           >
