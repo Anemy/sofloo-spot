@@ -5,6 +5,7 @@ export const VERSIONS = {
   BASIC_FIRST_GEN_GRADIENTS: 'g-1-cr-gr',
   FULL_RANDOM: 'rnd',
   INIT_FIRST_GEN: 'gen-1-1',
+  MUG: 'mug-1',
   TOPOLOGY: 'top-1',
   TOPOLOGY_GRADIENTS: 'top-1-cr-gr',
   TOPOLOGY_GRADIENT_PACK: 'top-1-cr',

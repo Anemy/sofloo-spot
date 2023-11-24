@@ -96,6 +96,7 @@ class SvgControls extends Component {
             <MenuItem value={VERSIONS.WATER_COLOR} primaryText="Water color" style={{fontStyle: 'italic'}} />
             <MenuItem value={VERSIONS.TRIANGLES} primaryText="Triangles" />
             <MenuItem value={VERSIONS.TRIANGLES_MULTI} primaryText="Triangles 🎉🎉 - Work in progress" />
+            <MenuItem value={VERSIONS.MUG} primaryText="Mug Size" />
             <MenuItem value={VERSIONS.INIT_FIRST_GEN} primaryText="Initial" />
           </SelectField>
           <ListItem

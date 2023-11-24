@@ -6,6 +6,7 @@ import {
 
 import {
   generateInitialShape,
+  generateRandomMug,
   generateRandomShape,
   generateRandomTopologyShape,
   generateRandomTriangles,
@@ -55,6 +56,11 @@ export const generateLayoutBySeedAndVersion = (width, height, seed, layoutVersio
     case VERSIONS.BASIC_FIRST_GEN_GRADIENT_PACK:
       layout.shapes = [generateRandomShape(width, height, seeder, { gradientPack: true })];
       break;
+
+    case VERSIONS.MUG: {
+      layout.shapes = generateRandomMug(width, height, seeder);
+      break;
+    }
 
     case VERSIONS.BASIC_FIRST_GEN_GRADIENTS: {
       const shapeOptions = {
