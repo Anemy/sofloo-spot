@@ -130,71 +130,234 @@ const generateRandomShapeConfig = (width, height, seeder, shapeOptions) => {
   };
 };
 
-function generateMugShape(config, seeder) { // previousShapes
+function generateBaseMugShapeConfig(width, height, seeder, shapeOptions) {
+  const options = {
+    ...shapeOptions
+  };
+
+  const floorRandom = max => Math.floor(seeder.rnd() * max);
+  const floorRandomNegate = range => Math.floor(seeder.rnd() * range) - Math.floor(seeder.rnd() * range);
+  // eslint-disable-next-line no-undefined
+  const chance = (chance) => (chance === null || chance === undefined) ? seeder.rnd() > 0.5 : 1 - seeder.rnd() > chance;
+
+  const maxPoints = 100;
+  let points = 3 + floorRandom(floorRandom(3) === 1 ? maxPoints : 9); // 1 / 5 chance for possibly many points.
+  const amountOfSteps = 2 + (30 - Math.floor(Math.pow(30, seeder.rnd())));
+
+  const maxColorRandom = {
+    r: floorRandom(12) === 1 ? 0 : 255,
+    g: floorRandom(12) === 1 ? 0 : 255,
+    b: floorRandom(12) === 1 ? 0 : 255,
+    a: 1
+  };
+
+  const randomColorOptions = {
+    maxColorRandom,
+    blackAndWhite: options.blackAndWhite || floorRandom(20) === 1
+  };
+
+  // 1/10 random color for each step, otherwise gradient a few colors.
+  const amountOfColors = floorRandom(10) === 1 ? amountOfSteps : 2 + floorRandom(3);
+
+  const stepCenterMaxDeviationX = floorRandom(4) === 1 ? 0 : 30;
+  const stepCenterMaxDeviationY = floorRandom(4) === 1 ? 0 : 30;
+
+  // 1 / 2 chance for no deviation.
+  const maxPointDeviation = floorRandom(3) === 1 ? 0 : Math.max(60 - (points / 20), 0);
+
+  const innerRadius = floorRandom(window.innerHeight / 8);
+
+  const colors = options.gradientPack ? getRandomGradientPackColors(seeder) : createRandomColors(amountOfColors, randomColorOptions, seeder);
+
+  return {
+    ...generateRandomShadowConfig(seeder, options),
+    divergentShadowConfig: chance(0.1),
+    
+    amountOfSteps,
+    divergentAmountOfSteps: chance(0.5),
+    colors,
+    gradientColor: options.gradientColor,
+    gradientDirection: generateRandomGradientDirection(seeder),
+    isCurve: false,
+
+    innerRadius,
+
+    divergentPointDeviationChance: chance(0.5),
+    divergentPointDeviationSharedPointChance: chance(0.5),
+    pointDeviationChance: chance(0.9), // 1 out of this. // TODO: Was 1
+    pointDeviationMaxX: floorRandom(maxPointDeviation),
+    pointDeviationMaxY: floorRandom(maxPointDeviation),
+
+    divergentPoints: chance(0.5),
+    points,
+
+    previousPointDeviationInfluence: floorRandom(3) === 1, // 1 out of 3
+
+    rotateEachStep: floorRandomNegate(Math.PI),
+    shapeRotation: floorRandom(3) === 0 ? 0 : floorRandom(Math.PI * 2),
+
+    sharedPointDeviation: floorRandom(2) === 1,
+
+    divergentCenterMax: chance(),
+    divergentCenterMaxX: chance(0.9),
+    divergentCenterMaxY: chance(0.9),
+    stepCenterDeviationX: floorRandomNegate(stepCenterMaxDeviationX),
+    stepCenterDeviationY: floorRandomNegate(stepCenterMaxDeviationY),
+    stepCenterDeviationDropOff: 1, // (seeder.rnd() * 2) - 1,
+
+    divergentStepLength: chance(0.5),
+    divergentStepLengthSharedSize: chance(0.5),
+    stepLength: 1 + floorRandom(((Math.min(height, width) - innerRadius) / 3) / amountOfSteps),
+
+    divergentStepLengthDropOff: chance(0.5),
+    stepLengthDropOff: floorRandom(12) === 0 ? 1 : ((seeder.rnd() * 4) - 2),
+
+    strokePath: floorRandom(8) === 1 // 1/8 chance for a stroke instead of a fill.
+  };
+}
+
+function doesShapeConflict(shape, otherShapes) {
+  const {
+    centerX,
+    centerY,
+    shapeSize
+  } = shape;
+
+  return otherShapes.every((previousShape) => {
+    const distance = Math.abs(centerX - previousShape.centerX) + Math.abs(centerY - previousShape.centerY);
+    return distance > (shapeSize + previousShape.shapeSize) * 2;
+  });
+}
+
+function generateMugShape(baseConfig, seeder, previousShapes, baseOptions) {
+  const {
+    windowWidth,
+    windowHeight
+  } = baseConfig;
   // const options = {
   //   // ...shapeOptions
   // };
 
-  // TODO: randomize
-  const shapeSize = Math.min(config.width, config.height) / 5;
+  let shapeSize;
+  let centerX;
+  let centerY;
+
+  let counter = 0;
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    shapeSize = (Math.min(windowWidth, windowHeight) / 100) + (seeder.rnd() * (Math.min(windowWidth, windowHeight) / 3));
+    centerX = (shapeSize) + (windowWidth - (shapeSize * 2)) * seeder.rnd();
+    centerY = (shapeSize) + (windowHeight - (shapeSize * 2)) * seeder.rnd();
+
+    if (doesShapeConflict({
+      centerX,
+      centerY,
+      shapeSize
+    }, previousShapes)) {
+      break;
+    }
+
+    if (counter++ > 50) {
+      // Might be filled up, skip adding this shape.
+      return null;
+    }
+  }
 
   const floorRandom = max => Math.floor(seeder.rnd() * max);
-  // const floorRandomNegate = range => Math.floor(seeder.rnd() * range) - Math.floor(seeder.rnd() * range);
+  const floorRandomNegate = range => Math.floor(seeder.rnd() * range) - Math.floor(seeder.rnd() * range);
 
-  const maxPoints = 500;
-  let points = 3 + floorRandom(floorRandom(3) === 1 ? maxPoints : 9); // 1 / 5 chance for possibly many points.
+  const innerRadius = shapeSize / 2;
 
-  const amountOfSteps = 2 + (100 - Math.floor(Math.pow(100, seeder.rnd())));
+  const shapeConfig = {
+    ...baseConfig,
+    ...(baseConfig.divergentShadowConfig ? generateRandomShadowConfig(seeder, baseOptions) : {}),
+    shapeSize,
+    centerX,
+    centerY,
 
-  // const stepCenterMaxDeviationX = floorRandom(4) === 1 ? 0 : 30;
-  // const stepCenterMaxDeviationY = floorRandom(4) === 1 ? 0 : 30;
-
-  // // 1 / 2 chance for no deviation.
-  // const maxPointDeviation = floorRandom(3) === 1 ? 0 : Math.max(60 - (points / 20), 0);
-
-  const innerRadius = floorRandom(window.innerHeight / 8);
-
-  return {
-    ...config,
-    // ...generateRandomShadowConfig(seeder, options),
-
-    amountOfSteps,
-    // TODO: Avoid shape overlap.
-    centerX: (shapeSize / 2) + (config.width - shapeSize) * Math.random(),
-    centerY: (shapeSize / 2) + (config.height - shapeSize) * Math.random(),
     innerRadius,
-    isCurve: false,
-    // pointDeviationChance: 1, // 1 out of this.
-    // pointDeviationMaxX: floorRandom(maxPointDeviation),
-    // pointDeviationMaxY: floorRandom(maxPointDeviation),
-    points,
-    // previousPointDeviationInfluence: floorRandom(3) === 1, // 1 out of 3
-    // rotateEachStep: floorRandomNegate(Math.PI),
+    isCurve: false, // TODO: Randomize this.
     shapeRotation: floorRandom(3) === 0 ? 0 : floorRandom(Math.PI * 2)
-    // sharedPointDeviation: floorRandom(2) === 1,
-    // stepCenterDeviationX: floorRandomNegate(stepCenterMaxDeviationX),
-    // stepCenterDeviationY: floorRandomNegate(stepCenterMaxDeviationY),
-    // stepCenterDeviationDropOff: 1, // (seeder.rnd() * 2) - 1,
-    // stepLength: 1 + floorRandom(((Math.min(config.height, config.width) - innerRadius) / 3) / amountOfSteps),
-    // stepLengthDropOff: floorRandom(12) === 0 ? 1 : ((seeder.rnd() * 4) - 2),
-    // strokePath: floorRandom(8) === 1 // 1/8 chance for a stroke instead of a fill.
   };
+
+  if (baseConfig.divergentPoints) {
+    const maxPoints = 500;
+    const points = 3 + floorRandom(floorRandom(3) === 1 ? maxPoints : 9); // 1 / 5 chance for possibly many points.
+    shapeConfig.points = points;
+  }
+
+  if (baseConfig.divergentAmountOfSteps) {
+    const amountOfSteps = 2 + (100 - Math.floor(Math.pow(100, seeder.rnd())));
+    shapeConfig.amountOfSteps = amountOfSteps;
+  }
+
+  if (baseConfig.divergentCenterMax) {
+    const stepCenterMaxDeviationX = floorRandom(4) === 1 ? 0 : 30;
+    const stepCenterMaxDeviationY = floorRandom(4) === 1 ? 0 : 30;
+    shapeConfig.stepCenterDeviationX = floorRandomNegate(stepCenterMaxDeviationX);
+    shapeConfig.stepCenterDeviationY = floorRandomNegate(stepCenterMaxDeviationY);
+  } else {
+    if (baseConfig.divergentCenterMaxX) {
+      const stepCenterMaxDeviationX = floorRandom(4) === 1 ? 0 : 30;
+      shapeConfig.stepCenterDeviationX = floorRandomNegate(stepCenterMaxDeviationX);
+    }
+    if (baseConfig.divergentCenterMaxY) {
+      const stepCenterMaxDeviationY = floorRandom(4) === 1 ? 0 : 30;
+      shapeConfig.stepCenterDeviationY = floorRandomNegate(stepCenterMaxDeviationY);
+    }
+  }
+
+  if (baseConfig.divergentPointDeviationChance) {
+    let maxPointDeviation = floorRandom(3) === 1 ? 0 : Math.max(60 - (shapeConfig.points / 20), 0);
+    if (baseConfig.divergentPointDeviationSharedPointChance) {
+      maxPointDeviation = floorRandom(3) === 1 ? 0 : Math.max(60 - (baseConfig.points / 20), 0);
+    }
+    // pointDeviationChance: chance(0.9), // 1 out of this. // TODO: Was 1
+    shapeConfig.pointDeviationMaxX = floorRandom(maxPointDeviation);
+    shapeConfig.pointDeviationMaxY = floorRandom(maxPointDeviation);
+  }
+
+  if (baseConfig.divergentStepLength) {
+    if (baseConfig.divergentStepLengthSharedSize) {
+      shapeConfig.stepLength = 1 + floorRandom(((Math.min(windowHeight, windowWidth) - baseConfig.innerRadius) / 3) / shapeConfig.amountOfSteps);
+    } else {
+      shapeConfig.stepLength = 1 + floorRandom(((Math.min(windowHeight, windowWidth) - innerRadius) / 3) / shapeConfig.amountOfSteps);
+    }
+  }
+
+  if (baseConfig.divergentStepLengthDropOff) {
+    shapeConfig.stepLengthDropOff = floorRandom(12) === 0 ? 1 : ((seeder.rnd() * 4) - 2);
+  }
+
+  return shapeConfig;
 }
 
 export function generateRandomMug(width, height, seeder) {
   const eachShapeSize = Math.min(width, height) / 10;
+  const shapeOptions = {
+    colorDropWithDepth: seeder.rnd() > 0.8,
+    gradientPack: seeder.rnd() > 0.5,
+    gradientColor: seeder.rnd() > 0.95,
+    blackAndWhite: seeder.rnd() > 0.9,
+    disableShadow: seeder.rnd() > 0.9
+  };
   const baseShapeConfig = {
-    width,
-    height,
+    windowWidth: width,
+    windowHeight: height,
     // ...generateRandomShapeConfig(width, height, seeder)
-    ...generateRandomShapeConfig(eachShapeSize, eachShapeSize, seeder)
+    ...generateBaseMugShapeConfig(eachShapeSize, eachShapeSize, seeder, shapeOptions)
   };
 
   const shapes = [];
 
-  const amountOfShapes = Math.floor(2 + (Math.random() * 5));
+  const amountOfShapes = Math.floor(2 + (seeder.rnd() * 5));
   for (let i = 0; i < amountOfShapes; i++) {
-    shapes.push(generateMugShape(baseShapeConfig, seeder, shapes));
+    const shape = generateMugShape(baseShapeConfig, seeder, shapes, shapeOptions);
+    if (!shape) {
+      // Couldn't make it.
+      break;
+    }
+    shapes.push(shape);
   }
 
   // TODO: Get the basic properties.
